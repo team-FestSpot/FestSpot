@@ -6,9 +6,7 @@ import Login from "./page/Auth/Login/Login.jsx";
 import SignUp from "./page/Auth/SignUp/SignUp.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <>
-    {/* <App /> */}
-    <Login />
-    {/* <SignUp /> */}
-  </>
+  <StrictMode>
+    <App />
+  </StrictMode>
 );
