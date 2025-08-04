@@ -50,7 +50,7 @@ function Login(props) {
     <div css={s.loginContainer}>
       <div css={s.logoContainer}>
         <div css={s.logoIcon}>
-          <img src="src\page\Auth\img\FestSpot_logo.png" alt="FestSpot Logo" />
+          <img src="" alt="FestSpot Logo" />
         </div>
       </div>
 
@@ -111,16 +111,13 @@ function Login(props) {
 
         <div css={s.socialButtonContainer}>
           <div css={s.socialButton}>
-            <img src="src\page\Auth\img\naver_logo.png" alt="naver logo" />
+            <img src="" alt="naver logo" />
           </div>
           <div css={s.socialButton}>
-            <img
-              src="src\page\Auth\img\Google__G__logo.png"
-              alt="google logo"
-            />
+            <img src="" alt="google logo" />
           </div>
           <div css={s.socialButton}>
-            <img src="src\page\Auth\img\kakao_logo.png" alt="google logo" />
+            <img src="" alt="google logo" />
           </div>
         </div>
 
