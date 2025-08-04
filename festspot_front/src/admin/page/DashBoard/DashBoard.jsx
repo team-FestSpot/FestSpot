@@ -6,7 +6,7 @@ import { getPublicApiQuery } from "../../../querys/admin/getPublicApiQuery";
 function DashBoard(props) {
   const response = getPublicApiQuery(1, 20);
   console.log(response.data);
-  return <></>;
+  return <>asdf</>;
 }
 
 export default DashBoard;
