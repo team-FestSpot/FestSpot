@@ -108,7 +108,7 @@ function SignUp(props) {
     <div css={s.signUpContainer}>
       <div css={s.logoContainer}>
         <div css={s.logoIcon}>
-          <img src="src/img/FestSpot_logo.png" alt="FestSpot Logo" />
+          <img src="src\page\Auth\img\FestSpot_logo.png" alt="FestSpot Logo" />
         </div>
       </div>
 
@@ -204,14 +204,17 @@ function SignUp(props) {
         </div>
 
         <div css={s.socialButtonContainer}>
-          <div css={s.naverButton}>
-            <span>N</span>
+          <div css={s.socialButton}>
+            <img src="src\page\Auth\img\naver_logo.png" alt="naver logo" />
           </div>
-          <div css={s.googleButton}>
-            <span>G</span>
+          <div css={s.socialButton}>
+            <img
+              src="src\page\Auth\img\Google__G__logo.png"
+              alt="google logo"
+            />
           </div>
-          <div css={s.kakaoButton}>
-            <span>K</span>
+          <div css={s.socialButton}>
+            <img src="src\page\Auth\img\kakao_logo.png" alt="google logo" />
           </div>
         </div>
 
