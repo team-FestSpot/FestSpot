@@ -50,7 +50,7 @@ function UpperSideBarModal(props) {
           <IoClose onClick={handleCloseOnClick} />
         </div>
         <div css={s.modalUserInfo}>
-          <img src="../FestSpotLogoImg.png" alt="" />
+          <img src="src\SideBar\UpperSideBar\FestSpotLogoImg.png" alt="" />
           <div>nickname</div>
         </div>
         {modalMenus.map((modalMenu, index) => (

@@ -24,10 +24,10 @@ function UpperSideBar(props) {
       <div css={s.modalContainer}>
         <div css={s.logoSection}>
           <div>
-            <img src="FestSpotLogoImg.png" />
+            <img src="src\SideBar\UpperSideBar\FestSpotLogoImg.png" />
           </div>
           <div>
-            <img src="FestSpotLogoText.png" />
+            <img src="src\SideBar\UpperSideBar\FestSpotLogoText.png" />
           </div>
         </div>
         <div css={s.searchSection}>
