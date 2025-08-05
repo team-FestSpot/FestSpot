@@ -2,8 +2,8 @@
 import * as s from "./styles";
 import React from "react";
 
-function Calendar(props) {
-  return <div></div>;
+function PerformanceCalendar(props) {
+  return <div>asdf</div>;
 }
 
-export default Calendar;
+export default PerformanceCalendar;
