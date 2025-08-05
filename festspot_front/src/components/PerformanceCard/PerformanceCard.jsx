@@ -17,11 +17,14 @@ function PerformanceCard({ performanceList }) {
       }}
       className="my-masonry-grid"
       columnClassName="my-masonry-grid_column"
-      columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+      columnsCountBreakPoints={{
+        1: 3,
+        767: 4,
+        1024: 3,
+      }}
     >
       <Masonry
         itemStyle={{
-          paddingLeft: "30px" /* gutter size */,
           backgroundClip: "padding-box",
           marginTop: "5px",
         }}
@@ -31,10 +34,11 @@ function PerformanceCard({ performanceList }) {
           <div css={s.cardContainer}>
             <div css={s.performanceDate}>
               {performance.prfpdfrom === performance.prfpdto ? (
-                <span>{performance.prfpdfrom}</span>
+                <span>{performance.prfpdfrom.slice(-5)}</span>
               ) : (
                 <span>
-                  {performance.prfpdfrom} ~ {performance.prfpdto.slice(-5)}
+                  {performance.prfpdfrom.slice(-5)} ~{" "}
+                  {performance.prfpdto.slice(-5)}
                 </span>
               )}
             </div>

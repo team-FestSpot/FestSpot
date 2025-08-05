@@ -17,29 +17,30 @@ export const cardContainer = css`
   margin-bottom: 50px;
 `;
 
-export const performanceName = css`
-  display: flex;
-  flex-grow: 1;
-  height: 40px;
-  width: 100%;
-  overflow-y: hidden;
-
-  & > span {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-`;
-
 export const card = css`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 20vh;
+  max-height: 100%;
 
   & > img {
     height: 100%;
-    max-width: 170px;
+    max-width: 100%;
+  }
+`;
+
+export const performanceName = css`
+  display: flex;
+  flex-grow: 1;
+  height: 40px;
+  width: 100%;
+  overflow: hidden;
+
+  & > span {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 `;
