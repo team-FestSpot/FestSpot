@@ -29,11 +29,11 @@ public class PrincipalUser implements UserDetails, OAuth2User {
 
   @Override
   public String getPassword() {
-    return "";
+    return user.getUserPassword();
   }
 
   @Override
   public String getUsername() {
-    return "";
+    return user.getUserNickName();
   }
 }
