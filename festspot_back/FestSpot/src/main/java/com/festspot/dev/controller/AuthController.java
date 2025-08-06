@@ -1,10 +1,12 @@
 package com.festspot.dev.controller;
 
+import com.festspot.dev.dto.auth.UserLoginDto;
 import com.festspot.dev.dto.auth.UserSignUpDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.service.AuthService;
 import com.festspot.dev.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,11 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> singup(@RequestBody @Valid UserSignUpDto dto) throws BindException {
         return ResponseEntity.ok(ResponseDto.success(authService.signUp(dto)));
+    }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginDto dto) {
+        System.out.println(dto);
+        return ResponseEntity.ok(ResponseDto.success(authService.login(dto)));
     }
 }
