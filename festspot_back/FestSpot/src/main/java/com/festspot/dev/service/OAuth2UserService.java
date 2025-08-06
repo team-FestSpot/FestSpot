@@ -72,6 +72,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .build();
 
         }
+
+        System.out.println("user - " + user);
+
+        userMapper.insert(user);
+
         return PrincipalUser.builder()
                 .user(user)
                 .attributes(oAuth2User.getAttributes())
