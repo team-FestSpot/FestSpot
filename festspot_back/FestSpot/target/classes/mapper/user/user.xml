@@ -7,8 +7,16 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="userId">
         insert into user_tb
-        values (default, #{userLoginId}, #{userPassword}, #{userNickName}, #{userEmail}, #{userProfileImgUrl})
+        values (default, #{userLoginId}, #{userPassword}, #{userNickName}, #{userEmail}, #{userProfileImgUrl}. #{provider}, #{providerId})
     </insert>
+
+    <update id="updateProfileImgPathById">
+        update user_tb
+        set user_profile_img_url = #{path}
+        where
+        user_id = #{userId}
+    </update>
+
     <select id="findByUserLoginId" resultType="com.festspot.dev.domain.user.User">
         select
             *

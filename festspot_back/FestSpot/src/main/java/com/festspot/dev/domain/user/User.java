@@ -21,5 +21,6 @@ public class User {
     private String userNickName;
     private String userProfileImgUrl;
     private LocalDateTime createdAt;
-
+    private String provider;
+    private String providerId;
 }
