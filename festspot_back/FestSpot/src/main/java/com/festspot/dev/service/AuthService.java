@@ -49,7 +49,7 @@ public class AuthService {
         }
 
         if(!passwordEncoder.matches(dto.getUserPassword(), foundUser.getUserPassword())) {
-            throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.")
+            throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
         }
 
         return TokenDto.builder()
