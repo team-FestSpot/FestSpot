@@ -31,22 +31,17 @@ function PerformanceCard({ performanceList }) {
         style={{}}
       >
         {performanceList.map((performance) => (
-          <div css={s.cardContainer}>
-            <div css={s.performanceDate}>
-              {performance.prfpdfrom === performance.prfpdto ? (
-                <span>{performance.prfpdfrom.slice(-5)}</span>
-              ) : (
-                <span>
-                  {performance.prfpdfrom.slice(-5)} ~{" "}
-                  {performance.prfpdto.slice(-5)}
-                </span>
-              )}
-            </div>
-            <div css={s.card}>
-              <img src={performance.poster} alt="" />
-            </div>
-            <div css={s.performanceName}>
-              <span>{performance.prfnm}</span>
+          <div>
+            <div css={s.performanceCard}>
+              <div css={s.posterContainer}>
+                <img src={performance.poster} />
+                <div css={s.dateBox}>09.06</div>
+                <div css={s.dateOverlay}></div>
+              </div>
+              <div css={s.content}>
+                <div>{performance.fcltynm}</div>
+                <h3>{performance.prfnm}</h3>
+              </div>
             </div>
           </div>
         ))}
