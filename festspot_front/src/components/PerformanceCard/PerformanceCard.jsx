@@ -19,7 +19,7 @@ function PerformanceCard({ performanceList }) {
       columnClassName="my-masonry-grid_column"
       columnsCountBreakPoints={{
         1: 3,
-        767: 4,
+        768: 4,
         1024: 3,
       }}
     >
@@ -35,12 +35,22 @@ function PerformanceCard({ performanceList }) {
             <div css={s.performanceCard}>
               <div css={s.posterContainer}>
                 <img src={performance.poster} />
-                <div css={s.dateBox}>09.06</div>
-                <div css={s.dateOverlay}></div>
+                <div css={s.dateBox}>
+                  {performance.prfpdfrom === performance.prfpdto ? (
+                    <p>{performance.prfpdfrom.slice(-5)}</p>
+                  ) : (
+                    <p>
+                      {performance.prfpdfrom.slice(-5)} ~
+                      {performance.prfpdto.slice(-5)}
+                    </p>
+                  )}
+                </div>
               </div>
               <div css={s.content}>
                 <div>{performance.fcltynm}</div>
-                <h3>{performance.prfnm}</h3>
+                <div>
+                  <h3>{performance.prfnm}</h3>
+                </div>
               </div>
             </div>
           </div>
