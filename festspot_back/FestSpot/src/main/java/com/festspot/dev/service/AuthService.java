@@ -6,6 +6,7 @@ import com.festspot.dev.dto.auth.TokenDto;
 import com.festspot.dev.dto.auth.UserLoginDto;
 import com.festspot.dev.dto.auth.UserSignUpDto;
 import com.festspot.dev.exception.auth.LoginException;
+import com.festspot.dev.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,4 +57,5 @@ public class AuthService {
                 .accessToken(jwtUtil.generateAccessToken(foundUser))
                 .build();
     }
+
 }

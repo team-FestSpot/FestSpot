@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.festspot.dev.domain.user.UserMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="userId">
+        insert into user_tb
+        values (default, #{userLoginId}, #{userPassword}, #{userNickName}, #{userEmail}, #{userProfileImgUrl}. #{provider}, #{providerId})
+    </insert>
+
+    <update id="updateProfileImgPathById">
+        update user_tb
+        set user_profile_img_url = #{path}
+        where
+        user_id = #{userId}
+    </update>
+
+    <select id="findByUserLoginId" resultType="com.festspot.dev.domain.user.User">
+        select
+            *
+        from
+            user_tb
+        where
+            user_login_id = #{userLoginId}
+    </select>
+    <select id="findByUserId" resultType="com.festspot.dev.domain.user.User">
+        select
+            *
+        from
+            user_tb
+        where
+            user_id = #{userId}
+    </select>
+
+</mapper>
