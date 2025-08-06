@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:mysql://mysql.czyymmc26gs1.ap-northeast-2.rds.amazonaws.com:3306/festspot_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: admin
+    password: 1Q2w3e4r!
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.festspot.dev.domain.entity
+
+jwt:
+  secret: 1968b508680fb182cb5ce95345b03eecbe3918487fc8bc8338a9a0ccb2ed141158df8f25f62f13ad80c60b04e5616989f6efec0fd27ab857eecc724f197759b7
