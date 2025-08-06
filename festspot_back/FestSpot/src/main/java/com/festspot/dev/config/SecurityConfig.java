@@ -51,6 +51,7 @@ public class SecurityConfig {
         // 모든 요청 허용
         http.authorizeHttpRequests(auth -> {
           auth.requestMatchers("/oauth2/**").permitAll();
+            auth.requestMatchers("/login/oauth2/code/**").permitAll();
             auth.requestMatchers("/api/auth/**").permitAll();
             auth.requestMatchers("/image/**").permitAll();
             auth.anyRequest().authenticated();
