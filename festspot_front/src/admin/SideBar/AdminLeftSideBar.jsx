@@ -44,8 +44,18 @@ function AdminLeftSideBar(props) {
             사용자 관리
           </Link>
           <Link
+            id="user"
+            to="/admin/user"
+            css={[
+              s.navItem,
+              location.pathname.slice(7) === "user" && s.activeNavItem,
+            ]}
+          >
+            사용자 등록 공연 정보 관리
+          </Link>
+          <Link
             id="config"
-            to="/admin/config"
+            to="/admin/user/performance"
             css={[
               s.navItem,
               location.pathname.slice(7) === "config" && s.activeNavItem,

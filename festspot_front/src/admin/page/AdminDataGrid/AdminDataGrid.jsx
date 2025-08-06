@@ -1,21 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { getPublicApiQuery } from "../../../querys/admin/getPublicApiQuery";
-import { RiEditBoxLine } from "react-icons/ri";
-import { IoTrashOutline } from "react-icons/io5";
-import useAdminPerformanceUpdateStore from "../../../stores/AdminPerformanceUpdateStore";
-import useAdminPerformanceUpdateModalStore from "../../../stores/AdminPerformanceUpdateModalStore";
+import Button from "@mui/material/Button";
+import { reqUploadPerformanceApi } from "../../../api/adminApi";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 function AdminDataGrid(props) {
-  const { setPerformanceToUpdate } = useAdminPerformanceUpdateStore();
-  const { setIsUpdate } = useAdminPerformanceUpdateModalStore();
-  const response = getPublicApiQuery(1, 20);
+  const page = useRef(1);
+  const [pages, setPages] = useState([1]);
+  const response = getPublicApiQuery(page.current, 20);
   const [rows, setRows] = useState([]);
   const columns = [
-    { field: "mt20id", headerName: "ID", width: 90 },
     {
       field: "poster",
       headerName: "포스터",
@@ -58,12 +56,6 @@ function AdminDataGrid(props) {
       editable: false,
     },
     {
-      field: "participant",
-      headerName: "참여자 수",
-      width: 100,
-      editable: false,
-    },
-    {
       field: "prfpdfrom",
       headerName: "공연 시작일",
       width: 100,
@@ -77,31 +69,69 @@ function AdminDataGrid(props) {
     },
     {
       field: "action",
-      headerName: "수정/삭제",
+      headerName: "등록",
       width: 100,
       editable: false,
       renderCell: (params) => (
         <div>
-          <RiEditBoxLine onClick={(e) => handleRowEditOnClick(e, params)} />
-          <IoTrashOutline onClick={(e) => handleRowDeleteOnClick(e, params)} />
+          <Button onClick={(e) => handleUploadButtonOnClick(e, params)}>
+            등록
+          </Button>
         </div>
       ),
     },
   ];
 
-  const handleRowEditOnClick = (e, params) => {
+  const handleUploadButtonOnClick = (e, params) => {
     // console.log(params.row);
-    setPerformanceToUpdate(params.row);
-    setIsUpdate();
+    reqUploadPerformanceApi(params.row.mt20id);
   };
 
-  const handleRowDeleteOnClick = (e, params) => {
-    // console.log(params.row.mt20id);
+  // 다음 페이지
+  // 다음 페이지가 불러온 적 없는 페이지면 API 요청 다시 보냄
+  const handlePageUpOnClick = (e) => {
+    if (pages.includes(page.current + 1)) {
+      page.current++;
+      return;
+    }
+    page.current++;
+    setPages([...pages, page.current]);
+    response.refetch();
   };
+
+  // 이전 페이지
+  const handlePageDownOnClick = (e) => {
+    if (page.current < 1) {
+      page.current = 1;
+      return;
+    }
+    page.current--;
+  };
+
+  // pages = 한 번이라도 본 적 있는 page 번호를 모아놓는 배열 상태
+  // 3페이지까지 봤으면 [1, 2, 3]
+  // useEffect(() => {
+
+  // }, [pages]);
 
   useEffect(() => {
-    setRows(response?.data);
-  }, [response?.data]);
+    if (!!response) {
+      setRows(response.data);
+    }
+  }, [response]);
+
+  useEffect(() => {
+    console.log(rows);
+  }, [rows]);
+  // const handleRowEditOnClick = (e, params) => {
+  //   console.log(params.row);
+  //   setPerformanceToUpdate(params.row);
+  //   setIsUpdate();
+  // };
+
+  // const handleRowDeleteOnClick = (e, params) => {
+  //   console.log(params.row.mt20id);
+  // };
 
   return (
     <div css={s.adminGridLayout}>
@@ -110,7 +140,7 @@ function AdminDataGrid(props) {
           width: "100%",
           maxWidth: "1400px",
           height: "100vh",
-          maxHeight: "800px",
+          maxHeight: "700px",
         }}
       >
         <DataGrid
@@ -128,7 +158,23 @@ function AdminDataGrid(props) {
           pageSizeOptions={[20]}
           checkboxSelection
           disableRowSelectionOnClick
+          hideFooter
         />
+        <div css={s.paginationButtonLayout}>
+          <Button
+            disabled={page < 2 ? true : false}
+            onClick={handlePageDownOnClick}
+          >
+            <FaChevronLeft />
+          </Button>
+          <div>
+            <p>{page.current}</p>
+          </div>
+          <Button onClick={handlePageUpOnClick}>
+            <FaChevronRight />
+          </Button>
+          <div>{pages}</div>
+        </div>
       </Box>
     </div>
   );

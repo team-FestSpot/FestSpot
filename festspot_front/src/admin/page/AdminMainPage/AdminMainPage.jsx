@@ -1,22 +1,13 @@
 import React, { useEffect } from "react";
-import AdminLeftSideBar from "../../sidebar/AdminLeftSideBar";
 import * as s from "./styles";
 import { IoSearch } from "react-icons/io5";
 import AdminDataGrid from "../AdminDataGrid/AdminDataGrid";
-import useAdminPerformanceUpdateModalStore from "../../../stores/AdminPerformanceUpdateModalStore";
-import AdminUpdateModal from "../AdminUpdateModal/AdminUpdateModal";
+import AdminLeftSideBar from "../../sidebar/AdminLeftSideBar";
 /** @jsxImportSource @emotion/react */
 
 function AdminMainPage(props) {
-  const { isUpdate } = useAdminPerformanceUpdateModalStore();
-
   return (
     <div css={s.layout}>
-      {!!isUpdate && (
-        <div css={s.updateModal}>
-          <AdminUpdateModal />
-        </div>
-      )}
       <div css={s.sidebarLayout}>
         <AdminLeftSideBar />
       </div>

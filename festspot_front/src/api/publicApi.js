@@ -6,3 +6,4 @@ export const reqPublicApi = (page, size) => {
     responseType: "text",
   });
 };
+

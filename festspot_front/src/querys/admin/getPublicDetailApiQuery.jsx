@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { reqPublicApi } from "../../api/publicApi";
+import { reqPublicDetailApi } from "../../api/publicDetailApi";
 import { convertXmlToJson } from "../../api/xml";
 
 export const getPublicApiQuery = (page, size) =>
   useQuery({
-    queryKey: ["publicApi"],
+    queryKey: ["publicDetailApi"],
     queryFn: async () => {
-      const xmlText = (await reqPublicApi(page, size)).data;
+      const xmlText = (await reqPublicDetailApi(page, size)).data;
       return (await convertXmlToJson(xmlText)).dbs.db;
     },
-    staleTime: 1000 * 60 * 5,
   });
