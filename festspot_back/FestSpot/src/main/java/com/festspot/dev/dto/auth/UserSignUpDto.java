@@ -23,7 +23,7 @@ public class UserSignUpDto {
     public User toUser(BCryptPasswordEncoder passwordEncoder) {
         return User.builder()
                 .userLoginId(userLoginId)
-                .userPassword(passwordEncoder.encode(userPassword))
+                .userLoginPassword(passwordEncoder.encode(userPassword))
                 .userNickName(userNickName)
                 .userEmail(userEmail)
                 .userProfileImgUrl("/profile/default.png")
