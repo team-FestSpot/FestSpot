@@ -4,10 +4,9 @@ import { convertXmlToJson } from "../../api/xml";
 
 export const getPublicApiQuery = (page, size) =>
   useQuery({
-    queryKey: ["publicApi"],
+    queryKey: ["publicApi", page],
     queryFn: async () => {
       const xmlText = (await reqPublicApi(page, size)).data;
       return (await convertXmlToJson(xmlText)).dbs.db;
     },
-    staleTime: 1000 * 60 * 5,
   });

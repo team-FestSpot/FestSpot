@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 export const layout = css`
   display: flex;
   flex-direction: row;
+  margin-bottom: 0;
 `;
 
 export const updateModal = css`
