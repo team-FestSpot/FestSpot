@@ -12,25 +12,6 @@ export const homeLayout = css`
   height: 85%;
 `;
 
-export const homeRightSide = css`
-  flex-grow: 1;
-  background-color: blue;
-`;
-
-export const performanceCardSection = css`
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
 export const homeLeftSide = css`
   @media (max-width: 1024px) {
     width: 100%;
@@ -44,6 +25,34 @@ export const homeLeftSide = css`
   padding: 5px;
 `;
 
-export const CalendarSection = css``;
+export const performanceCardSection = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 
-export const ComunitySection = css``;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const homeRightSide = css`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 55%;
+`;
+
+export const CalendarSection = css`
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+`;
+
+export const ComunitySection = css`
+  flex-grow: 1;
+`;
