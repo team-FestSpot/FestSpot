@@ -9,5 +9,21 @@
         insert into user_tb
         values (default, #{userLoginId}, #{userPassword}, #{userNickName}, #{userEmail}, #{userProfileImgUrl})
     </insert>
+    <select id="findByUserLoginId" resultType="com.festspot.dev.domain.user.User">
+        select
+            *
+        from
+            user_tb
+        where
+            user_login_id = #{userLoginId}
+    </select>
+    <select id="findByUserId" resultType="com.festspot.dev.domain.user.User">
+        select
+            *
+        from
+            user_tb
+        where
+            user_id = #{userId}
+    </select>
 
 </mapper>
