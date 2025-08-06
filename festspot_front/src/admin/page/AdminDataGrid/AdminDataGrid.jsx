@@ -7,12 +7,16 @@ import { getPublicApiQuery } from "../../../querys/admin/getPublicApiQuery";
 import Button from "@mui/material/Button";
 import { reqUploadPerformanceApi } from "../../../api/adminApi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
+import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
 
-function AdminDataGrid(props) {
-  const page = useRef(1);
-  const [pages, setPages] = useState([1]);
-  const response = getPublicApiQuery(page.current, 20);
-  const [rows, setRows] = useState([]);
+function AdminDataGrid({ searchInput }) {
+  const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
+  const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
+  const [pages, setPages] = useState([1]); // 한 번이라도 열었던 페이지 숫자들을 저장하는 배열 state (3페이지까지 봤으면 [1, 2, 3])
+  const response = getPublicApiQuery(pageParam, 20); // 공연예술통합전산망 api에 데이터 요청
+  // const [rows, setRows] = useState([]); // data grid에 표시할 데이터들 전부 저장해두는 배열 state <- 안씀
+  const { rows, setRows } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역 state
   const columns = [
     {
       field: "poster",
@@ -77,11 +81,12 @@ function AdminDataGrid(props) {
           <Button onClick={(e) => handleUploadButtonOnClick(e, params)}>
             등록
           </Button>
-        </div>
+        </div> // 맨 오른쪽 등록 버튼
       ),
     },
   ];
 
+  // 맨 오른쪽 등록 버튼 누르면 그 공연 db에 저장
   const handleUploadButtonOnClick = (e, params) => {
     // console.log(params.row);
     reqUploadPerformanceApi(params.row.mt20id);
@@ -90,22 +95,24 @@ function AdminDataGrid(props) {
   // 다음 페이지
   // 다음 페이지가 불러온 적 없는 페이지면 API 요청 다시 보냄
   const handlePageUpOnClick = (e) => {
-    if (pages.includes(page.current + 1)) {
-      page.current++;
+    if (pages.includes(pageParam)) {
+      setSearchParams({ page: pageParam + 1 });
       return;
     }
-    page.current++;
-    setPages([...pages, page.current]);
+    setSearchParams({ page: pageParam + 1 });
+    setPages([...pages, pageParam]);
     response.refetch();
   };
 
   // 이전 페이지
   const handlePageDownOnClick = (e) => {
-    if (page.current < 1) {
-      page.current = 1;
+    // 1페이지 아래로 내려가려고 하면 강제로 1페이지로 보냄
+    // 사실 1페이지 가면 이전 페이지 버튼 비활성화이긴 하지만 안전빵으로 넣음
+    if (pageParam < 1) {
+      setSearchParams({ page: 1 });
       return;
     }
-    page.current--;
+    setSearchParams({ page: pageParam - 1 });
   };
 
   // pages = 한 번이라도 본 적 있는 page 번호를 모아놓는 배열 상태
@@ -114,15 +121,19 @@ function AdminDataGrid(props) {
 
   // }, [pages]);
 
+  // api에 요청 보낸거 응답 오면 rows에 합침
+  // 그냥 response가 바뀔 때마다 동작하도록 하면 무한루프 돌아감
   useEffect(() => {
-    if (!!response) {
+    if (!response.isLoading) {
+      // setRows((prev) => [...prev, ...response.data]);
       setRows(response.data);
     }
-  }, [response]);
+  }, [response.isLoading]);
 
-  useEffect(() => {
-    console.log(rows);
-  }, [rows]);
+  // useEffect(() => {
+  //   console.log(rows);
+  // }, [rows]);
+
   // const handleRowEditOnClick = (e, params) => {
   //   console.log(params.row);
   //   setPerformanceToUpdate(params.row);
@@ -144,7 +155,7 @@ function AdminDataGrid(props) {
         }}
       >
         <DataGrid
-          rows={rows}
+          rows={rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)} // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
           getRowId={(row) => row.mt20id}
           rowHeight={200}
           columns={columns}
@@ -162,18 +173,17 @@ function AdminDataGrid(props) {
         />
         <div css={s.paginationButtonLayout}>
           <Button
-            disabled={page < 2 ? true : false}
+            disabled={pageParam < 2 ? true : false}
             onClick={handlePageDownOnClick}
           >
             <FaChevronLeft />
           </Button>
           <div>
-            <p>{page.current}</p>
+            <p>{pageParam}</p>
           </div>
           <Button onClick={handlePageUpOnClick}>
             <FaChevronRight />
           </Button>
-          <div>{pages}</div>
         </div>
       </Box>
     </div>
