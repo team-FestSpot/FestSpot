@@ -1,22 +1,24 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { getPublicApiQuery } from "../../../querys/admin/getPublicApiQuery";
 import Button from "@mui/material/Button";
-import { reqUploadPerformanceApi } from "../../../api/adminApi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
+import { reqPublicDetailUploadMutation } from "../../../querys/admin/reqPublicDetailUploadMutation";
 
 function AdminDataGrid({ searchInput }) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const [pages, setPages] = useState([1]); // 한 번이라도 열었던 페이지 숫자들을 저장하는 배열 state (3페이지까지 봤으면 [1, 2, 3])
   const response = getPublicApiQuery(pageParam, 20); // 공연예술통합전산망 api에 데이터 요청
-  // const [rows, setRows] = useState([]); // data grid에 표시할 데이터들 전부 저장해두는 배열 state <- 안씀
   const { rows, setRows } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역 state
+  const uploadMutation = reqPublicDetailUploadMutation(); // 등록 버튼 누르면 상세정보 받아서 백엔드에 전달하는 mutation
+  const gridRef = useGridApiRef();
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const columns = [
     {
       field: "poster",
@@ -78,7 +80,12 @@ function AdminDataGrid({ searchInput }) {
       editable: false,
       renderCell: (params) => (
         <div>
-          <Button onClick={(e) => handleUploadButtonOnClick(e, params)}>
+          {/* <Button onClick={(e) => handleUploadButtonOnClick(e, params)}> */}
+          <Button
+            onClick={(e) => {
+              uploadMutation.mutateAsync(params.row.mt20id); // 버튼 누르면 공연상세정보 받아와서 백엔드에 전달함
+            }}
+          >
             등록
           </Button>
         </div> // 맨 오른쪽 등록 버튼
@@ -86,10 +93,8 @@ function AdminDataGrid({ searchInput }) {
     },
   ];
 
-  // 맨 오른쪽 등록 버튼 누르면 그 공연 db에 저장
-  const handleUploadButtonOnClick = (e, params) => {
-    // console.log(params.row);
-    reqUploadPerformanceApi(params.row.mt20id);
+  const handleRowSelectionOnChange = (e) => {
+    console.log(e.ids);
   };
 
   // 다음 페이지
@@ -107,7 +112,7 @@ function AdminDataGrid({ searchInput }) {
   // 이전 페이지
   const handlePageDownOnClick = (e) => {
     // 1페이지 아래로 내려가려고 하면 강제로 1페이지로 보냄
-    // 사실 1페이지 가면 이전 페이지 버튼 비활성화이긴 하지만 안전빵으로 넣음
+    // 사실 1페이지 가면 이전 페이지 버튼 비활성화되게 해놨지만 안전빵으로 넣음
     if (pageParam < 1) {
       setSearchParams({ page: 1 });
       return;
@@ -115,34 +120,14 @@ function AdminDataGrid({ searchInput }) {
     setSearchParams({ page: pageParam - 1 });
   };
 
-  // pages = 한 번이라도 본 적 있는 page 번호를 모아놓는 배열 상태
-  // 3페이지까지 봤으면 [1, 2, 3]
-  // useEffect(() => {
-
-  // }, [pages]);
-
   // api에 요청 보낸거 응답 오면 rows에 합침
-  // 그냥 response가 바뀔 때마다 동작하도록 하면 무한루프 돌아감
+
   useEffect(() => {
     if (!response.isLoading) {
       // setRows((prev) => [...prev, ...response.data]);
       setRows(response.data);
     }
-  }, [response.isLoading]);
-
-  // useEffect(() => {
-  //   console.log(rows);
-  // }, [rows]);
-
-  // const handleRowEditOnClick = (e, params) => {
-  //   console.log(params.row);
-  //   setPerformanceToUpdate(params.row);
-  //   setIsUpdate();
-  // };
-
-  // const handleRowDeleteOnClick = (e, params) => {
-  //   console.log(params.row.mt20id);
-  // };
+  }, [response.isLoading]); // [response]로 해놓으면 무한루프 돌아감
 
   return (
     <div css={s.adminGridLayout}>
@@ -170,6 +155,8 @@ function AdminDataGrid({ searchInput }) {
           checkboxSelection
           disableRowSelectionOnClick
           hideFooter
+          apiRef={gridRef}
+          onRowSelectionModelChange={handleRowSelectionOnChange}
         />
         <div css={s.paginationButtonLayout}>
           <Button

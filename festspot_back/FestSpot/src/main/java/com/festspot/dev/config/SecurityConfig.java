@@ -1,0 +1,58 @@
+package com.festspot.dev.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOriginPattern(CorsConfiguration.ALL);
+        corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+        corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // 위에서 설정한게 default로 설정되어 있어서 그거 쓰겠다
+        http.cors(Customizer.withDefaults());
+        http.csrf(csrf -> csrf.disable());
+        http.formLogin(formLogin -> formLogin.disable());
+        // Restful API -> 무상태성 으로 설정
+        http.sessionManagement(
+                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // 모든 요청 허용
+        http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers("/oauth2/**").permitAll();
+            auth.requestMatchers("/login/oauth2/code/**").permitAll();
+            auth.requestMatchers("/api/auth/**").permitAll();
+            auth.requestMatchers("/image/**").permitAll();
+            auth.requestMatchers("/admin/**").permitAll();
+            auth.anyRequest().permitAll();
+        });
+
+        http.exceptionHandling(
+                handling -> handling.authenticationEntryPoint((request, response, authException) -> {
+                    authException.printStackTrace();
+                    response.setStatus(401);
+                }));
+
+        return http.build();
+    }
+}

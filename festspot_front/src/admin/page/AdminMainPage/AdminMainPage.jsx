@@ -3,11 +3,10 @@ import * as s from "./styles";
 import { IoSearch } from "react-icons/io5";
 import AdminDataGrid from "../AdminDataGrid/AdminDataGrid";
 import AdminLeftSideBar from "../../sidebar/AdminLeftSideBar";
-import { getPublicApiQuery } from "../../../querys/admin/getPublicApiQuery";
 /** @jsxImportSource @emotion/react */
 
 function AdminMainPage(props) {
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState({});
 
   const handleSearchInputOnKeyDown = (e) => {
     if (e.keyCode !== 13) {
@@ -36,6 +35,15 @@ function AdminMainPage(props) {
                   <input
                     type="text"
                     placeholder="공연/페스티벌명 검색"
+                    css={s.searchInput}
+                    onKeyDown={handleSearchInputOnKeyDown}
+                  />
+                </div>
+                <div css={s.searchInputLayout}>
+                  <IoSearch css={s.searchButton} />
+                  <input
+                    type="text"
+                    placeholder="공연장 검색"
                     css={s.searchInput}
                     onKeyDown={handleSearchInputOnKeyDown}
                   />
