@@ -43,15 +43,19 @@ export const performanceCardSection = css`
 export const homeRightSide = css`
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   width: 55%;
+  flex-grow: 1;
   padding-left: 10px;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 `;
 
 export const CalendarSection = css`
   display: flex;
-  flex-grow: 1;
   width: 100%;
+  height: fit-content;
 `;
 
 export const ComunitySection = css`
