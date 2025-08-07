@@ -40,12 +40,12 @@ function PerformanceCalendar() {
     }
 
     // 3개까지만 표시하고 이후는 숨김
-    if (eventRenderCount[dateKey] >= 2) {
+    if (eventRenderCount[dateKey] >= 3) {
       info.el.style.display = "none";
       return;
     }
 
-    console.log(eventRenderCount);
+    console.log(eventRenderCountRef);
     eventRenderCount[dateKey]++;
 
     if (isFestival) {
@@ -78,7 +78,7 @@ function PerformanceCalendar() {
           hendlePerformBoxStyle(info);
         }}
         datesSet={handleDateChange}
-        height={"auto"}
+        height={"100%"}
       ></FullCalendar>
     </div>
   );
