@@ -8,7 +8,6 @@ function MainLayout({ children }) {
   return (
     <div css={s.layout}>
       <UpperSideBar />
-      <PostSideBar />
       {children}
     </div>
   );
