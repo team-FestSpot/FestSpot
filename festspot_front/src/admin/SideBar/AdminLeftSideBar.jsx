@@ -14,8 +14,8 @@ function AdminLeftSideBar(props) {
         </header>
         <main>
           <Link
-            id="main"
-            to="/admin/main"
+            id="dashboard"
+            to="/admin/dashboard"
             css={[
               s.navItem,
               location.pathname.slice(7) === "main" && s.activeNavItem,
@@ -44,8 +44,8 @@ function AdminLeftSideBar(props) {
             사용자 관리
           </Link>
           <Link
-            id="user"
-            to="/admin/user"
+            id="userperformance"
+            to="/admin/userperformance"
             css={[
               s.navItem,
               location.pathname.slice(7) === "user" && s.activeNavItem,

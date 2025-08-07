@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.festspot.dev.mapper.AdminMapper">
+    <insert id="insert">
+        insert into performance_tb
+        values
+            (default,
+            #{performanceRegionId},
+            #{performanceApiId},
+            #{performanceTitle},
+            #{performancePosterUrl},
+            #{performanceStartDate},
+            #{performanceEndDate},
+            #{performanceVenue},
+            #{performanceStatus},
+            #{performanceLastModified},
+            #{isForeign},
+            #{isFestival},
+            #{updatedAt}
+        )
+    </insert>
+    <select id="getRegionCodeByRegionName" resultType="java.lang.Integer">
+        select
+            region_code
+        from
+            region_tb
+        where
+            region_name = #{regionName}
+    </select>
+    <select id="getStateCodeByState" resultType="java.lang.Integer">
+        select
+            performance_state_id
+        from
+            performance_state_tb
+        where
+            performance_state = #{status}
+    </select>
+</mapper>
