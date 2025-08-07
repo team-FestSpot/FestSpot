@@ -3,10 +3,17 @@ import * as s from "./styles";
 import { IoSearch } from "react-icons/io5";
 import AdminDataGrid from "../AdminDataGrid/AdminDataGrid";
 import AdminLeftSideBar from "../../sidebar/AdminLeftSideBar";
+import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
+import { reqPublicDetailUploadManyMutation } from "../../../querys/admin/reqPublicDetailUploadManyMutation";
+
+import Button from "@mui/material/Button";
+import Swal from "sweetalert2";
 /** @jsxImportSource @emotion/react */
 
 function AdminMainPage(props) {
   const [searchInput, setSearchInput] = useState({});
+  const { checkedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
+  const uploadManyMutation = reqPublicDetailUploadManyMutation();
 
   const handleSearchInputOnKeyDown = (e) => {
     if (e.keyCode !== 13) {
@@ -14,6 +21,18 @@ function AdminMainPage(props) {
     }
     setSearchInput(e.target.value);
   };
+
+  // const handleUploadManyWithoutCheckOnClick = () => {
+  //   if (checkedRows.length < 1) {
+  //     Swal.fire({
+  //       title: "1개 이상의 항목을 선택하세요.",
+  //       icon: "error",
+  //       showCloseButton: false,
+  //       showConfirmButton: false,
+  //       timer: 1500,
+  //     });
+  //   }
+  // };
 
   return (
     <div css={s.layout}>
@@ -49,13 +68,14 @@ function AdminMainPage(props) {
                   />
                 </div>
                 <div>
-                  <select name="" id="">
-                    <option value="">전체</option>
-                    <option value="category1">카테고리1</option>
-                    <option value="category2">카테고리2</option>
-                    <option value="category3">카테고리3</option>
-                  </select>
-                  <button>추가</button>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      uploadManyMutation.mutateAsync(checkedRows);
+                    }}
+                  >
+                    추가
+                  </Button>
                 </div>
               </div>
             </div>

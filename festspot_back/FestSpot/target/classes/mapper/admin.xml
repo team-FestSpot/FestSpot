@@ -3,10 +3,52 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.festspot.dev.mapper.AdminMapper">
-    <insert id="insert">
-        insert into performance_tb
-        values
-            (default,
+    <resultMap id="performanceMap" type="com.festspot.dev.domain.entity.Performance">
+        <id property="performanceId" column="performance_id" />
+        <result property="performanceRegionId" column="performance_region_id" />
+        <result property="performanceApiId" column="performance_api_id" />
+        <result property="performanceTitle" column="performance_title" />
+        <result property="performancePosterUrl" column="performance_poster_url" />
+        <result property="performanceStartDate" column="performance_start_date" />
+        <result property="performanceEndDate" column="performance_end_date" />
+        <result property="performanceVenue" column="performance_venue" />
+        <result property="performanceStatus" column="performance_status" />
+        <result property="performanceLastModified" column="performance_last_modified" />
+        <result property="isForeign" column="is_foreign" />
+        <result property="isFestival" column="is_festival" />
+        <result property="updatedAt" column="updated_at" />
+
+        <association property="region" resultMap="regionMap" />
+        <association property="performanceState" resultMap="performanceStateMap" />
+    </resultMap>
+
+    <resultMap id="regionMap" type="com.festspot.dev.domain.entity.Region">
+        <id property="regionId" column="region_id" />
+        <result property="regionCode" column="region_code" />
+        <result property="regionName" column="region_name" />
+    </resultMap>
+
+    <resultMap id="performanceStateMap" type="com.festspot.dev.domain.entity.PerformanceState">
+        <id property="performanceStateId" column="performance_state_id" />
+        <result property="performanceState" column="performance_state" />
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="performanceId">
+        insert ignore into performance_tb (
+            performance_region_id,
+            performance_api_id,
+            performance_title,
+            performance_poster_url,
+            performance_start_date,
+            performance_end_date,
+            performance_venue,
+            performance_status,
+            performance_last_modified,
+            is_foreign,
+            is_festival,
+            updated_at
+        )
+        values (
             #{performanceRegionId},
             #{performanceApiId},
             #{performanceTitle},
@@ -21,6 +63,39 @@
             #{updatedAt}
         )
     </insert>
+
+    <insert id="insertMany" parameterType="list" useGeneratedKeys="true" keyProperty="performanceId">
+        insert ignore into performance_tb (
+            performance_region_id,
+            performance_api_id,
+            performance_title,
+            performance_poster_url,
+            performance_start_date,
+            performance_end_date,
+            performance_venue,
+            performance_status,
+            performance_last_modified,
+            is_foreign,
+            is_festival,
+            updated_at
+        )
+        values
+            <foreach collection="list" item="performance" index="index" open="(" separator="," close=")">
+                #{performance.performanceRegionId},
+                #{performance.performanceApiId},
+                #{performance.performanceTitle},
+                #{performance.performancePosterUrl},
+                #{performance.performanceStartDate},
+                #{performance.performanceEndDate},
+                #{performance.performanceVenue},
+                #{performance.performanceStatus},
+                #{performance.performanceLastModified},
+                #{performance.isForeign},
+                #{performance.isFestival},
+                #{performance.updatedAt}
+            </foreach>
+    </insert>
+
     <select id="getRegionCodeByRegionName" resultType="java.lang.Integer">
         select
             region_code
@@ -29,12 +104,22 @@
         where
             region_name = #{regionName}
     </select>
+
     <select id="getStateCodeByState" resultType="java.lang.Integer">
         select
             performance_state_id
         from
             performance_state_tb
         where
-            performance_state = #{status}
+            performance_state = #{state}
+    </select>
+
+    <select id="findByPerformanceApiId" resultType="com.festspot.dev.domain.entity.Performance">
+        select
+            *
+        from
+            performance_tb
+        where
+            performance_api_id = #{performanceApiId}
     </select>
 </mapper>
