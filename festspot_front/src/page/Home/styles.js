@@ -19,10 +19,10 @@ export const homeLeftSide = css`
   }
 
   box-sizing: border-box;
-  border-right: 1px solid #dbdbdb;
+  box-shadow: inset -0.5px 0 0 #ccc;
   width: 45%;
   margin: 0;
-  padding: 5px;
+  padding-right: 10px;
 `;
 
 export const performanceCardSection = css`
@@ -45,6 +45,7 @@ export const homeRightSide = css`
   flex-direction: column;
   flex-grow: 1;
   width: 55%;
+  padding-left: 10px;
 `;
 
 export const CalendarSection = css`
