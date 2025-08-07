@@ -26,4 +26,7 @@ public class Performance {
     private Integer isForeign;
     private Integer isFestival;
     private LocalDateTime updatedAt;
+
+    private Region region;
+    private PerformanceState performanceState;
 }

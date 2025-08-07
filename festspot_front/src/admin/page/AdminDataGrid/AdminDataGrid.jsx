@@ -5,20 +5,22 @@ import Box from "@mui/material/Box";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { getPublicApiQuery } from "../../../querys/admin/getPublicApiQuery";
 import Button from "@mui/material/Button";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaRegEdit } from "react-icons/fa";
+
 import { useSearchParams } from "react-router-dom";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
+import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
 import { reqPublicDetailUploadMutation } from "../../../querys/admin/reqPublicDetailUploadMutation";
 
 function AdminDataGrid({ searchInput }) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
-  const [pages, setPages] = useState([1]); // 한 번이라도 열었던 페이지 숫자들을 저장하는 배열 state (3페이지까지 봤으면 [1, 2, 3])
+  const [pages, setPages] = useState([1]); // 한 번이라도 열었던 페이지 숫자들을 저장하는 상태 (3페이지까지 봤으면 [1, 2, 3])
   const response = getPublicApiQuery(pageParam, 20); // 공연예술통합전산망 api에 데이터 요청
-  const { rows, setRows } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역 state
+  const { rows, setRows } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
+  const { setCheckedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
   const uploadMutation = reqPublicDetailUploadMutation(); // 등록 버튼 누르면 상세정보 받아서 백엔드에 전달하는 mutation
   const gridRef = useGridApiRef();
-  const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const columns = [
     {
       field: "poster",
@@ -74,17 +76,30 @@ function AdminDataGrid({ searchInput }) {
       editable: false,
     },
     {
+      field: "edit",
+      headerName: "수정",
+      width: 100,
+      editable: false,
+      renderCell: (params) => (
+        <Button>
+          <FaRegEdit />
+        </Button> // 수정
+      ),
+    },
+    {
       field: "action",
       headerName: "등록",
       width: 100,
       editable: false,
       renderCell: (params) => (
         <div>
-          {/* <Button onClick={(e) => handleUploadButtonOnClick(e, params)}> */}
           <Button
-            onClick={(e) => {
-              uploadMutation.mutateAsync(params.row.mt20id); // 버튼 누르면 공연상세정보 받아와서 백엔드에 전달함
-            }}
+            onClick={
+              (e) => {
+                e.preventDefault();
+                uploadMutation.mutateAsync(params.row.mt20id);
+              } // 버튼 누르면 공연상세정보 받아와서 백엔드에 전달함
+            }
           >
             등록
           </Button>
@@ -94,7 +109,7 @@ function AdminDataGrid({ searchInput }) {
   ];
 
   const handleRowSelectionOnChange = (e) => {
-    console.log(e.ids);
+    setCheckedRows(e.ids);
   };
 
   // 다음 페이지
