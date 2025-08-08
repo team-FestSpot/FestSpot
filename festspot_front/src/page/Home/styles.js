@@ -55,9 +55,5 @@ export const homeRightSide = css`
 export const CalendarSection = css`
   display: flex;
   width: 100%;
-  height: fit-content;
-`;
-
-export const ComunitySection = css`
-  flex-grow: 1;
+  height: 100%;
 `;
