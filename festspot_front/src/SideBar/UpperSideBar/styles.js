@@ -4,7 +4,7 @@ export const modalContainer = css`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 48px;
+  padding: 12px 36px;
   background-color: #ffffff;
   border-bottom: 1px solid #e5e5e5;
   width: 100%;
@@ -15,6 +15,7 @@ export const modalContainer = css`
 
 export const logoSection = css`
   display: flex;
+  flex-grow: 1;
   align-items: center;
   gap: 8px;
 
@@ -31,10 +32,9 @@ export const logoSection = css`
 `;
 
 export const searchSection = css`
-  flex: 1;
   display: flex;
   justify-content: center;
-  max-width: 500px;
+  width: 82%;
   margin: 0 40px;
 `;
 
@@ -83,6 +83,8 @@ export const searchIcon = css`
 
 export const actionSection = css`
   display: flex;
+  flex-grow: 1;
+  height: 100%;
   align-items: center;
   gap: 16px;
 `;

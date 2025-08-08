@@ -2,9 +2,10 @@
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import * as s from "./styles";
 import React from "react";
+import { usePerformanceListQuery } from "../../querys/performance/usePerformanceListQuery";
+import { getDateDotForm } from "../../utils/getDateForm";
 
 function PerformanceCard({ performanceList }) {
-  console.log(performanceList);
   return (
     <ResponsiveMasonry
       style={{
@@ -30,31 +31,42 @@ function PerformanceCard({ performanceList }) {
         }}
         style={{}}
       >
-        {performanceList.map((performance) => (
-          <div>
-            <div css={s.performanceCard}>
-              <div css={s.posterContainer}>
-                <img src={performance.poster} />
-                <div css={s.dateBox}>
-                  {performance.prfpdfrom === performance.prfpdto ? (
-                    <p>{performance.prfpdfrom.slice(-5)}</p>
-                  ) : (
-                    <p>
-                      {performance.prfpdfrom.slice(-5)} ~
-                      {performance.prfpdto.slice(-5)}
-                    </p>
-                  )}
+        {!!performanceList.length &&
+          performanceList.map((performance) => (
+            <>
+              <div css={s.performanceCard}>
+                <div css={s.posterContainer}>
+                  <img src={performance.performancePosterUrl} />
+                  <div css={s.dateBox}>
+                    {performance.performanceStartDate ===
+                    performance.performanceEndDate ? (
+                      <p>
+                        {getDateDotForm(performance.performanceStartDate).slice(
+                          -5
+                        )}
+                      </p>
+                    ) : (
+                      <p>
+                        {getDateDotForm(performance.performanceStartDate).slice(
+                          -5
+                        )}{" "}
+                        ~
+                        {getDateDotForm(performance.performanceEndDate).slice(
+                          -5
+                        )}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div css={s.content}>
+                  <div>{performance.performanceVenue}</div>
+                  <div>
+                    <h3>{performance.performanceTitle}</h3>
+                  </div>
                 </div>
               </div>
-              <div css={s.content}>
-                <div>{performance.fcltynm}</div>
-                <div>
-                  <h3>{performance.prfnm}</h3>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+            </>
+          ))}
       </Masonry>
     </ResponsiveMasonry>
   );

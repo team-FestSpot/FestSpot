@@ -20,33 +20,33 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
-    private final OAuth2UserService oAuth2UserService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+  private final JwtFilter jwtFilter;
+  private final OAuth2UserService oAuth2UserService;
+  private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOriginPattern(CorsConfiguration.ALL);
-        corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
-        corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.addAllowedOriginPattern(CorsConfiguration.ALL);
+    corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+    corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfiguration);
+    return source;
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // 위에서 설정한게 default로 설정되어 있어서 그거 쓰겠다
-        http.cors(Customizer.withDefaults());
-        http.csrf(csrf -> csrf.disable());
-        http.formLogin(formLogin -> formLogin.disable());
-        // Restful API -> 무상태성 으로 설정
-        http.sessionManagement(
-            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    // 위에서 설정한게 default로 설정되어 있어서 그거 쓰겠다
+    http.cors(Customizer.withDefaults());
+    http.csrf(csrf -> csrf.disable());
+    http.formLogin(formLogin -> formLogin.disable());
+    // Restful API -> 무상태성 으로 설정
+    http.sessionManagement(
+        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         // 모든 요청 허용
         http.authorizeHttpRequests(auth -> {
@@ -58,21 +58,21 @@ public class SecurityConfig {
             auth.anyRequest().permitAll();
         });
 
-        http.exceptionHandling(
-            handling -> handling.authenticationEntryPoint((request, response, authException) -> {
-                authException.printStackTrace();
-                response.setStatus(401);
-            }));
+    http.exceptionHandling(
+        handling -> handling.authenticationEntryPoint((request, response, authException) -> {
+          authException.printStackTrace();
+          response.setStatus(401);
+        }));
 
-        http.oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                .successHandler(oAuth2SuccessHandler)
-                .failureHandler((request, response, exception) -> {
-                    System.out.println("oauth2 인증 실패");
-                    exception.printStackTrace();
-                })
-        );
+    http.oauth2Login(oauth2 -> oauth2
+        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+        .successHandler(oAuth2SuccessHandler)
+        .failureHandler((request, response, exception) -> {
+          System.out.println("oauth2 인증 실패");
+          exception.printStackTrace();
+        })
+    );
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

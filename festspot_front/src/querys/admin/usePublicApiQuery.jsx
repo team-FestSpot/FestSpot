@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { reqPublicApi } from "../../api/publicApi";
-import { convertXmlToJson } from "../../api/xml";
+import { convertXmlToJson } from "../../api/xmlToJson";
 
 export const usePublicApiQuery = (page, size) =>
   useQuery({

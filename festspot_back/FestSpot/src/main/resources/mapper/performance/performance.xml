@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.festspot.dev.domain.performance.PerformanceMapper">
+  <resultMap id="PerformanceMap" type="com.festspot.dev.domain.performance.Performance">
+    <id column="performance_id" property="performanceId" />
+    <result column="performance_region_id" property="performanceRegionId" />
+    <result column="performance_api_id" property="performanceApiId" />
+    <result column="performance_title" property="performanceTitle" />
+    <result column="performance_poster_url" property="performancePosterUrl" />
+    <result column="performance_start_date" property="performanceStartDate" />
+    <result column="performance_end_date" property="performanceEndDate" />
+    <result column="performance_venue" property="performanceVenue" />
+    <result column="performance_status" property="performanceStatus" />
+    <result column="performance_last_modified" property="performanceLastModified" />
+    <result column="is_foreign" property="isForeign" />
+    <result column="is_festival" property="isFestival" />
+    <result column="updated_at" property="updatedAt" />
+  </resultMap>
+
+  <select id="findAll" resultMap="PerformanceMap">
+    select
+      *
+    from
+      performance_tb
+  </select>
+  <select id="findByPerformanceApiId" resultMap="PerformanceMap">
+    select
+    *
+    from
+      performance_tb
+    where
+      performance_api_id = #{performanceApiId}
+  </select>
+  <select id="findById" resultMap="PerformanceMap">
+    select
+    *
+    from
+      performance_tb
+    where
+      performance_id = #{performanceId}
+  </select>
+</mapper>
