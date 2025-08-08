@@ -1,6 +1,6 @@
 import React from "react";
 
-export const getDateForm = (localDate) => {
+export const getDateDashForm = (localDate) => {
   if (localDate.includes(".")) {
     return localDate.replace(/\./g, "-");
   }
@@ -9,7 +9,7 @@ export const getDateForm = (localDate) => {
   ${localDate.slice(6, 8)}`;
 };
 
-export const getTommorowDateForm = (localDate) => {
+export const getTommorowDateDashForm = (localDate) => {
   let formatted;
 
   if (localDate.includes(".")) {
@@ -26,4 +26,13 @@ export const getTommorowDateForm = (localDate) => {
   const day = String(date.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
+};
+
+export const getDateDotForm = (localDate) => {
+  if (localDate.includes("-")) {
+    return localDate.replace(/\-/g, ".");
+  }
+  return `${localDate.slice(0, 4)}.
+  ${localDate.slice(4, 6)}.
+  ${localDate.slice(6, 8)}`;
 };

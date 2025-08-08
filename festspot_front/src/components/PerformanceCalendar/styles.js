@@ -44,7 +44,7 @@ export const calendarContainer2 = css`
   .fc-daygrid-day-top {
     font-size: 12px;
     & > a {
-      padding: 0 4px;
+      padding: 2px 4px;
     }
   }
 
