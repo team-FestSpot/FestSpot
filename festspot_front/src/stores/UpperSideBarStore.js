@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 const useUpperSideBarStore = create((set) => ({
   isMenuOpen: false,
-  setOpenDetailMenus: () => set((state) => ({ isMenuOpen: !state.isMenuOpen })),
+  setOpenDetailMenus: () => set((prev) => ({ isMenuOpen: !prev.isMenuOpen })),
   closeMenu: () => set(() => ({ isMenuOpen: false })),
 }));
 
