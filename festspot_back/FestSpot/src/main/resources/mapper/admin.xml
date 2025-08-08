@@ -64,7 +64,7 @@
         )
     </insert>
 
-    <insert id="insertMany" parameterType="list" useGeneratedKeys="true" keyProperty="performanceId">
+    <insert id="insertMany" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="performanceId">
         insert ignore into performance_tb (
             performance_region_id,
             performance_api_id,
@@ -80,8 +80,8 @@
             updated_at
         )
         values
-            <foreach collection="list" item="performance" index="index" open="(" separator="," close=")">
-                #{performance.performanceRegionId},
+            <foreach collection="list" item="performance" index="index" separator=",">
+                (#{performance.performanceRegionId},
                 #{performance.performanceApiId},
                 #{performance.performanceTitle},
                 #{performance.performancePosterUrl},
@@ -92,7 +92,7 @@
                 #{performance.performanceLastModified},
                 #{performance.isForeign},
                 #{performance.isFestival},
-                #{performance.updatedAt}
+                #{performance.updatedAt})
             </foreach>
     </insert>
 
