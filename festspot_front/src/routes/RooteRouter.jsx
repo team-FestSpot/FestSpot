@@ -3,14 +3,13 @@ import { Route, Routes } from "react-router-dom";
 import DashBoard from "../admin/page/DashBoard/DashBoard";
 import AuthRouter from "./AuthRouter";
 import MainLayout from "../components/layout/MainLayout/MainLayout";
-import FestivalBoard from "../page/Auth/Board/FestivalBoard";
 
 function RooteRouter(props) {
   return (
     <MainLayout>
       <Routes>
-        <Route path="/auth/*" element={<AuthRouter />} />
-        <Route path="/" element={<FestivalBoard />} />
+        <Route path="/dash" element={<DashBoard />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </MainLayout>
   );
