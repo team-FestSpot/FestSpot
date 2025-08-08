@@ -12,7 +12,9 @@
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",
     "@fullcalendar/daygrid": "^6.1.18",
+    "@fullcalendar/interaction": "^6.1.18",
     "@fullcalendar/react": "^6.1.18",
+    "@tippyjs/react": "^4.2.6",
     "fast-xml-parser": "^5.2.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
