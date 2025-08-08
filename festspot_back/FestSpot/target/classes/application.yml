@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://mysql.czyymmc26gs1.ap-northeast-2.rds.amazonaws.com:3306/festspot_db
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: admin
-    password: 1Q2w3e4r!
+    password: FestSpot!226$
   servlet:
     multipart:
       max-file-size: 100MB
@@ -61,4 +61,4 @@ mybatis:
   type-aliases-package: com.festspot.dev.domain.entity
 
 jwt:
-  secret: 1968b508680fb182cb5ce95345b03eecbe3918487fc8bc8338a9a0ccb2ed141158df8f25f62f13ad80c60b04e5616989f6efec0fd27ab857eecc724f197759b7
+  secret: 3f7f10f708f42014ca2aaeb995d18a2cd294a6e391965cc27258c41953bb1419146540df87698c1aad4d07f4775df24dedfdb4bad4af2eb7b084c1e00f485dbf
