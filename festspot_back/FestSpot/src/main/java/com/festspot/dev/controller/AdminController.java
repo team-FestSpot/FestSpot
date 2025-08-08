@@ -30,7 +30,7 @@ public class AdminController {
 
     @PostMapping("/uploads")
     public ResponseEntity<?> uploadManyPerformances(@RequestBody List<AdminUploadPerformanceReqDto> dtos) {
-        Integer result = adminService.uploadManyPerformance(dtos);
+        int result = adminService.uploadManyPerformance(dtos);
         if(result < 1) {
             return ResponseEntity.badRequest().body(HttpStatus.BAD_REQUEST);
         }
