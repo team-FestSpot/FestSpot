@@ -7,21 +7,10 @@ export const modalContainer = css`
   padding: 12px 48px;
   background-color: #ffffff;
   border-bottom: 1px solid #e5e5e5;
-  width: 100vw;
+  width: 100%;
   height: 50px;
-  position: fixed;
-  top: 0;
-  left: 0;
   z-index: 1000;
   box-sizing: border-box;
-
-  @media (max-width: 768px) {
-    padding: 12px 16px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 10px 12px;
-  }
 `;
 
 export const logoSection = css`
@@ -47,15 +36,6 @@ export const searchSection = css`
   justify-content: center;
   max-width: 500px;
   margin: 0 40px;
-
-  @media (max-width: 768px) {
-    margin: 0 20px;
-    max-width: 300px;
-  }
-
-  @media (max-width: 480px) {
-    margin: 0 12px;
-  }
 `;
 
 export const searchContainer = css`
@@ -84,21 +64,11 @@ export const searchInput = css`
   &::placeholder {
     color: #9ca3af;
   }
-
-  @media (max-width: 768px) {
-    font-size: 13px;
-    height: 38px;
-  }
-
-  @media (max-width: 480px) {
-    height: 36px;
-    padding: 0 16px;
-  }
 `;
 
 export const searchIcon = css`
   position: absolute;
-  right: 15px;
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
   color: #6b7280;
@@ -115,10 +85,6 @@ export const actionSection = css`
   display: flex;
   align-items: center;
   gap: 16px;
-
-  @media (max-width: 480px) {
-    gap: 12px;
-  }
 `;
 
 export const loginButton = css`
@@ -137,17 +103,6 @@ export const loginButton = css`
     background-color: #e55a42;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(255, 107, 74, 0.3);
-  }
-
-  @media (max-width: 768px) {
-    padding: 8px 16px;
-    font-size: 13px;
-    min-width: 60px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 7px 14px;
-    font-size: 12px;
   }
 `;
 
