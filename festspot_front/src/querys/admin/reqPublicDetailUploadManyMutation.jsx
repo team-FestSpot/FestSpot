@@ -2,12 +2,14 @@ import { useMutation } from "@tanstack/react-query";
 import { reqPublicDetailApi } from "../../api/publicDetailApi";
 import { convertXmlToJson } from "../../api/xml";
 import { reqUploadManyPerformanceApi } from "../../api/adminApi";
+import Swal from "sweetalert2";
 
 // 관리자 대시보드 왼쪽 체크박스에 체크한 다음 헤더에 있는 추가 버튼 누르면 체크한 공연정보들 전부 상세정보 api로 가져와서 백엔드에 전달
 // 목록 왼쪽 체크박스에 체크한 공연 정보 전부 db에 한번에 넣을때 사용
 export const reqPublicDetailUploadManyMutation = () =>
   useMutation({
     mutationFn: async (performanceApiIds) => {
+      // 아무것도 체크 안 하고 추가 버튼 누르면 경고창만 띄움
       if (performanceApiIds.length < 1) {
         await Swal.fire({
           title: "1개 이상의 항목을 선택하세요.",
@@ -34,9 +36,8 @@ export const reqPublicDetailUploadManyMutation = () =>
       );
       // Promise.all 해줘서 배열에 담겨서 오도록 함.
       // 필요한 데이터는 각 객체의 dbs.db에 들어있음
-      const promiseJsonDatas = await Promise.all(jsonDatas).then((result) =>
-        result.map((jsonData) => jsonData.dbs.db)
-      );
+      const promiseJsonDatas = await Promise.all(jsonDatas);
+      result.map((jsonData) => jsonData.dbs.db);
 
       return reqUploadManyPerformanceApi(promiseJsonDatas);
     },

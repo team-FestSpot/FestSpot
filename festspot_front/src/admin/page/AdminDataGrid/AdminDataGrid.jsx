@@ -3,20 +3,21 @@ import * as s from "./styles";
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
-import { getPublicApiQuery } from "../../../querys/admin/getPublicApiQuery";
 import Button from "@mui/material/Button";
-import { FaChevronLeft, FaChevronRight, FaRegEdit } from "react-icons/fa";
+import { FaRegEdit } from "react-icons/fa";
 
 import { useSearchParams } from "react-router-dom";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
 import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
 import { reqPublicDetailUploadMutation } from "../../../querys/admin/reqPublicDetailUploadMutation";
+import Pagination from "@mui/material/Pagination";
+import { usePublicApiAllQuery } from "../../../querys/admin/usePublicApiAllQuery";
 
-function AdminDataGrid({ searchInput }) {
+function AdminDataGrid(props) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
-  const [pages, setPages] = useState([1]); // 한 번이라도 열었던 페이지 숫자들을 저장하는 상태 (3페이지까지 봤으면 [1, 2, 3])
-  const response = getPublicApiQuery(pageParam, 20); // 공연예술통합전산망 api에 데이터 요청
+  const [paginationList, setPaginationList] = useState([]);
+  const { data, isLoading } = usePublicApiAllQuery(); // 공연예술통합전산망 api에 데이터 요청
   const { rows, setRows } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
   const { setCheckedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
   const uploadMutation = reqPublicDetailUploadMutation(); // 등록 버튼 누르면 상세정보 받아서 백엔드에 전달하는 mutation
@@ -112,37 +113,45 @@ function AdminDataGrid({ searchInput }) {
     setCheckedRows(e.ids);
   };
 
-  // 다음 페이지
-  // 다음 페이지가 불러온 적 없는 페이지면 API 요청 다시 보냄
-  const handlePageUpOnClick = (e) => {
-    if (pages.includes(pageParam)) {
-      setSearchParams({ page: pageParam + 1 });
-      return;
-    }
-    setSearchParams({ page: pageParam + 1 });
-    setPages([...pages, pageParam]);
-    response.refetch();
+  const handlePaginationOnChange = (e) => {
+    console.log(e.target.innerText);
+    setSearchParams({
+      page: e.target.innerText,
+    });
   };
-
-  // 이전 페이지
-  const handlePageDownOnClick = (e) => {
-    // 1페이지 아래로 내려가려고 하면 강제로 1페이지로 보냄
-    // 사실 1페이지 가면 이전 페이지 버튼 비활성화되게 해놨지만 안전빵으로 넣음
-    if (pageParam < 1) {
-      setSearchParams({ page: 1 });
-      return;
-    }
-    setSearchParams({ page: pageParam - 1 });
-  };
-
-  // api에 요청 보낸거 응답 오면 rows에 합침
 
   useEffect(() => {
-    if (!response.isLoading) {
-      // setRows((prev) => [...prev, ...response.data]);
-      setRows(response.data);
+    setSearchParams({
+      page: 1,
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(data);
+    if (
+      !isLoading &&
+      Array.isArray(data) &&
+      data.length > 0 &&
+      rows.length < 1
+    ) {
+      setRows(data);
     }
-  }, [response.isLoading]); // [response]로 해놓으면 무한루프 돌아감
+  }, [isLoading]);
+
+  // 페이지네이션 번호 구해주는 함수
+  // rows가 1~20개면 [1], 21~40개면 [1, 2], 41~60개면 [1, 2, 3], 61~80개면 [1, 2, 3, 4], ...
+  const getPaginationList = (total) => {
+    if (total < 1) return [];
+    // 구간 번호 = (n - 1) / 20 올림
+    const section = Math.ceil(total / 20);
+    // 1부터 section까지 배열 생성
+    return Array.from({ length: section }, (_, i) => i + 1);
+  };
+
+  useEffect(() => {
+    console.log(rows);
+    setPaginationList(getPaginationList(rows.length));
+  }, [rows]);
 
   return (
     <div css={s.adminGridLayout}>
@@ -174,7 +183,13 @@ function AdminDataGrid({ searchInput }) {
           onRowSelectionModelChange={handleRowSelectionOnChange}
         />
         <div css={s.paginationButtonLayout}>
-          <Button
+          <Pagination
+            count={paginationList.length}
+            onChange={handlePaginationOnChange}
+            hideNextButton
+            hidePrevButton
+          />
+          {/* <Button
             disabled={pageParam < 2 ? true : false}
             onClick={handlePageDownOnClick}
           >
@@ -185,7 +200,7 @@ function AdminDataGrid({ searchInput }) {
           </div>
           <Button onClick={handlePageUpOnClick}>
             <FaChevronRight />
-          </Button>
+          </Button> */}
         </div>
       </Box>
     </div>

@@ -5,6 +5,7 @@ import { create } from "zustand";
 const useAdminPerformanceRowsStore = create((set) => ({
   rows: [],
   setRows: (newRows) => set((state) => ({ rows: [...state.rows, ...newRows] })),
+  setRowsEmpty: () => set(() => ({ rows: [] })),
 }));
 
 export default useAdminPerformanceRowsStore;

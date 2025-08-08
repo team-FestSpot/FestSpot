@@ -10,6 +10,5 @@ export const paginationButtonLayout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 300px;
-  height: 50px;
+  margin-top: 20px;
 `;
