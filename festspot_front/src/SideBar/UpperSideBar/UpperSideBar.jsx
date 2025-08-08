@@ -8,8 +8,7 @@ import UpperSideBarModal from "./UpperSideBarModal/UpperSideBarModal";
 import useUpperSideBarStore from "../../stores/upperSideBarStore";
 
 function UpperSideBar(props) {
-  const { openDetailMenus, setOpenDetailMenus, closeMenu } =
-    useUpperSideBarStore();
+  const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
 
   const handleMenuOnClick = () => {
     setOpenDetailMenus();
@@ -20,14 +19,14 @@ function UpperSideBar(props) {
   };
 
   return (
-    <div css={s.layout}>
+    <div>
       <div css={s.modalContainer}>
         <div css={s.logoSection}>
           <div>
-            <img src="src\SideBar\UpperSideBar\FestSpotLogoImg.png" />
+            <img src="src\SideBar\UpperSideBar\UpperSideBarModal\img\FestSpotLogoImg.png" />
           </div>
           <div>
-            <img src="src\SideBar\UpperSideBar\FestSpotLogoText.png" />
+            <img src="src\SideBar\UpperSideBar\UpperSideBarModal\img\FestSpotLogoText.png" />
           </div>
         </div>
         <div css={s.searchSection}>
@@ -41,11 +40,13 @@ function UpperSideBar(props) {
           </div>
         </div>
         <div css={s.actionSection}>
-          <button css={s.loginButton}>Login</button>
+          <div>
+            <button css={s.loginButton}>Login</button>
+          </div>
           <GiHamburgerMenu css={s.menuIcon} onClick={handleMenuOnClick} />
         </div>
       </div>
-      {openDetailMenus && (
+      {isMenuOpen && (
         <div>
           <UpperSideBarModal onClose={handleModalOnClose} />
         </div>
