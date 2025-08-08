@@ -8,6 +8,7 @@ function RooteRouter(props) {
   return (
     <MainLayout>
       <Routes>
+        <Route path="/auth/*" element={<AuthRouter />} />
         <Route path="/dash" element={<DashBoard />} />
         <Route path="/" element={<Home />} />
       </Routes>
