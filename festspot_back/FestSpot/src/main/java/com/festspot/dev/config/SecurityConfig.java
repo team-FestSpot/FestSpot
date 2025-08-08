@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -44,7 +43,7 @@ public class SecurityConfig {
         http.formLogin(formLogin -> formLogin.disable());
         // Restful API -> 무상태성 으로 설정
         http.sessionManagement(
-                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -59,10 +58,10 @@ public class SecurityConfig {
         });
 
         http.exceptionHandling(
-                handling -> handling.authenticationEntryPoint((request, response, authException) -> {
-                    authException.printStackTrace();
-                    response.setStatus(401);
-                }));
+            handling -> handling.authenticationEntryPoint((request, response, authException) -> {
+                authException.printStackTrace();
+                response.setStatus(401);
+            }));
 
         http.oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
