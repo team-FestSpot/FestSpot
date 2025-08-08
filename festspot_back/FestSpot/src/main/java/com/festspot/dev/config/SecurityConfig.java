@@ -1,12 +1,17 @@
 package com.festspot.dev.config;
 
+import com.festspot.dev.security.handler.OAuth2SuccessHandler;
+import com.festspot.dev.security.jwt.filter.JwtFilter;
+import com.festspot.dev.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -14,6 +19,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
+    private final OAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -37,13 +46,15 @@ public class SecurityConfig {
         http.sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
         // 모든 요청 허용
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/oauth2/**").permitAll();
-            auth.requestMatchers("/login/oauth2/code/**").permitAll();
-            auth.requestMatchers("/api/auth/**").permitAll();
-            auth.requestMatchers("/image/**").permitAll();
-            auth.requestMatchers("/admin/**").permitAll();
+//          auth.requestMatchers("/oauth2/**").permitAll();
+//            auth.requestMatchers("/login/oauth2/code/**").permitAll();
+//            auth.requestMatchers("/api/auth/**").permitAll();
+//            auth.requestMatchers("/api/board/**").permitAll();
+//            auth.requestMatchers("/image/**").permitAll();
             auth.anyRequest().permitAll();
         });
 
@@ -52,6 +63,15 @@ public class SecurityConfig {
                     authException.printStackTrace();
                     response.setStatus(401);
                 }));
+
+        http.oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                .successHandler(oAuth2SuccessHandler)
+                .failureHandler((request, response, exception) -> {
+                    System.out.println("oauth2 인증 실패");
+                    exception.printStackTrace();
+                })
+        );
 
         return http.build();
     }
