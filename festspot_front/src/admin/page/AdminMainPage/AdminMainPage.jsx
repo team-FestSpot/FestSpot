@@ -5,34 +5,35 @@ import AdminDataGrid from "../AdminDataGrid/AdminDataGrid";
 import AdminLeftSideBar from "../../sidebar/AdminLeftSideBar";
 import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
 import { reqPublicDetailUploadManyMutation } from "../../../querys/admin/reqPublicDetailUploadManyMutation";
+import { getPublicApiSearchResultMutation } from "../../../querys/admin/usePublicApiSearchResultMutation";
 
 import Button from "@mui/material/Button";
-import Swal from "sweetalert2";
+import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
 /** @jsxImportSource @emotion/react */
 
 function AdminMainPage(props) {
-  const [searchInput, setSearchInput] = useState({});
+  const [searchInput, setSearchInput] = useState({
+    name: "",
+    venue: "",
+  });
+
   const { checkedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
   const uploadManyMutation = reqPublicDetailUploadManyMutation();
-
-  const handleSearchInputOnKeyDown = (e) => {
-    if (e.keyCode !== 13) {
-      return;
-    }
-    setSearchInput(e.target.value);
+  const searchMutation = getPublicApiSearchResultMutation();
+  const { setRows, setRowsEmpty } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
+  let searchMutationParams = {
+    page: 1,
+    size: 100,
+    name: searchInput.name,
+    venue: searchInput.venue,
   };
 
-  // const handleUploadManyWithoutCheckOnClick = () => {
-  //   if (checkedRows.length < 1) {
-  //     Swal.fire({
-  //       title: "1개 이상의 항목을 선택하세요.",
-  //       icon: "error",
-  //       showCloseButton: false,
-  //       showConfirmButton: false,
-  //       timer: 1500,
-  //     });
-  //   }
-  // };
+  const handleSearchInputOnChange = (e) => {
+    setSearchInput({
+      ...searchInput,
+      [e.target.id]: e.target.value,
+    });
+  };
 
   return (
     <div css={s.layout}>
@@ -50,22 +51,48 @@ function AdminMainPage(props) {
             <div>
               <div css={s.searchLayout}>
                 <div css={s.searchInputLayout}>
-                  <IoSearch css={s.searchButton} />
+                  <div css={s.searchButton}>
+                    <IoSearch />
+                  </div>
                   <input
+                    id="name"
                     type="text"
                     placeholder="공연/페스티벌명 검색"
                     css={s.searchInput}
-                    onKeyDown={handleSearchInputOnKeyDown}
+                    onChange={handleSearchInputOnChange}
                   />
                 </div>
                 <div css={s.searchInputLayout}>
-                  <IoSearch css={s.searchButton} />
+                  <div css={s.searchButton}>
+                    <IoSearch />
+                  </div>
                   <input
+                    id="venue"
                     type="text"
                     placeholder="공연장 검색"
                     css={s.searchInput}
-                    onKeyDown={handleSearchInputOnKeyDown}
+                    onChange={handleSearchInputOnChange}
                   />
+                </div>
+                <div>
+                  <Button
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      setRowsEmpty();
+                      while (
+                        !!(await searchMutation.mutateAsync(
+                          searchMutationParams
+                        ))
+                      ) {
+                        await searchMutation
+                          .mutateAsync(searchMutationParams)
+                          .then((result) => setRows(result));
+                        searchMutationParams.page++;
+                      }
+                    }}
+                  >
+                    검색
+                  </Button>
                 </div>
                 <div>
                   <Button

@@ -47,7 +47,8 @@ export const searchInputLayout = css`
 
 export const searchButton = css`
   display: flex;
-  margin: 0 10px;
+  width: 30px;
+  background-color: transparent;
 `;
 
 export const searchInput = css`
