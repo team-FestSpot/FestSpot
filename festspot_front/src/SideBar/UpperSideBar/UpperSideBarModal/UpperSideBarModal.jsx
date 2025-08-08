@@ -1,13 +1,12 @@
 import React from "react";
-import UpperSideBarModalList from "./UpperSideBarModalList/UpperSideBarModalList";
 import { IoClose } from "react-icons/io5";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import { css } from "@emotion/react";
+import { Link } from "react-router-dom";
 import useUpperSideBarStore from "../../../stores/upperSideBarStore";
 
 function UpperSideBarModal(props) {
-  const { openDetailMenus, closeMenu } = useUpperSideBarStore();
+  const { isMenuOpen, closeMenu } = useUpperSideBarStore();
 
   const modalMenus = [
     {
@@ -45,19 +44,40 @@ function UpperSideBarModal(props) {
 
   return (
     <div>
-      <div css={() => s.modalContainer(openDetailMenus)}>
+      <div css={() => s.modalContainer(isMenuOpen)}>
         <div css={s.closeButton}>
           <IoClose onClick={handleCloseOnClick} />
         </div>
         <div css={s.modalUserInfo}>
-          <img src="src\SideBar\UpperSideBar\FestSpotLogoImg.png" alt="" />
-          <div>nickname</div>
-        </div>
-        {modalMenus.map((modalMenu, index) => (
-          <div key={index} css={s.modalMinorCategory}>
-            <UpperSideBarModalList props={modalMenu} />
+          <img src="로고 이미지" alt="" />
+          <Link css={s.username}>nickname</Link>
+          <div css={s.logoutContainer}>
+            <Link css={s.logout}>로그아웃</Link>
           </div>
-        ))}
+        </div>
+        {modalMenus.map((modalMenu, index) => {
+          const major = modalMenu.majorCategory;
+          const minors = modalMenu.minorCategory;
+
+          return (
+            <div key={index} css={s.modalMinorCategory}>
+              <div css={s.container}>
+                <div css={s.majorCategory}>
+                  <a href={major.link} css={s.majorLink}>
+                    {major.content}
+                  </a>
+                </div>
+                <div css={s.minorCategoryContainer}>
+                  {minors.map((minor, index) => (
+                    <a key={index} href={minor.link} css={s.minorLink}>
+                      {minor.content}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
