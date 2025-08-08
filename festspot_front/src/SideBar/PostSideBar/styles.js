@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 
 export const mainContainer = css`
+  flex-direction: column;
   max-width: 1200px;
   margin: 0 auto;
   padding: 32px 16px;
