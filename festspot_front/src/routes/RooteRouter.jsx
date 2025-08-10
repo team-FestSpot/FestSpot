@@ -1,15 +1,17 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import DashBoard from "../admin/page/DashBoard/DashBoard";
 import AuthRouter from "./AuthRouter";
 import MainLayout from "../components/layout/MainLayout/MainLayout";
+import Home from "../page/Home/Home";
+import DashBoard from "../page/admin/DashBoard/DashBoard";
 
 function RooteRouter(props) {
   return (
     <MainLayout>
       <Routes>
         <Route path="/auth/*" element={<AuthRouter />} />
-        <Route path="/" element={<DashBoard />} />
+        <Route path="/dash" element={<DashBoard />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </MainLayout>
   );

@@ -160,4 +160,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/react,windows,intellij
 
 #db secret
-festspot_back/FestSpot/src/main/resources/application.yml
+application.yml
