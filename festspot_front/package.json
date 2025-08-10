@@ -10,18 +10,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.18",
+    "@fullcalendar/daygrid": "^6.1.18",
+    "@fullcalendar/interaction": "^6.1.18",
+    "@fullcalendar/react": "^6.1.18",
+    "@tippyjs/react": "^4.2.6",
     "fast-xml-parser": "^5.2.5",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-masonry-css": "^1.0.16",
+    "react-responsive-masonry": "^2.7.1",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@eslint/js": "^9.30.1",
-    "@fullcalendar/core": "^6.1.18",
-    "@fullcalendar/daygrid": "^6.1.18",
-    "@fullcalendar/react": "^6.1.18",
     "@mui/material": "^7.2.0",
     "@mui/x-data-grid": "^8.9.2",
     "@tanstack/react-query": "^5.84.0",

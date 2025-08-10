@@ -1,13 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import UpperSideBar from "../../../SideBar/UpperSideBar/UpperSideBar";
 import * as s from "./styles";
-import React from "react";
 
 function MainLayout({ children }) {
   return (
     <div css={s.layout}>
       <UpperSideBar />
-      {children}
+      <div css={s.container}>
+        <div css={s.children}>{children}</div>
+      </div>
     </div>
   );
 }
