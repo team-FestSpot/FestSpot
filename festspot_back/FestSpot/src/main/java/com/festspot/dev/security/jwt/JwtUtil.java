@@ -23,8 +23,8 @@ public class JwtUtil {
 
   public String generateAccessToken(User user) {
     return Jwts.builder()
-        .subject("FestSpot")
-        .issuer("team_FestSpot")
+        .subject("FestSpot_access_token")
+        .issuer("team_festspot")
         .expiration(new Date(new Date().getTime() + EXPIRED_TIME))
         .issuedAt(new Date())
         .claim("userId", user.getUserId())
