@@ -12,17 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-<<<<<<< HEAD
-  private Integer userId;
-  private String userLoginId;
-  @JsonIgnore
-  private String userLoginPassword;
-  private String userEmail;
-  private String userNickName;
-  private String userProfileImgUrl;
-  private LocalDateTime createdAt;
-
-=======
     private Integer userId;
     private String userLoginId;
     @JsonIgnore
@@ -33,5 +22,4 @@ public class User {
     private LocalDateTime createdAt;
     private String provider;
     private String providerId;
->>>>>>> main
 }

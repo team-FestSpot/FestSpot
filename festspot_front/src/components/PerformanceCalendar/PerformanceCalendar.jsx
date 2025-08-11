@@ -4,7 +4,6 @@ import React, { useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import ko from "@fullcalendar/core/locales/ko";
-import tippy from "tippy.js";
 import interactionPlugin from "@fullcalendar/interaction";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
@@ -13,21 +12,30 @@ import ReactDOM from "react-dom/client";
 import { css, Global } from "@emotion/react";
 import { performanceEventTippy } from "../tippy/performanceEventTippy";
 import { dayClickTippy } from "../tippy/dayClickTippy";
+import { getTommorowDateDashForm } from "../../utils/getDateForm";
 
 function PerformanceCalendar({ performanceList }) {
+  console.log(performanceList);
+
   const setPerformanceEvents = (e) => {
     return performanceList.map((performance) =>
       performance.performanceStartDate === performance.performanceEndDate
         ? {
             title: performance.performanceTitle,
             start: performance.performanceStartDate,
+
+            performanceCast: performance.performanceCast,
+            performanceVenue: performance.performanceVenue,
             isFestival: performance.isFestival,
             isForeign: performance.isForeign,
           }
         : {
             title: performance.performanceTitle,
             start: performance.performanceStartDate,
-            end: performance.performanceEndDate,
+            end: getTommorowDateDashForm(performance.performanceEndDate),
+
+            performanceCast: performance.performanceCast,
+            performanceVenue: performance.performanceVenue,
             isFestival: performance.isFestival,
             isForeign: performance.isForeign,
           }
@@ -71,12 +79,18 @@ function PerformanceCalendar({ performanceList }) {
     eventRenderCountRef.current = {};
   };
 
+  const calendarRef = useRef(null);
   const handleDateClick = (info) => {
-    const content = document.createElement("div");
-    const root = ReactDOM.createRoot(content);
-    root.render(<div>선택한 날짜 {info.dateStr}</div>);
+    const calendarApi = calendarRef.current.getApi();
+    const events = calendarApi.getEvents();
 
-    dayClickTippy(info, content);
+    const clickedDate = info.dateStr;
+
+    const eventsListOnDate = events.filter(
+      (event) => event.startStr === clickedDate
+    );
+
+    dayClickTippy(info, eventsListOnDate);
   };
 
   return (
@@ -95,6 +109,7 @@ function PerformanceCalendar({ performanceList }) {
       />
       <div css={s.calendarContainer2}>
         <FullCalendar
+          ref={calendarRef}
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           locale={ko}
