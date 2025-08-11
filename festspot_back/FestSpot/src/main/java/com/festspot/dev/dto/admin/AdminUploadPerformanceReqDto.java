@@ -6,6 +6,7 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -22,6 +23,8 @@ public class AdminUploadPerformanceReqDto {
     private String prfpdto;
     private String visit;
     private String festival;
+    private String prfcast;
+    private List<Object> relates;
 
     public LocalDate localDateParser(String stringDate) {
         // 문자열 형식에 맞는 포매터 지정
@@ -45,6 +48,7 @@ public class AdminUploadPerformanceReqDto {
                 .isForeign(Objects.equals(visit, "Y") ? 1 : 0)
                 .isFestival(Objects.equals(festival, "Y") ? 1 : 0)
                 .updatedAt(now)
+                .performanceCast(prfcast)
                 .build();
     }
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.festspot.dev.domain.entity.relate.RelateMapper">
+    <resultMap id="relateMap" type="com.festspot.dev.domain.entity.relate.Relate">
+        <id property="relateUrlId" column="relate_url_id" />
+        <result property="performanceId" column="performance_id" />
+        <result property="relateUrl" column="relate_url" />
+        <result property="relateName" column="relate_name" />
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="relateUrlId">
+        insert into relate_tb
+        values
+            <foreach collection="list" item="relate" separator=",">
+                (default,
+                #{relate.performanceId},
+                #{relate.relateUrl},
+                #{relate.relateName})
+            </foreach>
+    </insert>
+
+    <insert id="insertMany">
+
+    </insert>
+</mapper>
