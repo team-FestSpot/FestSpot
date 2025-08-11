@@ -4,7 +4,10 @@ import ReactDOM from "react-dom/client";
 export const dayClickTippy = (info, eventsListOnDate) => {
   const content = document.createElement("div");
   const root = ReactDOM.createRoot(content);
-  root.render(eventsListOnDate.map((event) => <div>{event._def.title}</div>));
+  content.classList.add("tippy-content");
+  root.render(
+    eventsListOnDate.map((event) => <div style={{}}>{event._def.title}</div>)
+  );
 
   tippy(info.dayEl, {
     content: content,
