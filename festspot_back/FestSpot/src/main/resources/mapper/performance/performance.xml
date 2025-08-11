@@ -7,6 +7,7 @@
   <resultMap id="PerformanceMap" type="com.festspot.dev.domain.performance.Performance">
     <id column="performance_id" property="performanceId" />
     <result column="performance_region_id" property="performanceRegionId" />
+      <result column="performance_cast" property="performanceCast" />
     <result column="performance_api_id" property="performanceApiId" />
     <result column="performance_title" property="performanceTitle" />
     <result column="performance_poster_url" property="performancePosterUrl" />
