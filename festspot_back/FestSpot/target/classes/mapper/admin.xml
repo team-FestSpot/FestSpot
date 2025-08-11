@@ -46,7 +46,8 @@
             performance_last_modified,
             is_foreign,
             is_festival,
-            updated_at
+            updated_at,
+            performance_cast
         )
         values (
             #{performanceRegionId},
@@ -60,7 +61,8 @@
             #{performanceLastModified},
             #{isForeign},
             #{isFestival},
-            #{updatedAt}
+            #{updatedAt},
+            #{performanceCast}
         )
     </insert>
 
