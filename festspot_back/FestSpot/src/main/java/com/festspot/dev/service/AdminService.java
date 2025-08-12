@@ -7,13 +7,14 @@ import com.festspot.dev.domain.entity.relate.Relate;
 import com.festspot.dev.domain.entity.relate.RelateMapper;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.relate.RelateDto;
-import com.festspot.dev.mapper.AdminMapper;
+import com.festspot.dev.domain.admin.AdminMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,6 +61,18 @@ public class AdminService {
 
     @Transactional(rollbackFor = Exception.class)
     public int uploadManyPerformance(List<AdminUploadPerformanceReqDto> dtos) {
+        AtomicInteger checkDuplicate = new AtomicInteger(1);
+        dtos.forEach(dto -> {
+            if(adminMapper.findByPerformanceApiId(dto.getMt20id()) != null) {
+                checkDuplicate.set(0);
+            }
+        });
+        int checkDuplicateInt = Integer.parseInt(String.valueOf(checkDuplicate));
+        if(checkDuplicateInt < 1) {
+            return checkDuplicateInt;
+        }
+
+
         List<Performance> performanceList = dtos.stream().map(adminUploadPerformanceReqDto -> {
             Integer statusCode = adminMapper.getStateCodeByState(adminUploadPerformanceReqDto.getPrfstate());
             Integer regionCode = adminMapper.getRegionCodeByRegionName(adminUploadPerformanceReqDto.getArea());
