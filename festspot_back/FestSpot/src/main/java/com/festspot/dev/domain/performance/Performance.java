@@ -17,6 +17,7 @@ public class Performance {
   private Integer performanceRegionId;
   private String performanceApiId;
   private String performanceTitle;
+  private String performanceCast;
   private String performancePosterUrl;
   private LocalDate performanceStartDate;
   private LocalDate performanceEndDate;
