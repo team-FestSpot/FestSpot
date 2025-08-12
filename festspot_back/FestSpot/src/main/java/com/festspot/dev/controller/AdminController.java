@@ -30,7 +30,6 @@ public class AdminController {
 
     @PostMapping("/uploads")
     public ResponseEntity<?> uploadManyPerformances(@RequestBody List<AdminUploadPerformanceReqDto> dtos) {
-        System.out.println(dtos);
         int result = adminService.uploadManyPerformance(dtos);
         if(result < 1) {
             return ResponseEntity.badRequest().body(HttpStatus.SERVICE_UNAVAILABLE);

@@ -23,6 +23,15 @@
     </insert>
 
     <insert id="insertMany">
-
+        insert into relate_tb
+        values
+            <foreach collection="list" item="manyRelates" separator=",">
+                <foreach collection="manyRelates" item="relate" separator=",">
+                    (default,
+                    #{relate.performanceId},
+                    #{relate.relateUrl},
+                    #{relate.relateName})
+                </foreach>
+            </foreach>
     </insert>
 </mapper>
