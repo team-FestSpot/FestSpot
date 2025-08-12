@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { convertXmlToJson } from "../../api/xml";
+import { convertXmlToJson } from "../../api/xmlToJson";
 import { publicSearchResultApi } from "../../api/publicSearchResultApi";
 
 export const getPublicApiSearchResultMutation = () =>

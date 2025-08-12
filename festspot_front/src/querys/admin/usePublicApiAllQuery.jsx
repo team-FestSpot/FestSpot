@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { reqPublicApi } from "../../api/publicApi";
-import { convertXmlToJson } from "../../api/xml";
+import { convertXmlToJson } from "../../api/xmlToJson";
 import { useState } from "react";
 
 // api에서 받아올 수 있는 공연정보 전부 받아오는 쿼리

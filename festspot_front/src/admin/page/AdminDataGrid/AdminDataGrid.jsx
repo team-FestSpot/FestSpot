@@ -149,7 +149,6 @@ function AdminDataGrid(props) {
   };
 
   useEffect(() => {
-    console.log(rows);
     setPaginationList(getPaginationList(rows.length));
   }, [rows]);
 
@@ -189,18 +188,6 @@ function AdminDataGrid(props) {
             hideNextButton
             hidePrevButton
           />
-          {/* <Button
-            disabled={pageParam < 2 ? true : false}
-            onClick={handlePageDownOnClick}
-          >
-            <FaChevronLeft />
-          </Button>
-          <div>
-            <p>{pageParam}</p>
-          </div>
-          <Button onClick={handlePageUpOnClick}>
-            <FaChevronRight />
-          </Button> */}
         </div>
       </Box>
     </div>

@@ -23,7 +23,7 @@ public class AdminController {
     public ResponseEntity<?> uploadPerformance(@RequestBody AdminUploadPerformanceReqDto dto) {
         int result = adminService.uploadPerformance(dto);
         if(result < 1) {
-            return ResponseEntity.badRequest().body(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(HttpStatus.SERVICE_UNAVAILABLE);
         }
         return ResponseEntity.ok("공연 정보 업로드 성공");
     }
@@ -32,7 +32,7 @@ public class AdminController {
     public ResponseEntity<?> uploadManyPerformances(@RequestBody List<AdminUploadPerformanceReqDto> dtos) {
         int result = adminService.uploadManyPerformance(dtos);
         if(result < 1) {
-            return ResponseEntity.badRequest().body(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(HttpStatus.SERVICE_UNAVAILABLE);
         }
         return ResponseEntity.ok("공연 정보 다중 업로드 성공");
     }
