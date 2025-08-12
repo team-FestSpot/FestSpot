@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.festspot.dev.mapper.AdminMapper">
+<mapper namespace="com.festspot.dev.domain.admin.AdminMapper">
     <resultMap id="performanceMap" type="com.festspot.dev.domain.entity.Performance">
         <id property="performanceId" column="performance_id" />
         <result property="performanceRegionId" column="performance_region_id" />

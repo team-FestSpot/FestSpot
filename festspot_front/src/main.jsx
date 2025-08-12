@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { global } from "./styles/global";
-import AdminMainPage from "./admin/page/AdminMainPage/AdminMainPage.jsx";
+import AdminMainPage from "./page/admin/AdminMainPage/AdminMainPage.jsx"
 
 const queryClient = new QueryClient({
   defaultOptions: {

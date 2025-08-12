@@ -46,7 +46,6 @@ export const reqPublicDetailUploadManyMutation = () =>
         else { // 예매처가 한 곳이면 배열에 안 들어있어서 배열에 넣어줌
           promiseJsonData.relates = [promiseJsonData.relates.relate];
         }
-        console.log(promiseJsonData.relates);
         return promiseJsonData;
       }));
 
