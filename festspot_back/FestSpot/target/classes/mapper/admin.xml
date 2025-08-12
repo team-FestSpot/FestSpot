@@ -79,7 +79,8 @@
             performance_last_modified,
             is_foreign,
             is_festival,
-            updated_at
+            updated_at,
+            performance_cast
         )
         values
             <foreach collection="list" item="performance" index="index" separator=",">
@@ -94,7 +95,8 @@
                 #{performance.performanceLastModified},
                 #{performance.isForeign},
                 #{performance.isFestival},
-                #{performance.updatedAt})
+                #{performance.updatedAt},
+                #{performance.performanceCast})
             </foreach>
     </insert>
 

@@ -7,6 +7,5 @@ import java.util.List;
 @Mapper
 public interface RelateMapper {
     int insert(List<Relate> relates);
-
     int insertMany(List<List<Relate>> manyRelates);
 }
