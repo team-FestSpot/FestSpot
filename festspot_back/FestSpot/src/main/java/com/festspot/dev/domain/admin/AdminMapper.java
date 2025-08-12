@@ -1,4 +1,4 @@
-package com.festspot.dev.mapper;
+package com.festspot.dev.domain.admin;
 
 import com.festspot.dev.domain.entity.Performance;
 import org.apache.ibatis.annotations.Mapper;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as s from "./styles";
 import { IoSearch } from "react-icons/io5";
 import AdminDataGrid from "../AdminDataGrid/AdminDataGrid";
-import AdminLeftSideBar from "../../sidebar/AdminLeftSideBar";
+import AdminLeftSideBar from "../../admin/SideBar/AdminLeftSideBar";
 import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
 import { reqPublicDetailUploadManyMutation } from "../../../querys/admin/reqPublicDetailUploadManyMutation";
 import { getPublicApiSearchResultMutation } from "../../../querys/admin/usePublicApiSearchResultMutation";
