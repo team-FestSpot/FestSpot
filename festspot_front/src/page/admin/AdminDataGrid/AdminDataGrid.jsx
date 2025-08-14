@@ -16,9 +16,10 @@ import { usePublicApiAllQuery } from "../../../querys/admin/usePublicApiAllQuery
 function AdminDataGrid(props) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
+  const [sortOption, setSortOption] = useState({column: "prfpdfrom", direction: "asc"}); // 특정 컬럼 기준 오름차순/내림차순 정렬 상태
   const [paginationList, setPaginationList] = useState([]);
   const { data, isLoading } = usePublicApiAllQuery(); // 공연예술통합전산망 api에 데이터 요청
-  const { rows, setRows } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
+  const { rows, setRows, setRowsEmpty } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
   const { setCheckedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
   const uploadMutation = reqPublicDetailUploadMutation(); // 등록 버튼 누르면 상세정보 받아서 백엔드에 전달하는 mutation
   const gridRef = useGridApiRef();
@@ -60,7 +61,7 @@ function AdminDataGrid(props) {
     },
     {
       field: "prfstate",
-      headerName: "상태",
+      headerName: "공연 진행 상황",
       width: 100,
       editable: false,
     },
@@ -109,12 +110,39 @@ function AdminDataGrid(props) {
     },
   ];
 
+  // 오름차순 내림차순 정렬 기능인데 가끔 이상하게 동작함
+  // 원본 rows랑 별개로 화면 표시용 displayRows 상태를 새로 만들어서 뿌려줘야 할 듯함
+  const handleColumnHeaderOnClick = (e) => {
+    const sortArr = [...rows];
+    const column = e.field;
+
+    let direction = "asc";
+    if (sortOption.column === column && sortOption.direction === "asc") {
+      direction = "desc";
+    }
+
+    setSortOption((prev) => {
+      let direction = "asc";
+      if (prev.column === column && prev.direction === "asc") {
+        direction = "desc";
+      }
+      return { column, direction };
+    });
+
+    sortArr.sort((a, b) => {
+       if (a[column] < b[column]) return direction === "asc" ? -1 : 1;
+      if (a[column] > b[column]) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+    setRowsEmpty();
+    setRows([...sortArr]);
+  }
+
   const handleRowSelectionOnChange = (e) => {
     setCheckedRows(e.ids);
   };
 
   const handlePaginationOnChange = (e) => {
-    console.log(e.target.innerText);
     setSearchParams({
       page: e.target.innerText,
     });
@@ -127,7 +155,7 @@ function AdminDataGrid(props) {
   }, []);
 
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
     if (
       !isLoading &&
       Array.isArray(data) &&
@@ -157,7 +185,7 @@ function AdminDataGrid(props) {
       <Box
         sx={{
           width: "100%",
-          maxWidth: "1400px",
+          maxWidth: "1600px",
           height: "100vh",
           maxHeight: "700px",
         }}
@@ -180,6 +208,7 @@ function AdminDataGrid(props) {
           hideFooter
           apiRef={gridRef}
           onRowSelectionModelChange={handleRowSelectionOnChange}
+          onColumnHeaderClick={handleColumnHeaderOnClick}
         />
         <div css={s.paginationButtonLayout}>
           <Pagination
