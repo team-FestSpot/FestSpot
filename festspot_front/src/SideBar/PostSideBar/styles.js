@@ -41,9 +41,8 @@ export const boardBtn = css`
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  margin-top: 30px;
   border-radius: 8px;
-  font-weight: 500;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 0.2s;
