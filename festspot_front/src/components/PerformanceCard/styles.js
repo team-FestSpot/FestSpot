@@ -69,7 +69,7 @@ export const posterContainer = css`
 
 export const content = css`
   padding: 10px;
-  background-color: #ef5a393d;
+  background-color: #fbd8d0;
 
   @media (min-width: 1025px) {
     font-size: 12px;
