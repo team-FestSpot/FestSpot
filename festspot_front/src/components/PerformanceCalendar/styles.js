@@ -22,6 +22,16 @@ export const calendarContainer2 = css`
   .fc-button {
     border: none;
     background-color: #ef5a39;
+
+    &:hover {
+      background-color: #fbd8d0;
+    }
+  }
+
+  // 모든 칸
+  .fc-daygrid-day {
+    min-height: 80px !important;
+    height: 80px !important;
   }
 
   .fc-day-today {
@@ -29,20 +39,24 @@ export const calendarContainer2 = css`
   }
 
   .fc-day-sun {
-    background-color: #f8e4e4ff; /* 일요일: 연한 빨강 */
+    color: red;
+    /* background-color: #f8e4e4ff; 일요일: 연한 빨강 */
   }
 
   .fc-day-sat {
-    background-color: #e6ecfcff; /* 토요일: 연한 파랑 */
+    color: blue;
+    /* background-color: #e6ecfcff; 토요일: 연한 파랑 */
   }
 
-  .fc-daygrid-day-events {
+  //이벤트
+  .fc-daygrid-event-harness {
     margin: 2px 0 !important;
   }
 
   //날짜 칸
   .fc-daygrid-day-top {
     font-size: 12px;
+    font-weight: 600;
     & > a {
       padding: 2px 4px;
     }
@@ -58,5 +72,14 @@ export const calendarContainer2 = css`
     font-size: 12px;
     font-weight: 400;
     color: black;
+  }
+
+  // 더보기 글자(+3 같은거)
+  .fc-daygrid-more-link {
+    float: right;
+    font-size: 14px;
+    pointer-events: none;
+    cursor: default;
+    color: #474747;
   }
 `;
