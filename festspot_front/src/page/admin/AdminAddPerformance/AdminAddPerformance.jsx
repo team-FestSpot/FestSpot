@@ -3,9 +3,29 @@ import React, { useEffect, useState } from 'react';
 import * as s from "./styles";
 import AdminInput from '../AdminInput/AdminInput';
 import Button from '@mui/material/Button';
+import useAdminAddPerformanceStore from '../../../stores/AdminAddPerformanceStore';
+import { reqUploadPerformanceApi } from '../../../api/adminApi';
+import { CiSquarePlus, CiSquareMinus } from "react-icons/ci";
 
 function AdminAddPerformance(props) {
-    const [images, setImages] = useState([]);
+    const [imageFile, setImageFile] = useState({});
+    const {detail, setDetail, setDetailEmpty} = useAdminAddPerformanceStore();
+    const [ticketingUrlList, setTicketingUrlList] = useState([
+        [
+            {
+                id: "relatenm",
+                type: "text",
+                placeholder: "예매처명",
+                options: [],
+            },
+            {
+                id: "relateurl",
+                type: "text",
+                placeholder: "예매처 URL",
+                options: [],
+            }
+        ],
+    ]);
     const inputList = [
         {
             id: "prfnm",
@@ -85,40 +105,70 @@ function AdminAddPerformance(props) {
         },
     ]
     
-    const handleImageUploadOnChange = (e) => {
-        const filesArray = [...e.target.files];
 
-        Promise.all(filesArray.map(file => {
-            return new Promise(resolve => {
-                const fileReader = new FileReader();
-                fileReader.onload = (e) => {
-                    resolve({file, dataUrl: e.target.result});
-                }
-                fileReader.readAsDataURL(file);
-            })
-        })).then(resolves => {
-            setImages(prev => [...prev, ...resolves]);
-        });
+    const handleImageUploadOnChange = (e) => {
+        setImageFile(...e.target.files);
+
+        // const filesArray = [...e.target.files];
+
+        // Promise.all(filesArray.map(file => {
+        //     return new Promise(resolve => {
+        //         const fileReader = new FileReader();
+        //         fileReader.onload = (e) => {
+        //             resolve({file, dataUrl: e.target.result});
+        //         }
+        //         fileReader.readAsDataURL(file);
+        //     })
+        // })).then(resolves => {
+        //     setImages(prev => [...prev, ...resolves]);
+        // });
+    }
+
+    const handleAddPerformanceButtonOnClick = () => {
+        let formData = new FormData;
+        formData.append("detail", detail);
+        formData.append("file", imageFile);
+        formData.append("ticketingUrlList", ticketingUrlList);
+
+        try {
+            reqUploadPerformanceApi(detail);
+            setDetailEmpty();
+            setImageFile("");
+        } 
+        catch (error) {
+            console.log(error);
+        }
     }
 
     // useEffect(() => {
-    //     console.log(images);
-    // }, [images]);
+    //     console.log(imageFile);
+    // }, [imageFile]);
+
+    //  useEffect(() => {
+    //     console.log(details);
+    // }, [details]);
+
+     useEffect(() => {
+        console.log(ticketingUrlList);
+    }, []);
 
     return (
         <div css={s.layout}>
             <div css={s.imgContainerLayout}>
-            {
+                <div css={s.imgContainer}>
+                    <img src={imageFile.dataUrl} alt="" />
+                </div>
+            {/* {
                 images.map((image, index) => 
                     <div key={index} css={s.imgContainer}>
                         <img src={image.dataUrl} alt="" />
                     </div>
                 )
-            }
+            } */}
             </div>
             <div css={s.inputListContainerLayout}>
                 <div css={s.imgInput}>
-                    <input type="file" accept='image/*' multiple onChange={handleImageUploadOnChange} />
+                    <input type="file" accept='image/*' onChange={handleImageUploadOnChange} />
                 </div>
                 {
                     inputList.map((input, index) => 
@@ -127,8 +177,33 @@ function AdminAddPerformance(props) {
                         </div>
                     )
                 }
+                {
+                    
+                    ticketingUrlList.map((ticketingUrl) => (
+                        ticketingUrl.map((input, index) => 
+                        <div>
+                            <div>
+                                <p>{input.placeholder}</p>
+                            </div>
+                            <div key={index} css={s.inputListContainer}>
+                                <div key={input.id} css={s.inputContainer}>
+                                    <div css={s.inputTicketingContainer}>
+                                        <input type={input.type} placeholder={input.placeholder}  onChange={(e) => handleInputOnChange(e, input.id)} />
+                                    </div>
+                                    {/* <div css={s.inputTicketingUrlContainer}>
+                                        <input type={input.type} placeholder={input.placeholder}  onChange={(e) => handleInputOnChange(e, input.id)} />
+                                    </div> */}
+                                </div>
+                                <CiSquarePlus />
+                                {
+                                    index > 0 && <CiSquareMinus />
+                                }
+                            </div>
+                        </div>)
+                    ))
+                }
                 <div>
-                    <Button>추가</Button>
+                    <Button onClick={handleAddPerformanceButtonOnClick}>추가</Button>
                 </div>
             </div>
         </div>

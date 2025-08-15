@@ -10,7 +10,7 @@ export const layout = css`
 
 export const imgContainerLayout = css`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     padding: 20px;
     width: 100%;
@@ -46,6 +46,7 @@ export const inputListContainerLayout = css`
     align-items: center;
     flex: 1;
     padding-bottom: 30px;
+    overflow-y: scroll;
 `;
 
 export const inputListContainer = css`
