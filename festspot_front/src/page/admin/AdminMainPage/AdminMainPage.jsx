@@ -3,8 +3,8 @@ import * as s from "./styles";
 import { IoSearch } from "react-icons/io5";
 import AdminDataGrid from "../AdminDataGrid/AdminDataGrid";
 import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
-import { reqPublicDetailUploadManyMutation } from "../../../querys/admin/reqPublicDetailUploadManyMutation";
-import { getPublicApiSearchResultMutation } from "../../../querys/admin/usePublicApiSearchResultMutation";
+import { usePublicDetailUploadManyMutation } from "../../../querys/admin/usePublicDetailUploadManyMutation";
+import { usePublicApiSearchResultMutation } from "../../../querys/admin/usePublicApiSearchResultMutation";
 
 import Button from "@mui/material/Button";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
@@ -17,8 +17,8 @@ function AdminMainPage(props) {
   });
 
   const { checkedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
-  const uploadManyMutation = reqPublicDetailUploadManyMutation();
-  const searchMutation = getPublicApiSearchResultMutation();
+  const uploadManyMutation = usePublicDetailUploadManyMutation();
+  const searchMutation = usePublicApiSearchResultMutation();
   const { setRows, setRowsEmpty } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
   let searchMutationParams = {
     page: 1,

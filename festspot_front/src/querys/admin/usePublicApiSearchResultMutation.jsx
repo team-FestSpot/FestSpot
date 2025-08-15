@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { convertXmlToJson } from "../../api/xmlToJson";
 import { publicSearchResultApi } from "../../api/publicSearchResultApi";
 
-export const getPublicApiSearchResultMutation = () =>
+export const usePublicApiSearchResultMutation = () =>
   useMutation({
     mutationFn: async (searchMutationParams) => {
       const xmlText = (await publicSearchResultApi(searchMutationParams)).data;

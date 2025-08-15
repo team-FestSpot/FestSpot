@@ -9,7 +9,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
 import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
-import { reqPublicDetailUploadMutation } from "../../../querys/admin/reqPublicDetailUploadMutation";
+import { usePublicDetailUploadMutation } from "../../../querys/admin/usePublicDetailUploadMutation";
 import Pagination from "@mui/material/Pagination";
 import { usePublicApiAllQuery } from "../../../querys/admin/usePublicApiAllQuery";
 
@@ -21,7 +21,7 @@ function AdminDataGrid(props) {
   const { data, isLoading } = usePublicApiAllQuery(); // 공연예술통합전산망 api에 데이터 요청
   const { rows, setRows, setRowsEmpty } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
   const { setCheckedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
-  const uploadMutation = reqPublicDetailUploadMutation(); // 등록 버튼 누르면 상세정보 받아서 백엔드에 전달하는 mutation
+  const uploadMutation = usePublicDetailUploadMutation(); // 등록 버튼 누르면 상세정보 받아서 백엔드에 전달하는 mutation
   const gridRef = useGridApiRef();
   const columns = [
     {

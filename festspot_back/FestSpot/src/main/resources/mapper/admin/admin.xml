@@ -12,7 +12,7 @@
         <result property="performanceStartDate" column="performance_start_date" />
         <result property="performanceEndDate" column="performance_end_date" />
         <result property="performanceVenue" column="performance_venue" />
-        <result property="performanceStatus" column="performance_status" />
+        <result property="performanceStatus" column="performance_state_id" />
         <result property="performanceLastModified" column="performance_last_modified" />
         <result property="isForeign" column="is_foreign" />
         <result property="isFestival" column="is_festival" />
@@ -42,7 +42,7 @@
             performance_start_date,
             performance_end_date,
             performance_venue,
-            performance_status,
+            performance_state_id,
             performance_last_modified,
             is_foreign,
             is_festival,
@@ -75,7 +75,7 @@
             performance_start_date,
             performance_end_date,
             performance_venue,
-            performance_status,
+            performance_state_id,
             performance_last_modified,
             is_foreign,
             is_festival,
@@ -100,16 +100,16 @@
             </foreach>
     </insert>
 
-    <select id="getRegionCodeByRegionName" resultType="java.lang.Integer">
+    <select id="getRegionIdByRegionName" resultType="java.lang.Integer">
         select
-            region_code
+            region_id
         from
             region_tb
         where
             region_name = #{regionName}
     </select>
 
-    <select id="getStateCodeByState" resultType="java.lang.Integer">
+    <select id="getStateIdByState" resultType="java.lang.Integer">
         select
             performance_state_id
         from

@@ -9,7 +9,7 @@ import java.util.List;
 public interface AdminMapper {
     int insert(Performance performance);
     int insertMany(List<Performance> performanceList);
-    int getRegionCodeByRegionName(String regionName);
-    int getStateCodeByState(String state);
+    int getRegionIdByRegionName(String regionName);
+    int getStateIdByState(String state);
     Performance findByPerformanceApiId(String performanceApiId);
 }

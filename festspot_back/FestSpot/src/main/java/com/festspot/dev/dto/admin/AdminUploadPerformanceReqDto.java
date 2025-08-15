@@ -33,18 +33,18 @@ public class AdminUploadPerformanceReqDto {
         return LocalDate.parse(stringDate, formatter);
     }
 
-    public Performance toEntity(Integer regionCode, Integer statusCode) {
+    public Performance toEntity(Integer regionId, Integer statusId) {
         LocalDateTime now = LocalDateTime.now();
         return Performance.builder()
                 .performanceApiId(mt20id)
                 .performanceTitle(prfnm)
-                .performanceRegionId(regionCode)
+                .performanceRegionId(regionId)
                 .performancePosterUrl(poster)
                 .performanceStartDate(localDateParser(prfpdfrom))
                 .performanceEndDate(localDateParser(prfpdto))
                 .performanceVenue(fcltynm)
                 .performanceLastModified(now)
-                .performanceStatus(statusCode)
+                .performanceStatus(statusId)
                 .isForeign(Objects.equals(visit, "Y") ? 1 : 0)
                 .isFestival(Objects.equals(festival, "Y") ? 1 : 0)
                 .updatedAt(now)

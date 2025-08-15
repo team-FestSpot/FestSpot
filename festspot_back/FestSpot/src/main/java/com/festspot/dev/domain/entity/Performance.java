@@ -1,6 +1,6 @@
 package com.festspot.dev.domain.entity;
 
-import com.festspot.dev.domain.entity.relate.Relate;
+import com.festspot.dev.domain.entity.ticketing.TicketingUrl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
@@ -32,5 +31,5 @@ public class Performance {
 
     private Region region;
     private PerformanceState performanceState;
-    private Relate relate;
+    private TicketingUrl relate;
 }

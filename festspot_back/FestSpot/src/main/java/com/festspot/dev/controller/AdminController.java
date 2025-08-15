@@ -1,15 +1,13 @@
 package com.festspot.dev.controller;
 
+import com.festspot.dev.dto.admin.AdminUploadCustomPerformanceReqDto;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +33,16 @@ public class AdminController {
             return ResponseEntity.badRequest().body(HttpStatus.SERVICE_UNAVAILABLE);
         }
         return ResponseEntity.ok("공연 정보 다중 업로드 성공");
+    }
+
+    @PostMapping("/upload/custom")
+    public ResponseEntity<?> uploadCustomPerformance(@ModelAttribute AdminUploadCustomPerformanceReqDto dto) {
+        System.out.println(dto);
+        int result = 1;
+        if(result < 1) {
+            return ResponseEntity.badRequest().body(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+        return ResponseEntity.ok("공연 정보 업로드 성공");
     }
 
 }
