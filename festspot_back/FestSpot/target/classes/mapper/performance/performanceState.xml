@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.festspot.dev.domain.performance.performanceState.PerformanceStateMapper">
+  <select id="findById"
+          resultType="com.festspot.dev.domain.performance.performanceState.PerformanceState">
+    select
+      *
+    from
+      performance_state_tb
+    where
+      performance_state_id = #{performanceStateId}
+  </select>
+  <select id="findByState"
+          resultType="com.festspot.dev.domain.performance.performanceState.PerformanceState">
+    select
+      *
+    from
+      performance_state_tb
+    where
+      performance_state = #{performanceState}
+  </select>
+</mapper>
