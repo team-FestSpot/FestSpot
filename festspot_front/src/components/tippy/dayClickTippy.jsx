@@ -2,10 +2,6 @@ import tippy from "tippy.js";
 import ReactDOM from "react-dom/client";
 
 export const dayClickTippy = (info, eventsListOnDate) => {
-  const content = document.createElement("div");
-  const root = ReactDOM.createRoot(content);
-  root.render(eventsListOnDate.map((event) => <div>{event._def.title}</div>));
-
   const htmlString = eventsListOnDate
     .map((event, idx) => {
       const { isFestival, isForeign } = event._def.extendedProps;
@@ -31,9 +27,13 @@ export const dayClickTippy = (info, eventsListOnDate) => {
     })
     .join("");
 
+  <div id="test">test</div>;
+
+  const test = document.getElementById("test");
+
   if (eventsListOnDate.length > 0) {
     tippy(info.dayEl, {
-      content: htmlString,
+      content: test.innerHTML,
       trigger: "manual",
       placement: "top",
       animation: "scale-extreme",
