@@ -3,56 +3,25 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.festspot.dev.domain.admin.AdminMapper">
-    <resultMap id="performanceMap" type="com.festspot.dev.domain.entity.Performance">
-        <id property="performanceId" column="performance_id" />
-        <result property="performanceRegionId" column="performance_region_id" />
-        <result property="performanceApiId" column="performance_api_id" />
-        <result property="performanceTitle" column="performance_title" />
-        <result property="performancePosterUrl" column="performance_poster_url" />
-        <result property="performanceStartDate" column="performance_start_date" />
-        <result property="performanceEndDate" column="performance_end_date" />
-        <result property="performanceVenue" column="performance_venue" />
-        <result property="performanceStatus" column="performance_state_id" />
-        <result property="performanceLastModified" column="performance_last_modified" />
-        <result property="isForeign" column="is_foreign" />
-        <result property="isFestival" column="is_festival" />
-        <result property="updatedAt" column="updated_at" />
-
-        <association property="region" resultMap="regionMap" />
-        <association property="performanceState" resultMap="performanceStateMap" />
-    </resultMap>
-
-    <resultMap id="regionMap" type="com.festspot.dev.domain.entity.Region">
-        <id property="regionId" column="region_id" />
-        <result property="regionCode" column="region_code" />
-        <result property="regionName" column="region_name" />
-    </resultMap>
-
-    <resultMap id="performanceStateMap" type="com.festspot.dev.domain.entity.PerformanceState">
-        <id property="performanceStateId" column="performance_state_id" />
-        <result property="performanceState" column="performance_state" />
-    </resultMap>
-
-    <insert id="insert" useGeneratedKeys="true" keyProperty="performanceId">
+    <insert id="insert" keyProperty="performanceId" useGeneratedKeys="true">
         insert ignore into performance_tb (
-            performance_region_id,
             performance_api_id,
             performance_title,
+            performance_cast
             performance_poster_url,
             performance_start_date,
             performance_end_date,
             performance_venue,
-            performance_state_id,
             performance_last_modified,
             is_foreign,
             is_festival,
-            updated_at,
-            performance_cast
+            updated_at
         )
         values (
             #{performanceRegionId},
             #{performanceApiId},
             #{performanceTitle},
+            #{performanceCast},
             #{performancePosterUrl},
             #{performanceStartDate},
             #{performanceEndDate},
@@ -61,32 +30,30 @@
             #{performanceLastModified},
             #{isForeign},
             #{isFestival},
-            #{updatedAt},
-            #{performanceCast}
+            #{updatedAt}
         )
     </insert>
 
-    <insert id="insertMany" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="performanceId">
+    <insert id="insertMany" keyProperty="performanceId" parameterType="java.util.List" useGeneratedKeys="true">
         insert ignore into performance_tb (
-            performance_region_id,
             performance_api_id,
             performance_title,
+            performance_cast,
             performance_poster_url,
             performance_start_date,
             performance_end_date,
             performance_venue,
-            performance_state_id,
             performance_last_modified,
             is_foreign,
             is_festival,
-            updated_at,
-            performance_cast
+            updated_at
         )
         values
-            <foreach collection="list" item="performance" index="index" separator=",">
+            <foreach collection="list" index="index" item="performance" separator=",">
                 (#{performance.performanceRegionId},
                 #{performance.performanceApiId},
                 #{performance.performanceTitle},
+                #{performance.performanceCast}),
                 #{performance.performancePosterUrl},
                 #{performance.performanceStartDate},
                 #{performance.performanceEndDate},
@@ -95,21 +62,55 @@
                 #{performance.performanceLastModified},
                 #{performance.isForeign},
                 #{performance.isFestival},
-                #{performance.updatedAt},
-                #{performance.performanceCast})
+                #{performance.updatedAt}
             </foreach>
     </insert>
 
-    <select id="getRegionIdByRegionName" resultType="java.lang.Integer">
+
+
+    <resultMap id="PerformanceMap" type="com.festspot.dev.domain.performance.Performance">
+        <id column="performance_id" property="performanceId" />
+        <result column="performance_api_id" property="performanceApiId" />
+        <result column="performance_title" property="performanceTitle" />
+        <result column="performance_cast" property="performanceCast" />
+        <result column="performance_poster_url" property="performancePosterUrl" />
+        <result column="performance_start_date" property="performanceStartDate" />
+        <result column="performance_end_date" property="performanceEndDate" />
+        <result column="performance_venue" property="performanceVenue" />
+        <result column="performance_last_modified" property="performanceLastModified" />
+        <result column="is_foreign" property="isForeign" />
+        <result column="is_festival" property="isFestival" />
+        <result column="updated_at" property="updatedAt" />
+        <association property="performanceRegion" resultMap="PerformanceRegionMap" />
+        <association property="performanceState" resultMap="PerformanceStateMap" />
+        <collection javaType="list" property="ticketingUrls" resultMap="TicketingUrlMap" />
+    </resultMap>
+    <resultMap id="PerformanceRegionMap" type="com.festspot.dev.domain.performance.performanceRegion.PerformanceRegion">
+        <id column="performance_region_id" property="performanceRegionId" />
+        <result column="region_code" property="regionCode" />
+        <result column="region_name" property="regionName" />
+    </resultMap>
+    <resultMap id="PerformanceStateMap" type="com.festspot.dev.domain.performance.performanceState.PerformanceState">
+        <id column="performance_state_id" property="performanceStateId" />
+        <result column="performance_state" property="performanceState" />
+    </resultMap>
+    <resultMap id="TicketingUrlMap" type="com.festspot.dev.domain.ticketing.TicketingUrl">
+        <id column="ticketing_url_id" property="ticketingUrlId" />
+        <result column="performance_id" property="performanceId" />
+        <result column="ticketing_url" property="ticketingUrl" />
+        <result column="ticketing_agency_name" property="ticketingAgencyName" />
+    </resultMap>
+
+    <select id="getRegionCodeByRegionName" resultType="java.lang.Integer">
         select
-            region_id
+            region_code
         from
             region_tb
         where
             region_name = #{regionName}
     </select>
 
-    <select id="getStateIdByState" resultType="java.lang.Integer">
+    <select id="getStateCodeByState" resultType="java.lang.Integer">
         select
             performance_state_id
         from
@@ -118,7 +119,7 @@
             performance_state = #{state}
     </select>
 
-    <select id="findByPerformanceApiId" resultType="com.festspot.dev.domain.entity.Performance">
+    <select id="findByPerformanceApiId" resultType="com.festspot.dev.domain.performance.Performance">
         select
             *
         from

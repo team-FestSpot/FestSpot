@@ -11,21 +11,25 @@ const useAdminAddPerformanceStore = create((set) => ({
     prfcast: "",
     visit: "",
     festival: "",
+    relates: [],
   },
-  setDetail: (id, value) => 
-    set((state) => ({ detail: ({ ...state.detail, [id]: value }) })),
-  setDetailEmpty: () => set(() => ({detail: {
-      prfnm: "",
-      area: "",
-      fcltynm: "",
-      prfstate: "",
-      prfpdfrom: "",
-      prfpdto: "",
-      prfcast: "",
-      visit: "",
-      festival: "",
-    }
-  }))
+  setDetail: (id, value) =>
+    set((state) => ({ detail: { ...state.detail, [id]: value } })),
+  setDetailEmpty: () =>
+    set(() => ({
+      detail: {
+        prfnm: "",
+        area: "",
+        fcltynm: "",
+        prfstate: "",
+        prfpdfrom: "",
+        prfpdto: "",
+        prfcast: "",
+        visit: "",
+        festival: "",
+        relates: [],
+      },
+    })),
 }));
 
 export default useAdminAddPerformanceStore;
