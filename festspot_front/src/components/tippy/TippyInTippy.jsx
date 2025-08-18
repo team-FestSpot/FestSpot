@@ -1,16 +1,26 @@
 import tippy from "tippy.js";
 import { getLocalDotDate } from "../../utils/getLocalDate";
 import ReactDOM from "react-dom/client";
+import { getDateDotForm } from "../../utils/getDateForm";
 
-export const PerformanceEventTippy = (info) => {
-  const prevDay = new Date(info.event._instance.range.end);
-  prevDay.setDate(prevDay.getDate() - 1);
+const tippyInstanceMap = new Map();
+
+export const TippyInTippy = (target, event) => {
+  // map에 값이 있으면 그냥 return
+  if (tippyInstanceMap.has(target.id)) {
+    return;
+  }
 
   const performance = {
-    title: info.event._def.title,
-    start: info.event._instance.range.start,
-    end: prevDay,
-    ...info.event.extendedProps,
+    title: event.performanceTitle,
+    start: event.performanceStartDate,
+    end: event.performanceEndDate,
+
+    performanceCast: event.performanceCast,
+    performanceVenue: event.performanceVenue,
+    isFestival: event.isFestival,
+    isForeign: event.isForeign,
+    ticketingUrls: event.ticketingUrls,
   };
 
   const contentElement = document.createElement("div");
@@ -22,11 +32,11 @@ export const PerformanceEventTippy = (info) => {
       </div>
       <div style={{ fontSize: "14px", color: "#474747" }}>
         공연 시간 :{" "}
-        {performance.start.toDateString() === performance.end.toDateString()
-          ? getLocalDotDate(performance.start)
-          : getLocalDotDate(performance.start) +
+        {performance.start === performance.end
+          ? getDateDotForm(performance.start)
+          : getDateDotForm(performance.start) +
             " ~ " +
-            getLocalDotDate(performance.end)}
+            getDateDotForm(performance.end)}
       </div>
       <div style={{ fontSize: "14px", color: "#474747" }}>
         공연 장소 : {performance.performanceVenue}
@@ -74,7 +84,7 @@ export const PerformanceEventTippy = (info) => {
     </div>
   );
 
-  tippy(info.el, {
+  const instance = tippy(target, {
     content: contentElement,
 
     trigger: "click",
@@ -84,12 +94,13 @@ export const PerformanceEventTippy = (info) => {
     interactive: true,
     appendTo: () => document.body, // 부모의 overflow/transform 영향 제거
     maxWidth: "none",
+    showOnCreate: true,
 
     onMount(instance) {
       const tippyBox = instance.popper.querySelector(".tippy-box");
       const tippyArrow = tippyBox.querySelector(".tippy-arrow");
 
-      const { isFestival, isForeign } = info.event.extendedProps;
+      const { isFestival, isForeign } = performance;
 
       tippyBox.style.color = "#474747";
 
@@ -104,10 +115,12 @@ export const PerformanceEventTippy = (info) => {
         tippyArrow.style.color = "#FBD8D0";
       }
 
-      //내부 클릭하면 닫히게
-      // instance.popper.addEventListener("click", () => {
-      //   instance.hide();
-      // });
+      //   내부 클릭하면 닫히게
+      instance.popper.addEventListener("click", () => {
+        instance.hide();
+      });
     },
   });
+
+  tippyInstanceMap.set(target.id, instance);
 };

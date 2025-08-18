@@ -10,13 +10,17 @@ import "tippy.js/animations/scale.css";
 import "tippy.js/animations/scale-extreme.css";
 import ReactDOM from "react-dom/client";
 import { css, Global } from "@emotion/react";
-import { performanceEventTippy } from "../tippy/performanceEventTippy";
-import { dayClickTippy } from "../tippy/dayClickTippy";
-import { getTommorowDateDashForm } from "../../utils/getDateForm";
+import {
+  getDateDashForm,
+  getTommorowDateDashForm,
+} from "../../utils/getDateForm";
+import { getLocalDate } from "../../utils/getLocalDate";
+import { DayClickTippy } from "../tippy/dayClickTippy";
+import { PerformanceEventTippy } from "../tippy/performanceEventTippy";
 
 function PerformanceCalendar({ performanceList }) {
   const setPerformanceEvents = (e) => {
-    const calendarEvents = performanceList.map((performance) =>
+    const performanceEvents = performanceList.map((performance) =>
       performance.performanceStartDate === performance.performanceEndDate
         ? {
             title: performance.performanceTitle,
@@ -41,7 +45,7 @@ function PerformanceCalendar({ performanceList }) {
           }
     );
 
-    return calendarEvents;
+    return performanceEvents;
   };
 
   const performEventBoxStyle = (info) => {
@@ -62,18 +66,12 @@ function PerformanceCalendar({ performanceList }) {
     eventBoxStyle.border = "none";
   };
 
-  const calendarRef = useRef(null);
-  const handleDateClick = (info) => {
-    const calendarApi = calendarRef.current.getApi();
-    const events = calendarApi.getEvents();
-
-    const clickedDate = info.dateStr;
-
-    const eventsListOnDate = events.filter(
-      (event) => event.startStr === clickedDate
+  const eventOnDay = (info) => {
+    const dayCellDate = getDateDashForm(getLocalDate(info.date));
+    const eventsListOnDate = performanceList.filter(
+      (event) => event.performanceStartDate === dayCellDate
     );
-
-    dayClickTippy(info, eventsListOnDate);
+    return eventsListOnDate;
   };
 
   return (
@@ -92,7 +90,6 @@ function PerformanceCalendar({ performanceList }) {
       />
       <div css={s.calendarContainer2}>
         <FullCalendar
-          ref={calendarRef}
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           locale={ko}
@@ -105,10 +102,14 @@ function PerformanceCalendar({ performanceList }) {
             right: "next", // 오른쪽
           }}
           dayCellContent={(arg) => String(arg.date.getDate())}
-          dateClick={handleDateClick}
+          dayCellDidMount={(info) => {
+            const eventsListOnDate = eventOnDay(info);
+            DayClickTippy(info, eventsListOnDate);
+          }}
           eventDidMount={(info) => {
+            info.el.addEventListener("click", (e) => e.stopPropagation());
             performEventBoxStyle(info);
-            performanceEventTippy(info);
+            PerformanceEventTippy(info);
           }}
           height={"100%"}
         ></FullCalendar>
