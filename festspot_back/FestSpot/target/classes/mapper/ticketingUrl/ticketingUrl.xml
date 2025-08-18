@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.festspot.dev.domain.ticketing.TicketingUrlMapper">
-    <insert id="insert" keyProperty="relateUrlId" useGeneratedKeys="true">
+    <insert id="insert" keyProperty="ticketingUrlId" useGeneratedKeys="true">
         insert into ticketing_url_tb
         values
             <foreach collection="list" item="ticketing_url" separator=",">
@@ -19,16 +19,16 @@
         insert into ticketing_url_tb
         values
             <foreach collection="list" item="manyTicketingUrls" separator=",">
-                <foreach collection="manyRelates" item="ticketingUrl" separator=",">
+                <foreach collection="manyTicketingUrls" item="ticketingUrl" separator=",">
                     (default,
-                    #{ticketing_url.performanceId},
-                    #{ticketing_url.ticketingUrl},
-                    #{ticketing_url.ticketingAgencyName})
+                    #{ticketingUrl.performanceId},
+                    #{ticketingUrl.ticketingUrl},
+                    #{ticketingUrl.ticketingAgencyName})
                 </foreach>
             </foreach>
     </insert>
 
-    <resultMap id="relateMap" type="com.festspot.dev.domain.ticketing.TicketingUrl">
+    <resultMap id="TicketingUrlMap" type="com.festspot.dev.domain.ticketing.TicketingUrl">
         <id column="ticketing_url_id" property="ticketingUrlId" />
         <result column="performance_id" property="performanceId" />
         <result column="ticketing_url" property="ticketingUrl" />

@@ -62,10 +62,12 @@
 
   <insert id="insert" keyProperty="performanceId" useGeneratedKeys="true">
     insert ignore into performance_tb (
+      performance_id,
       performance_region_id,
       performance_api_id,
       performance_title,
       performance_cast,
+      performance_poster_url,
       performance_start_date,
       performance_end_date,
       performance_venue,
@@ -76,10 +78,12 @@
       updated_at
     )
     values (
-      #{performanceRegion.regionId},
+      default,
+      #{performanceRegion.performanceRegionId},
       #{performanceApiId},
       #{performanceTitle},
       #{performanceCast},
+      #{performancePosterUrl},
       #{performanceStartDate},
       #{performanceEndDate},
       #{performanceVenue},
@@ -93,10 +97,12 @@
 
   <insert id="insertMany" keyProperty="performanceId" parameterType="java.util.List" useGeneratedKeys="true">
     insert ignore into performance_tb (
+      performance_id,
       performance_region_id,
       performance_api_id,
       performance_title,
       performance_cast,
+      performance_poster_url,
       performance_start_date,
       performance_end_date,
       performance_venue,
@@ -108,18 +114,22 @@
     )
     values
       <foreach collection="list" index="index" item="performance" separator=",">
-        (#{performance.performanceRegion.regionId},
-        #{performance.performanceApiId},
-        #{performance.performanceTitle},
-        #{performance.performanceCast},
-        #{performance.performanceStartDate},
-        #{performance.performanceEndDate},
-        #{performance.performanceVenue},
-        #{performance.performanceState.performanceStateId},
-        #{performance.performanceLastModified},
-        #{performance.isForeign},
-        #{performance.isFestival},
-        #{performance.updatedAt})
+        (
+          default,
+          #{performance.performanceRegion.performanceRegionId},
+          #{performance.performanceApiId},
+          #{performance.performanceTitle},
+          #{performance.performanceCast},
+          #{performance.performancePosterUrl},
+          #{performance.performanceStartDate},
+          #{performance.performanceEndDate},
+          #{performance.performanceVenue},
+          #{performance.performanceState.performanceStateId},
+          #{performance.performanceLastModified},
+          #{performance.isForeign},
+          #{performance.isFestival},
+          #{performance.updatedAt}
+        )
       </foreach>
   </insert>
 </mapper>
