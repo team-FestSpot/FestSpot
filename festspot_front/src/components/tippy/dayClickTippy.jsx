@@ -31,7 +31,7 @@ export const dayClickTippy = (info, eventsListOnDate) => {
     })
     .join("");
 
-  if (eventsListOnDate.length > 3) {
+  if (eventsListOnDate.length > 0) {
     tippy(info.dayEl, {
       content: htmlString,
       trigger: "manual",
