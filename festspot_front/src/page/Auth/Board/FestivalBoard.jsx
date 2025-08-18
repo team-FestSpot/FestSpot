@@ -79,6 +79,10 @@ function FestivalBoard() {
 
   const handlePageOnClick = (page) => setCurrentPage(page);
 
+  const handleWriteButtonOnClick = () => {
+    navigate(`/board/write`);
+  }
+
   return (
     // <>
     //   {posts.map((post) => (
@@ -95,7 +99,7 @@ function FestivalBoard() {
           {totalPages} 페이지
         </span>
         <div css={s.headerButtons}>
-          <button css={s.writeBtn} disabled={false}>
+          <button css={s.writeBtn} disabled={false} onClick={handleWriteButtonOnClick} >
             <AiOutlinePlus css={s.icon} />
             글쓰기
           </button>
@@ -152,7 +156,7 @@ function FestivalBoard() {
       {boardPosts.isFetched && posts.length === 0 && (
         <div css={s.emptyContainer}>
           <p css={s.emptyMessage}>아직 게시글이 없습니다.</p>
-          <button css={s.writeBtn}>
+          <button css={s.writeBtn} onClick={handleWriteButtonOnClick}>
             <AiOutlinePlus css={s.icon} />첫 번째 글 작성하기
           </button>
         </div>
