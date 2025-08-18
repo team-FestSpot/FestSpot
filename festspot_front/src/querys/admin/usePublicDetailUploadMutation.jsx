@@ -12,13 +12,14 @@ export const usePublicDetailUploadMutation = () =>
       const jsonData = (await convertXmlToJson(xmlText)).dbs.db;
 
       // 예매처 데이터가 relates.relate에 있어서 꺼냄
-      if(jsonData.relates.relate.length > 1) { // 예매처가 어러 곳이면 배열의 배열 안에 들어있어서 배열을 한겹 벗김
+      if (jsonData.relates.relate.length > 1) {
+        // 예매처가 어러 곳이면 배열의 배열 안에 들어있어서 배열을 한겹 벗김
         jsonData.relates = jsonData.relates.relate;
-      }
-      else { // 예매처가 한 곳이면 배열에 안 들어있어서 배열에 넣어줌
+      } else {
+        // 예매처가 한 곳이면 배열에 안 들어있어서 배열에 넣어줌
         jsonData.relates = [jsonData.relates.relate];
       }
-      console.log(jsonData.relates);
+      // console.log(jsonData);
       return reqUploadPerformanceApi(jsonData);
     },
   });

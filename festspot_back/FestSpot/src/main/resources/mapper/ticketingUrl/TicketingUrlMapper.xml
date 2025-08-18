@@ -3,35 +3,35 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.festspot.dev.domain.entity.ticketing.TicketingUrlMapper">
-    <resultMap id="relateMap" type="com.festspot.dev.domain.entity.ticketing.TicketingUrl">
-        <id property="ticketingUrlId" column="ticketing_url_id" />
-        <result property="performanceId" column="performance_id" />
-        <result property="ticketingUrl" column="ticketing_url" />
-        <result property="ticketingAgencyName" column="ticketing_agency_name" />
-    </resultMap>
-
-    <insert id="insert" useGeneratedKeys="true" keyProperty="ticketingUrlId">
+<mapper namespace="com.festspot.dev.domain.ticketing.TicketingUrlMapper">
+    <insert id="insert" keyProperty="ticketingUrlId" useGeneratedKeys="true">
         insert into ticketing_url_tb
         values
-            <foreach collection="list" item="ticketing" separator=",">
-                (default,
-                #{ticketing.performanceId},
-                #{ticketing.ticketingUrl},
-                #{ticketing.ticketingAgencyName})
-            </foreach>
+        <foreach collection="list" item="ticketing_url" separator=",">
+            (default,
+            #{ticketing_url.performanceId},
+            #{ticketing_url.ticketingUrl},
+            #{ticketing_url.ticketingAgencyName})
+        </foreach>
     </insert>
 
     <insert id="insertMany">
         insert into ticketing_url_tb
         values
-            <foreach collection="list" item="manyTicketingUrls" separator=",">
-                <foreach collection="manyTicketingUrls" item="ticketing" separator=",">
-                    (default,
-                    #{ticketing.performanceId},
-                    #{ticketing.ticketingUrl},
-                    #{ticketing.ticketingAgencyName})
-                </foreach>
+        <foreach collection="list" item="manyTicketingUrls" separator=",">
+            <foreach collection="manyTicketingUrls" item="ticketingUrl" separator=",">
+                (default,
+                #{ticketingUrl.performanceId},
+                #{ticketingUrl.ticketingUrl},
+                #{ticketingUrl.ticketingAgencyName})
             </foreach>
+        </foreach>
     </insert>
+
+    <resultMap id="TicketingUrlMap" type="com.festspot.dev.domain.ticketing.TicketingUrl">
+        <id column="ticketing_url_id" property="ticketingUrlId" />
+        <result column="performance_id" property="performanceId" />
+        <result column="ticketing_url" property="ticketingUrl" />
+        <result column="ticketing_agency_name" property="ticketingAgencyName" />
+    </resultMap>
 </mapper>

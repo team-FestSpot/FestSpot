@@ -8,7 +8,6 @@ export const reqUploadManyPerformanceApi = (details) => {
   return api.post("/admin/uploads", details);
 };
 
-
-export const reqUploadCustomPerformanceApi = (detail) => {
-  return api.post("/admin/upload/custom", detail);
+export const reqUploadCustomPerformanceApi = (data) => {
+  return api.post("/admin/upload/custom", data);
 };
