@@ -1,7 +1,11 @@
 package com.festspot.dev.domain.performance;
 
+import com.festspot.dev.domain.performance.performanceRegion.PerformanceRegion;
+import com.festspot.dev.domain.performance.performanceState.PerformanceState;
+import com.festspot.dev.domain.ticketing.TicketingUrl;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +18,6 @@ import lombok.NoArgsConstructor;
 public class Performance {
 
   private Integer performanceId;
-  private Integer performanceRegionId;
   private String performanceApiId;
   private String performanceTitle;
   private String performanceCast;
@@ -22,10 +25,12 @@ public class Performance {
   private LocalDate performanceStartDate;
   private LocalDate performanceEndDate;
   private String performanceVenue;
-  private Integer performanceStatus;
-  private Date performanceLastModified;
+  private LocalDateTime performanceLastModified;
   private Integer isForeign;
   private Integer isFestival;
-  private Date updatedAt;
+  private LocalDateTime updatedAt;
 
+  private PerformanceRegion performanceRegion;
+  private PerformanceState performanceState;
+  private List<TicketingUrl> ticketingUrls;
 }
