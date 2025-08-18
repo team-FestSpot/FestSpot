@@ -41,13 +41,19 @@
     select
       *
     from
-      performance_tb
+      performance_tb pt
+      left outer join performance_region_tb prt on(prt.performance_region_id = pt.performance_region_id)
+      left outer join performance_state_tb pst on(pst.performance_state_id = pt.performance_state_id)
+      left outer join ticketing_url_tb tut on(tut.performance_id = pt.performance_id)
   </select>
   <select id="findByPerformanceApiId" resultMap="PerformanceMap">
     select
     *
     from
       performance_tb
+      left outer join performance_region_tb prt on(prt.performance_region_id = pt.performance_region_id)
+      left outer join performance_state_tb pst on(pst.performance_state_id = pt.performance_state_id)
+      left outer join ticketing_url_tb tut on(tut.performance_id = pt.performance_id)
     where
       performance_api_id = #{performanceApiId}
   </select>
@@ -56,6 +62,9 @@
     *
     from
       performance_tb
+      left outer join performance_region_tb prt on(prt.performance_region_id = pt.performance_region_id)
+      left outer join performance_state_tb pst on(pst.performance_state_id = pt.performance_state_id)
+      left outer join ticketing_url_tb tut on(tut.performance_id = pt.performance_id)
     where
       performance_id = #{performanceId}
   </select>

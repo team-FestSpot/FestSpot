@@ -21,9 +21,11 @@ function Home(props) {
         </div>
       </div>
       <div css={s.homeRightSide}>
-        <div css={s.CalendarSection}>
-          <PerformanceCalendar performanceList={performanceList} />
-        </div>
+        {performanceList.length > 0 && (
+          <div css={s.CalendarSection}>
+            <PerformanceCalendar performanceList={performanceList} />
+          </div>
+        )}
       </div>
     </div>
   );
