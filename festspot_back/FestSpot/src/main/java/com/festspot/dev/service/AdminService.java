@@ -33,8 +33,8 @@ public class AdminService {
     }
 
     PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
-        dto.getPrfstate());
-    PerformanceState performanceState = performanceStateMapper.findByState(dto.getArea());
+        dto.getArea());
+    PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
 
     Performance performance = dto.toEntity(performanceRegion, performanceState);
     int performanceInsert = performanceMapper.insert(performance);
@@ -53,8 +53,8 @@ public class AdminService {
 
     List<Performance> performanceList = dtos.stream().map(dto -> {
       PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
-          dto.getPrfstate());
-      PerformanceState performanceState = performanceStateMapper.findByState(dto.getArea());
+          dto.getArea());
+      PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
       return dto.toEntity(performanceRegion, performanceState);
     }).toList();
     int result = performanceMapper.insertMany(performanceList);
