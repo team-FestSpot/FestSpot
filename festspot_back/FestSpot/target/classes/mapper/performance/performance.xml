@@ -60,7 +60,25 @@
     performance_id = #{performanceId}
   </select>
 
-  <insert id="insert" keyProperty="performanceId" useGeneratedKeys="true">
+  <select id="findByPerformanceApiIdIsNull" resultType="com.festspot.dev.domain.performance.Performance">
+    select
+      *
+    from
+      performance_tb pt
+      left outer join performance_region_tb prt
+      left outer join performance_state_tb pst
+      left outer join ticketing_url_tb tut
+    where
+      pt.performance_api_id is null
+    and
+      prt.performance_region_id = pt.performance_region_id
+    and
+      pst.performance_state_id = pt.performance_state_id
+    and
+      tut.performance_id = pt.performance_id
+  </select>
+
+    <insert id="insert" keyProperty="performanceId" useGeneratedKeys="true">
     insert ignore into performance_tb (
     performance_id,
     performance_region_id,

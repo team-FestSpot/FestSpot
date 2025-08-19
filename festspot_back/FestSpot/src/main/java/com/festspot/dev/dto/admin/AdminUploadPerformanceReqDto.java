@@ -7,6 +7,7 @@ import com.festspot.dev.dto.ticketing.TicketingReqDto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +35,9 @@ public class AdminUploadPerformanceReqDto {
 
     public LocalDate localDateParser(String stringDate) {
         // 문자열 형식에 맞는 포매터 지정
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("[yyyy.MM.dd][yyyy-MM-dd]") // 대괄호로 패턴 여러 개 등록
+                .toFormatter();
         // 문자열을 LocalDate로 파싱
         return LocalDate.parse(stringDate, formatter);
     }
