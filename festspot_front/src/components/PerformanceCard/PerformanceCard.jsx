@@ -9,9 +9,8 @@ function PerformanceCard({ performanceList }) {
   return (
     <ResponsiveMasonry
       style={{
-        display: "-webkit-box" /* Not needed if autoprefixing */,
-        display: "-ms-flexbox" /* Not needed if autoprefixing */,
-        display: "flex",
+        display: "-webkit-box",
+        display: "-ms-flexbox",
         justifyContent: "center",
         alignContent: "center",
         width: "100%",
@@ -21,7 +20,7 @@ function PerformanceCard({ performanceList }) {
       columnsCountBreakPoints={{
         1: 3,
         768: 4,
-        1024: 3,
+        1024: 3, // 반응형
       }}
     >
       <Masonry
@@ -38,7 +37,7 @@ function PerformanceCard({ performanceList }) {
                 <div css={s.posterContainer}>
                   <img src={performance.performancePosterUrl} />
                   <div css={s.dateBox}>
-                    {performance.performanceStartDate ===
+                    {performance.performanceStartDate === // 시작 날짜와 끝나는 날짜가 같으면 하나만 출력
                     performance.performanceEndDate ? (
                       <p>
                         {getDateDotForm(performance.performanceStartDate).slice(

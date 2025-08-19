@@ -6,8 +6,6 @@ import * as s from "./styles";
 import React from "react";
 
 function Home(props) {
-  const listData = JSON.parse(localStorage.getItem("data"));
-
   const performanceListQuery = usePerformanceListQuery();
   const performanceList = performanceListQuery.isFetched
     ? performanceListQuery?.data?.data?.body
@@ -21,9 +19,11 @@ function Home(props) {
         </div>
       </div>
       <div css={s.homeRightSide}>
-        <div css={s.CalendarSection}>
-          <PerformanceCalendar performanceList={performanceList} />
-        </div>
+        {performanceList.length > 0 && (
+          <div css={s.CalendarSection}>
+            <PerformanceCalendar performanceList={performanceList} />
+          </div>
+        )}
       </div>
     </div>
   );

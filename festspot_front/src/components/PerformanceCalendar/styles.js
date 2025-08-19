@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 
-export const calendarContainer2 = css`
+export const calendarContainer = css`
   width: 100%;
 
   //스크롤 옵션
