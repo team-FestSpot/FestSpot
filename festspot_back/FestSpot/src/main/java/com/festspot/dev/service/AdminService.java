@@ -15,22 +15,16 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-<<<<<<< HEAD
 import org.springframework.web.multipart.MultipartFile;
-=======
->>>>>>> 370a1d7a1ed1d9e5b170a9847197b521560ba496
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-<<<<<<< HEAD
-
     private final PerformanceMapper performanceMapper;
     private final PerformanceRegionMapper performanceRegionMapper;
     private final PerformanceStateMapper performanceStateMapper;
     private final TicketingUrlMapper ticketingUrlMapper;
     private final FileService fileService;
-    private final PostFileStorage storage;
 
     @Transactional(rollbackFor = Exception.class)
     public int uploadPerformance(AdminUploadPerformanceReqDto dto) {
@@ -104,61 +98,10 @@ public class AdminService {
 
         return performanceInsert * ticketingUrlInsert;
     }
-}
-=======
 
-  private final PerformanceMapper performanceMapper;
-  private final PerformanceRegionMapper performanceRegionMapper;
-  private final PerformanceStateMapper performanceStateMapper;
-  private final TicketingUrlMapper ticketingUrlMapper;
-
-  @Transactional(rollbackFor = Exception.class)
-  public int uploadPerformance(AdminUploadPerformanceReqDto dto) {
-    System.out.println(dto);
-    if (performanceMapper.findByPerformanceApiId(dto.getMt20id()) != null) {
-      return 0;
+    public List<Performance> getCustomPerformanceInfoList() {
+        List<Performance> customPerformanceList = performanceMapper.findByPerformanceApiIdIsNotNull();
+        System.out.println(customPerformanceList);
+        return null;
     }
-
-    PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
-        dto.getArea());
-    PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
-
-    Performance performance = dto.toEntity(performanceRegion, performanceState);
-    int performanceInsert = performanceMapper.insert(performance);
-
-    // 예매처 dto 객체가 담긴 List 생성
-    // 예매처 링크는 배열 안에 객체(예매처명, 예매처링크)가 들어있는 형태로 날아옴
-    List<TicketingUrl> ticketingUrls = dto.getRelates().stream()
-        .map(relate -> relate.toEntity(performance.getPerformanceId())).toList();
-    int ticketingUrlInsert = ticketingUrlMapper.insert(ticketingUrls);
-
-    return performanceInsert * ticketingUrlInsert;
-  }
-
-  @Transactional(rollbackFor = Exception.class)
-  public int uploadManyPerformance(List<AdminUploadPerformanceReqDto> dtos) {
-
-    List<Performance> performanceList = dtos.stream().map(dto -> {
-      PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
-          dto.getArea());
-      PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
-      return dto.toEntity(performanceRegion, performanceState);
-    }).toList();
-    int result = performanceMapper.insertMany(performanceList);
-
-    // 예매처 dto들이 담긴 list가 담긴 list를 예매처 entity들이 담긴 list가 담긴 list로 변환
-    List<List<TicketingUrl>> TicketingUrls = performanceList.stream().map(perform -> {
-      List<TicketingReqDto> relates = dtos.stream()
-          .filter(dto -> Objects.equals(dto.getMt20id(), perform.getPerformanceApiId()))
-          .findFirst().orElseThrow()
-          .getRelates();
-      return relates.stream().map(relate -> relate.toEntity(perform.getPerformanceId())).toList();
-    }).toList();
-
-    // 각 공연들의 예매처 정보들을 relate 테이블에 저장
-    ticketingUrlMapper.insertMany(TicketingUrls);
-
-    return result;
-  }
 }
->>>>>>> 370a1d7a1ed1d9e5b170a9847197b521560ba496

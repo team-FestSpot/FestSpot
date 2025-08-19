@@ -33,8 +33,4 @@ public class Performance {
   private PerformanceRegion performanceRegion;
   private PerformanceState performanceState;
   private List<TicketingUrl> ticketingUrls;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 370a1d7a1ed1d9e5b170a9847197b521560ba496
