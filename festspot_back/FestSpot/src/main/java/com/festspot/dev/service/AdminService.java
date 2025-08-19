@@ -8,6 +8,7 @@ import com.festspot.dev.domain.performance.performanceState.PerformanceState;
 import com.festspot.dev.domain.performance.performanceState.PerformanceStateMapper;
 import com.festspot.dev.domain.ticketing.TicketingUrl;
 import com.festspot.dev.domain.ticketing.TicketingUrlMapper;
+import com.festspot.dev.dto.admin.AdminGetCustomPerformanceRespDto;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
 import java.util.List;
@@ -99,9 +100,8 @@ public class AdminService {
         return performanceInsert * ticketingUrlInsert;
     }
 
-    public List<Performance> getCustomPerformanceInfoList() {
-        List<Performance> customPerformanceList = performanceMapper.findByPerformanceApiIdIsNotNull();
-        System.out.println(customPerformanceList);
-        return null;
+    public List<AdminGetCustomPerformanceRespDto> getCustomPerformanceInfoList() {
+        List<Performance> performanceList = performanceMapper.findByPerformanceApiIdIsNull();
+        return performanceList.stream().map(performance -> performance.toPerformanceDto()).toList();
     }
 }

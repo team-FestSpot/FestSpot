@@ -5,7 +5,6 @@ import AdminDataGrid from "../AdminDataGrid/AdminDataGrid";
 import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
 import { usePublicDetailUploadManyMutation } from "../../../querys/admin/usePublicDetailUploadManyMutation";
 import { usePublicApiSearchResultMutation } from "../../../querys/admin/usePublicApiSearchResultMutation";
-
 import Button from "@mui/material/Button";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
 /** @jsxImportSource @emotion/react */
@@ -36,8 +35,7 @@ function AdminMainPage(props) {
 
   return (
     <div css={s.layout}>
-      <div css={s.sidebarLayout}>
-      </div>
+      <div css={s.sidebarLayout}></div>
       <div css={s.mainLayout}>
         <header css={s.header}>
           <div>
@@ -46,62 +44,58 @@ function AdminMainPage(props) {
         </header>
         <main>
           <div>
-            <div>
-              <div css={s.searchLayout}>
-                <div css={s.searchInputLayout}>
-                  <div css={s.searchButton}>
-                    <IoSearch />
-                  </div>
-                  <input
-                    id="name"
-                    type="text"
-                    placeholder="공연/페스티벌명 검색"
-                    css={s.searchInput}
-                    onChange={handleSearchInputOnChange}
-                  />
+            <div css={s.searchLayout}>
+              <div css={s.searchInputLayout}>
+                <div css={s.searchButton}>
+                  <IoSearch />
                 </div>
-                <div css={s.searchInputLayout}>
-                  <div css={s.searchButton}>
-                    <IoSearch />
-                  </div>
-                  <input
-                    id="venue"
-                    type="text"
-                    placeholder="공연장 검색"
-                    css={s.searchInput}
-                    onChange={handleSearchInputOnChange}
-                  />
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="공연/페스티벌명 검색"
+                  css={s.searchInput}
+                  onChange={handleSearchInputOnChange}
+                />
+              </div>
+              <div css={s.searchInputLayout}>
+                <div css={s.searchButton}>
+                  <IoSearch />
                 </div>
-                <div>
-                  <Button
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      setRowsEmpty();
-                      while (
-                        !!(await searchMutation.mutateAsync(
-                          searchMutationParams
-                        ))
-                      ) {
-                        await searchMutation
-                          .mutateAsync(searchMutationParams)
-                          .then((result) => setRows(result));
-                        searchMutationParams.page++;
-                      }
-                    }}
-                  >
-                    검색
-                  </Button>
-                </div>
-                <div>
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      uploadManyMutation.mutateAsync(checkedRows);
-                    }}
-                  >
-                    추가
-                  </Button>
-                </div>
+                <input
+                  id="venue"
+                  type="text"
+                  placeholder="공연장 검색"
+                  css={s.searchInput}
+                  onChange={handleSearchInputOnChange}
+                />
+              </div>
+              <div>
+                <Button
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    setRowsEmpty();
+                    while (
+                      !!(await searchMutation.mutateAsync(searchMutationParams))
+                    ) {
+                      await searchMutation
+                        .mutateAsync(searchMutationParams)
+                        .then((result) => setRows(result));
+                      searchMutationParams.page++;
+                    }
+                  }}
+                >
+                  검색
+                </Button>
+              </div>
+              <div>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    uploadManyMutation.mutateAsync(checkedRows);
+                  }}
+                >
+                  추가
+                </Button>
               </div>
             </div>
           </div>
