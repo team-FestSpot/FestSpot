@@ -6,7 +6,7 @@ import { getDateDotForm } from "../../utils/getDateForm";
 const tippyInstanceMap = new Map();
 
 export const TippyInTippy = (target, event) => {
-  // map에 값이 있으면 그냥 return
+  // 싱글톤 (map에 값이 있으면 그냥 return)
   if (tippyInstanceMap.has(target.id)) {
     return;
   }
@@ -23,6 +23,7 @@ export const TippyInTippy = (target, event) => {
     ticketingUrls: event.ticketingUrls,
   };
 
+  // tippy 창
   const contentElement = document.createElement("div");
   const root = ReactDOM.createRoot(contentElement);
   root.render(
@@ -104,6 +105,7 @@ export const TippyInTippy = (target, event) => {
 
       tippyBox.style.color = "#474747";
 
+      // 페스티벌, 내한 여부에 따라 배경 색 다르게
       if (isFestival) {
         tippyBox.style.backgroundColor = "#ffda77";
         tippyArrow.style.color = "#ffda77";
@@ -122,5 +124,6 @@ export const TippyInTippy = (target, event) => {
     },
   });
 
+  // map에 값 등록
   tippyInstanceMap.set(target.id, instance);
 };

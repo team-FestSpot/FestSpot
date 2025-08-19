@@ -1,5 +1,4 @@
 import { css } from "@emotion/react";
-import { width } from "@mui/system";
 
 export const homeLayout = css`
   display: flex;
@@ -9,7 +8,7 @@ export const homeLayout = css`
   }
 
   width: 100%;
-  height: 85%;
+  height: 95%;
 `;
 
 export const homeLeftSide = css`
@@ -18,6 +17,7 @@ export const homeLeftSide = css`
     border-right: none;
   }
 
+  height: 100%;
   box-sizing: border-box;
   box-shadow: inset -0.5px 0 0 #ccc;
   width: 45%;
@@ -46,6 +46,7 @@ export const homeRightSide = css`
   width: 55%;
   flex-grow: 1;
   padding-left: 10px;
+  height: 100%;
 
   @media (max-width: 1024px) {
     width: 100%;
