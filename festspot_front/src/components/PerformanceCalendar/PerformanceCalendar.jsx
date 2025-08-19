@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import ko from "@fullcalendar/core/locales/ko";
@@ -15,10 +15,8 @@ import { dayClickTippy } from "../tippy/dayClickTippy";
 import { getTommorowDateDashForm } from "../../utils/getDateForm";
 
 function PerformanceCalendar({ performanceList }) {
-  console.log(performanceList);
-
   const setPerformanceEvents = (e) => {
-    return performanceList.map((performance) =>
+    const calendarEvents = performanceList.map((performance) =>
       performance.performanceStartDate === performance.performanceEndDate
         ? {
             title: performance.performanceTitle,
@@ -28,6 +26,7 @@ function PerformanceCalendar({ performanceList }) {
             performanceVenue: performance.performanceVenue,
             isFestival: performance.isFestival,
             isForeign: performance.isForeign,
+            ticketingUrls: performance.ticketingUrls,
           }
         : {
             title: performance.performanceTitle,
@@ -38,28 +37,16 @@ function PerformanceCalendar({ performanceList }) {
             performanceVenue: performance.performanceVenue,
             isFestival: performance.isFestival,
             isForeign: performance.isForeign,
+            ticketingUrls: performance.ticketingUrls,
           }
     );
+
+    return calendarEvents;
   };
 
-  const eventRenderCountRef = useRef({});
   const performEventBoxStyle = (info) => {
     const { isFestival, isForeign } = info.event.extendedProps;
-    const eventRenderCount = eventRenderCountRef.current;
-    const dateKey = info.event.startStr;
-
-    // 날짜별 카운트가 없으면 초기화
-    if (!eventRenderCount[dateKey]) {
-      eventRenderCount[dateKey] = 0;
-    }
-
     const eventBoxStyle = info.el.style;
-    // 3개까지만 표시하고 이후는 숨김
-    if (eventRenderCount[dateKey] >= 3) {
-      eventBoxStyle.display = "none";
-      return;
-    }
-    eventRenderCount[dateKey]++;
 
     // 스타일 변경하기 위한 변수
     if (isFestival) {
@@ -67,16 +54,12 @@ function PerformanceCalendar({ performanceList }) {
     } else if (isForeign) {
       eventBoxStyle.backgroundColor = "#a2d2ff"; // 예: 파란색
     } else {
-      eventBoxStyle.backgroundColor = "#ef5a393d"; // 일반 공연 회색
+      eventBoxStyle.backgroundColor = "#FBD8D0"; // 일반 공연 회색
     }
+
     //공통 스타일
     eventBoxStyle.color = "red";
     eventBoxStyle.border = "none";
-  };
-
-  //달 바뀔때마다 ref 초기화
-  const handleDateOnChange = () => {
-    eventRenderCountRef.current = {};
   };
 
   const calendarRef = useRef(null);
@@ -114,6 +97,8 @@ function PerformanceCalendar({ performanceList }) {
           initialView="dayGridMonth"
           locale={ko}
           events={setPerformanceEvents()}
+          dayMaxEvents={3}
+          moreLinkContent={(eventCount) => `${eventCount.shortText}`}
           headerToolbar={{
             left: "prev", // 왼쪽
             center: "title", // 가운데
@@ -125,7 +110,6 @@ function PerformanceCalendar({ performanceList }) {
             performEventBoxStyle(info);
             performanceEventTippy(info);
           }}
-          datesSet={handleDateOnChange}
           height={"100%"}
         ></FullCalendar>
       </div>
