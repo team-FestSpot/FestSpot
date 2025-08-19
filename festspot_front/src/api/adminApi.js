@@ -11,3 +11,7 @@ export const reqUploadManyPerformanceApi = (details) => {
 export const reqUploadCustomPerformanceApi = (data) => {
   return api.post("/admin/upload/custom", data);
 };
+
+export const reqGetCustomPerformanceListApi = () => {
+  return api.get("/admin/list/custom");
+};
