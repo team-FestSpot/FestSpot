@@ -7,12 +7,64 @@ import com.festspot.dev.dto.ticketing.TicketingReqDto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Objects;
 import lombok.Data;
 
+import lombok.Builder;
+import lombok.Data;
+
 @Data
 public class AdminUploadPerformanceReqDto {
+<<<<<<< HEAD
+
+    // api 기준으로 변수명 작성됨
+    private String mt20id;    // performanceApiId
+    private String poster;    // 포스터 url
+    private String prfnm;
+    private String area;      // 지역명(문자열)
+    private String fcltynm;
+    private String genrenm;
+    private String openrun;
+    private String prfstate;  // 공연 상태(문자열)
+    private String prfpdfrom;
+    private String prfpdto;
+    private String visit;
+    private String festival;
+    private String prfcast;
+    private List<TicketingReqDto> relates;
+
+    public LocalDate localDateParser(String stringDate) {
+        // 문자열 형식에 맞는 포매터 지정
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("[yyyy.MM.dd][yyyy-MM-dd]") // 대괄호로 패턴 여러 개 등록
+                .toFormatter();
+        // 문자열을 LocalDate로 파싱
+        return LocalDate.parse(stringDate, formatter);
+    }
+
+    public Performance toEntity(PerformanceRegion performanceRegion,
+                                PerformanceState performanceState) {
+        LocalDateTime now = LocalDateTime.now();
+        return Performance.builder()
+                .performanceApiId(mt20id)
+                .performanceTitle(prfnm)
+                .performancePosterUrl(poster)
+                .performanceStartDate(localDateParser(prfpdfrom))
+                .performanceEndDate(localDateParser(prfpdto))
+                .performanceVenue(fcltynm)
+                .performanceLastModified(now)
+                .isForeign(Objects.equals(visit, "Y") ? 1 : 0)
+                .isFestival(Objects.equals(festival, "Y") ? 1 : 0)
+                .updatedAt(now)
+                .performanceCast(prfcast)
+                .performanceRegion(performanceRegion)
+                .performanceState(performanceState)
+                .build();
+    }
+}
+=======
 
   // api 기준으로 변수명 작성됨
   private String mt20id;    // performanceApiId
@@ -57,3 +109,4 @@ public class AdminUploadPerformanceReqDto {
         .build();
   }
 }
+>>>>>>> 370a1d7a1ed1d9e5b170a9847197b521560ba496
