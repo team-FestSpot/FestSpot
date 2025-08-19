@@ -6,16 +6,16 @@ export const layout = css`
   justify-content: center;
   width: 100%;
   height: 100%;
+  overflow: scroll;
 `;
 
 export const imgContainerLayout = css`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  padding: 20px;
   width: 100%;
   max-height: 40vh;
-  overflow: scroll;
+  flex-shrink: 0;
 
   ::-webkit-scrollbar {
     display: none;
@@ -36,6 +36,7 @@ export const imgInput = css`
   display: flex;
   justify-content: center;
   width: 100%;
+  height: 40px;
 `;
 
 export const inputListContainerLayout = css`
@@ -44,21 +45,21 @@ export const inputListContainerLayout = css`
   justify-content: flex-end;
   align-items: center;
   flex: 1;
-  padding-bottom: 30px;
   width: 100%;
-  overflow-y: scroll;
 `;
 
 export const inputListContainer = css`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  align-items: center;
+  width: 70%;
+  flex-shrink: 0;
 `;
 
 export const inputTicketingContainer = css`
   display: flex;
   flex-direction: row;
-  width: 80%;
+  width: 70%;
   gap: 10px;
 `;
 

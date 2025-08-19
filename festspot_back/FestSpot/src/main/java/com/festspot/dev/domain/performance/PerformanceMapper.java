@@ -8,6 +8,8 @@ public interface PerformanceMapper {
 
   List<Performance> findAll();
 
+  List<Performance> findByPerformanceApiIdIsNull();
+
   Performance findByPerformanceApiId(String performanceApiId);
 
   Performance findById(Integer performanceId);

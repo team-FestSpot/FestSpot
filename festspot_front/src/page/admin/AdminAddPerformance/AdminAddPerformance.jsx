@@ -9,8 +9,8 @@ import { reqUploadCustomPerformanceApi } from "../../../api/adminApi";
 import { CiSquarePlus, CiSquareMinus } from "react-icons/ci";
 
 function AdminAddPerformance(props) {
-  const [imageFile, setImageFile] = useState({});
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState({}); // 업로드할 이미지파일 데이터 저장
+  const [imageUrl, setImageUrl] = useState(""); // 화면에 업로드할 이미지 표시
   const { detail, setDetail, setDetailEmpty } = useAdminAddPerformanceStore();
   const [ticketingUrlList, setTicketingUrlList] = useState([
     {
@@ -103,14 +103,15 @@ function AdminAddPerformance(props) {
 
   const handleImageUploadOnChange = (e) => {
     const file = e.target.files[0];
-    if (!!file) {
-      const fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        setImageUrl(e.target.result);
-      };
-      fileReader.readAsDataURL(file);
-      setImageFile(...e.target.files);
+    if (!file) {
+      return;
     }
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      setImageUrl(e.target.result);
+    };
+    fileReader.readAsDataURL(file);
+    setImageFile(...e.target.files);
 
     // const filesArray = [...e.target.files];
 
@@ -170,12 +171,34 @@ function AdminAddPerformance(props) {
     });
   };
 
-  const handleAddPerformanceButtonOnClick = () => {
-    // for (let item in detail) {
-    //   if (!detail[item]) {
-    //     console.log(item);
-    //   }
-    // }
+  const handleAddPerformanceButtonOnClick = async () => {
+    console.log(imageFile);
+    console.log(Object.keys(imageFile).length);
+    if (Object.keys(imageFile).length < 1) {
+      alert("이미지 없음");
+      return;
+    }
+
+    for (const [value] of Object.values(detail)) {
+      // console.log(value);
+      // console.log(!value);
+      if (!value) {
+        alert("내용 누락");
+        return;
+      }
+    }
+
+    for (let relate in detail.relates) {
+      for (const [value] of Object.values(relate)) {
+        console.log(value);
+        console.log(!value);
+        if (!value < 1) {
+          alert("예매처 정보 누락");
+          return;
+        }
+      }
+    }
+
     let formData = new FormData();
     formData.append(
       "data",
@@ -186,33 +209,28 @@ function AdminAddPerformance(props) {
     formData.append("file", imageFile);
 
     try {
-      reqUploadCustomPerformanceApi(formData);
-      //   setDetailEmpty();
-      //   setImageFile("");
+      const response = await reqUploadCustomPerformanceApi(formData);
+      if (response > 0) {
+        setDetailEmpty();
+        setImageFile({});
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    console.log(ticketingInputValue);
     setDetail("relates", [...ticketingInputValue]);
   }, [ticketingInputValue]);
-
-  //   useEffect(() => {
-  //     console.log(imageFile);
-  //   }, [imageFile]);
-
-  useEffect(() => {
-    console.log(detail);
-  }, [detail]);
 
   return (
     <div css={s.layout}>
       <div css={s.imgContainerLayout}>
-        <div css={s.imgContainer}>
-          <img src={imageUrl} alt="" />
-        </div>
+        {!!imageUrl && (
+          <div css={s.imgContainer}>
+            <img src={imageUrl} alt="" />
+          </div>
+        )}
       </div>
       <div css={s.inputListContainerLayout}>
         <div css={s.imgInput}>

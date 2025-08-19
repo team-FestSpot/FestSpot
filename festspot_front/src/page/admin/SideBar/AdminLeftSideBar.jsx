@@ -48,10 +48,11 @@ function AdminLeftSideBar(props) {
             to="/admin/userperformance"
             css={[
               s.navItem,
-              location.pathname.slice(7) === "userperformance" && s.activeNavItem,
+              location.pathname.slice(7) === "userperformance" &&
+                s.activeNavItem,
             ]}
           >
-            사용자 등록 공연 정보 관리
+            API 외 공연 정보 관리
           </Link>
           <Link
             id="config"

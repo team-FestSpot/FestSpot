@@ -16,7 +16,10 @@ import { usePublicApiAllQuery } from "../../../querys/admin/usePublicApiAllQuery
 function AdminDataGrid(props) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
-  const [sortOption, setSortOption] = useState({column: "prfpdfrom", direction: "asc"}); // 특정 컬럼 기준 오름차순/내림차순 정렬 상태
+  const [sortOption, setSortOption] = useState({
+    column: "prfpdfrom",
+    direction: "asc",
+  }); // 특정 컬럼 기준 오름차순/내림차순 정렬 상태
   const [paginationList, setPaginationList] = useState([]);
   const { data, isLoading } = usePublicApiAllQuery(); // 공연예술통합전산망 api에 데이터 요청
   const { rows, setRows, setRowsEmpty } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
@@ -130,13 +133,13 @@ function AdminDataGrid(props) {
     });
 
     sortArr.sort((a, b) => {
-       if (a[column] < b[column]) return direction === "asc" ? -1 : 1;
+      if (a[column] < b[column]) return direction === "asc" ? -1 : 1;
       if (a[column] > b[column]) return direction === "asc" ? 1 : -1;
       return 0;
     });
     setRowsEmpty();
     setRows([...sortArr]);
-  }
+  };
 
   const handleRowSelectionOnChange = (e) => {
     setCheckedRows(e.ids);

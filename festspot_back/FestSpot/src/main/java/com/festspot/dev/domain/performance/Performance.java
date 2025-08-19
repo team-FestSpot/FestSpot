@@ -6,6 +6,8 @@ import com.festspot.dev.domain.ticketing.TicketingUrl;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.festspot.dev.dto.admin.AdminGetCustomPerformanceRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,4 +35,20 @@ public class Performance {
   private PerformanceRegion performanceRegion;
   private PerformanceState performanceState;
   private List<TicketingUrl> ticketingUrls;
+
+  public AdminGetCustomPerformanceRespDto toDto() {
+    return AdminGetCustomPerformanceRespDto.builder()
+            .prfnm(performanceTitle)
+            .area(performanceRegion.getRegionName())
+            .performanceId(performanceId)
+            .poster(performancePosterUrl)
+            .prfpdfrom(performanceStartDate)
+            .prfpdto(performanceEndDate)
+            .visit(isForeign == 1 ? "Y" : "N")
+            .festival(isFestival == 1 ? "Y" : "N")
+            .fcltynm(performanceVenue)
+            .prfcast(performanceCast)
+            .prfstate(performanceState.getPerformanceState())
+            .build();
+  }
 }

@@ -1,5 +1,6 @@
 package com.festspot.dev.controller;
 
+import com.festspot.dev.domain.performance.Performance;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +40,17 @@ public class AdminController {
     public ResponseEntity<?> uploadCustomPerformance(@RequestPart("data") AdminUploadPerformanceReqDto dto, @RequestPart MultipartFile file) {
         System.out.println(dto);
         System.out.println(file);
-        adminService.uploadCustomPerformance(dto, file);
 
-        int result = 1;
+        int result = adminService.uploadCustomPerformance(dto, file);
         if(result < 1) {
             return ResponseEntity.badRequest().body(HttpStatus.SERVICE_UNAVAILABLE);
         }
         return ResponseEntity.ok("공연 정보 업로드 성공");
     }
 
+    @GetMapping("/custom/list")
+    public ResponseEntity<?> getCustomPerformanceInfo() {
+        adminService.getCustomPerformanceInfo();
+        return ResponseEntity.ok("");
+    }
 }
