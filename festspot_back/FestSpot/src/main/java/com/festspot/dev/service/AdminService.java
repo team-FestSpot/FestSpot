@@ -100,8 +100,4 @@ public class AdminService {
 
         return performanceInsert * ticketingUrlInsert;
     }
-
-    public List<Performance> getCustomPerformanceInfo() {
-        return performanceMapper.findByPerformanceApiIdIsNull();
-    }
 }
