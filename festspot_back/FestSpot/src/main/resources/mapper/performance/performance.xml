@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.festspot.dev.domain.performance.PerformanceMapper">
   <resultMap id="PerformanceMap" type="com.festspot.dev.domain.performance.Performance">
@@ -39,29 +39,61 @@
 
   <select id="findAll" resultMap="PerformanceMap">
     select
-      *
+    *
     from
-      performance_tb
+    performance_tb
   </select>
   <select id="findByPerformanceApiId" resultMap="PerformanceMap">
     select
     *
     from
-      performance_tb
+    performance_tb
     where
-      performance_api_id = #{performanceApiId}
+    performance_api_id = #{performanceApiId}
   </select>
   <select id="findById" resultMap="PerformanceMap">
     select
     *
     from
-      performance_tb
+    performance_tb
     where
-      performance_id = #{performanceId}
+    performance_id = #{performanceId}
   </select>
 
   <insert id="insert" keyProperty="performanceId" useGeneratedKeys="true">
     insert ignore into performance_tb (
+<<<<<<< HEAD
+    performance_id,
+    performance_region_id,
+    performance_api_id,
+    performance_title,
+    performance_cast,
+    performance_poster_url,
+    performance_start_date,
+    performance_end_date,
+    performance_venue,
+    performance_state_id,
+    performance_last_modified,
+    is_foreign,
+    is_festival,
+    updated_at
+    )
+    values (
+    default,
+    #{performanceRegion.performanceRegionId},
+    #{performanceApiId},
+    #{performanceTitle},
+    #{performanceCast},
+    #{performancePosterUrl},
+    #{performanceStartDate},
+    #{performanceEndDate},
+    #{performanceVenue},
+    #{performanceState.performanceStateId},
+    #{performanceLastModified},
+    #{isForeign},
+    #{isFestival},
+    #{updatedAt}
+=======
       performance_id,
       performance_region_id,
       performance_api_id,
@@ -92,11 +124,48 @@
       #{isForeign},
       #{isFestival},
       #{updatedAt}
+>>>>>>> 370a1d7a1ed1d9e5b170a9847197b521560ba496
     )
   </insert>
 
   <insert id="insertMany" keyProperty="performanceId" parameterType="java.util.List" useGeneratedKeys="true">
     insert ignore into performance_tb (
+<<<<<<< HEAD
+    performance_id,
+    performance_region_id,
+    performance_api_id,
+    performance_title,
+    performance_cast,
+    performance_poster_url,
+    performance_start_date,
+    performance_end_date,
+    performance_venue,
+    performance_state_id,
+    performance_last_modified,
+    is_foreign,
+    is_festival,
+    updated_at
+    )
+    values
+    <foreach collection="list" index="index" item="performance" separator=",">
+      (
+      default,
+      #{performance.performanceRegion.performanceRegionId},
+      #{performance.performanceApiId},
+      #{performance.performanceTitle},
+      #{performance.performanceCast},
+      #{performance.performancePosterUrl},
+      #{performance.performanceStartDate},
+      #{performance.performanceEndDate},
+      #{performance.performanceVenue},
+      #{performance.performanceState.performanceStateId},
+      #{performance.performanceLastModified},
+      #{performance.isForeign},
+      #{performance.isFestival},
+      #{performance.updatedAt}
+      )
+    </foreach>
+=======
       performance_id,
       performance_region_id,
       performance_api_id,
@@ -131,5 +200,6 @@
           #{performance.updatedAt}
         )
       </foreach>
+>>>>>>> 370a1d7a1ed1d9e5b170a9847197b521560ba496
   </insert>
 </mapper>

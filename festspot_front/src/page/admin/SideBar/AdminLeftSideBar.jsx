@@ -18,7 +18,7 @@ function AdminLeftSideBar(props) {
             to="/admin/dashboard"
             css={[
               s.navItem,
-              location.pathname.slice(7) === "main" && s.activeNavItem,
+              location.pathname.slice(7) === "dashboard" && s.activeNavItem,
             ]}
           >
             관리자 메인
@@ -44,18 +44,19 @@ function AdminLeftSideBar(props) {
             사용자 관리
           </Link>
           <Link
-            id="userperformance"
+            id="user"
             to="/admin/userperformance"
             css={[
               s.navItem,
-              location.pathname.slice(7) === "user" && s.activeNavItem,
+              location.pathname.slice(7) === "userperformance" &&
+                s.activeNavItem,
             ]}
           >
-            사용자 등록 공연 정보 관리
+            API 외 공연 정보 관리
           </Link>
           <Link
             id="config"
-            to="/admin/user/performance"
+            to="/admin/config"
             css={[
               s.navItem,
               location.pathname.slice(7) === "config" && s.activeNavItem,
