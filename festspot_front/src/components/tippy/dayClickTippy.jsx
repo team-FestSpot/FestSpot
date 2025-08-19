@@ -1,43 +1,56 @@
 import tippy from "tippy.js";
 import ReactDOM from "react-dom/client";
+import { TippyInTippy } from "./tippyInTippy";
 
-export const dayClickTippy = (info, eventsListOnDate) => {
-  const htmlString = eventsListOnDate
-    .map((event, idx) => {
-      const { isFestival, isForeign } = event._def.extendedProps;
+export const DayClickTippy = (info, eventsListOnDate) => {
+  // 페스티벌, 내한 여부에 따라 배경 색 다르게
+  const backgroundColor = (isFestival, isForeign) => {
+    if (isFestival) return "#ffda77";
+    if (isForeign) return "#a2d2ff";
+    return "#FBD8D0";
+  };
 
-      let backgroundColor = "#FBD8D0";
-      if (isFestival) {
-        backgroundColor = "#ffda77";
-      } else if (isForeign) {
-        backgroundColor = "#a2d2ff";
-      }
-      const padding = "4px 8px";
-      const borderRadius = "4px";
-      const marginBottom = "4px";
+  const handleDayTippyOnClick = (e) => {
+    const clickedEvent = eventsListOnDate.find(
+      (event) => event.performanceId.toString() === e.target.id
+    );
+    TippyInTippy(e.target, clickedEvent);
+  };
 
-      return `<div style="
-      background-color: ${backgroundColor};
-      padding: ${padding};
-      border-radius: ${borderRadius};
-      margin-bottom: ${marginBottom};
-    ">
-      ${event._def.title}
-    </div>`;
-    })
-    .join("");
+  // tippy 창
+  const contentElement = document.createElement("div");
+  const root = ReactDOM.createRoot(contentElement);
+  root.render(
+    eventsListOnDate.map((event) => (
+      <div
+        key={event.performanceId}
+        id={event.performanceId}
+        style={{
+          backgroundColor: `${backgroundColor(
+            event.isFestival,
+            event.isForeign
+          )}`,
+          padding: "4px 8px",
+          borderRadius: "4px",
+          marginBottom: "4px",
+        }}
+      >
+        {event.performanceTitle}
+      </div>
+    ))
+  );
+  contentElement.addEventListener("click", handleDayTippyOnClick);
 
-  <div id="test">test</div>;
-
-  const test = document.getElementById("test");
-
-  if (eventsListOnDate.length > 0) {
-    tippy(info.dayEl, {
-      content: test.innerHTML,
-      trigger: "manual",
+  // 날짜에 이벤트 4개 이상이여야 창 뜨게
+  if (eventsListOnDate.length > 3) {
+    tippy(info.el, {
+      content: contentElement,
+      trigger: "click",
       placement: "top",
       animation: "scale-extreme",
       allowHTML: true,
+      interactive: true,
+      appendTo: () => document.body,
 
       onMount(instance) {
         const tippyBox = instance.popper.querySelector(".tippy-box");
@@ -47,6 +60,6 @@ export const dayClickTippy = (info, eventsListOnDate) => {
         tippyBox.style.backgroundColor = "#fff";
         tippyArrow.style.color = "#fff";
       },
-    }).show();
+    });
   }
 };

@@ -4,9 +4,10 @@ export const getDateDashForm = (localDate) => {
   if (localDate.includes(".")) {
     return localDate.replace(/\./g, "-");
   }
-  return `${localDate.slice(0, 4)}-
-  ${localDate.slice(4, 6)}-
-  ${localDate.slice(6, 8)}`;
+  return `${localDate.slice(0, 4)}-${localDate.slice(4, 6)}-${localDate.slice(
+    6,
+    8
+  )}`;
 };
 
 export const getTommorowDateDashForm = (localDate) => {
@@ -55,7 +56,8 @@ export const getDateDotForm = (localDate) => {
   if (localDate.includes("-")) {
     return localDate.replace(/\-/g, ".");
   }
-  return `${localDate.slice(0, 4)}.
-  ${localDate.slice(4, 6)}.
-  ${localDate.slice(6, 8)}`;
+  return `${localDate.slice(0, 4)}.${localDate.slice(4, 6)}.${localDate.slice(
+    6,
+    8
+  )}`;
 };

@@ -39,26 +39,24 @@ function PostSideBar({ currentBoard, onBoardChange, loading }) {
   return (
     <div css={s.sidebarContainer}>
       {/* 게시판 네비게이션 */}
-      <div css={s.boardNav}>
-        <div css={s.boardNavButtons}>
-          {boards.map((board) => {
-            const IconComponent = board.icon;
-            return (
-              <button
-                key={board.id}
-                onClick={() => onBoardChange(board.id)}
-                css={[
-                  s.boardBtn,
-                  currentBoard === board.id && s.boardBtnActive,
-                ]}
-                disabled={loading}
-              >
-                <IconComponent css={s.icon} />
-                {board.name}
-              </button>
-            );
-          })}
-        </div>
+      <div css={s.boardNavButtons}>
+        {boards.map((board) => {
+          const IconComponent = board.icon;
+          return (
+            <button
+              key={board.id}
+              onClick={() => onBoardChange(board.id)}
+              css={[
+                s.boardBtn,
+                // currentBoard === board.id && s.boardBtnActive,
+              ]}
+              disabled={loading}
+            >
+              <IconComponent css={s.icon} />
+              {board.name}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

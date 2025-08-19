@@ -19,12 +19,16 @@ function MainLayout({ children }) {
       value={{ currentBoard, onBoardChange: handleBoardOnChange, loading }}
     >
       <div css={s.layout}>
-        <UpperSideBar />
-        <PostSideBar
-          currentBoard={currentBoard}
-          onBoardChange={handleBoardOnChange}
-          loading={loading}
-        />
+        <div css={s.upperSideBar}>
+          <UpperSideBar />
+        </div>
+        <div css={s.postSideBar}>
+          <PostSideBar
+            currentBoard={currentBoard}
+            onBoardChange={handleBoardOnChange}
+            loading={loading}
+          />
+        </div>
         <div css={s.container}>
           <div css={s.children}>{children}</div>
         </div>

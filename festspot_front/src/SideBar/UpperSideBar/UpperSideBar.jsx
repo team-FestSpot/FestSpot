@@ -19,13 +19,13 @@ function UpperSideBar(props) {
   };
 
   return (
-    <div>
-      <div css={s.modalContainer}>
+    <div css={s.upperBarLayout}>
+      <div css={s.container}>
         <div css={s.logoSection}>
-          <div>
+          <div css={s.logo}>
             <img src="src\SideBar\UpperSideBar\UpperSideBarModal\img\FestSpotLogoImg.png" />
           </div>
-          <div>
+          <div css={s.logoText}>
             <img src="src\SideBar\UpperSideBar\UpperSideBarModal\img\FestSpotLogoText.png" />
           </div>
         </div>
@@ -36,14 +36,18 @@ function UpperSideBar(props) {
               type="text"
               placeholder="검색어를 입력하세요"
             />
-            <IoSearch css={s.searchIcon} />
+            <div css={s.iconContainer}>
+              <IoSearch css={s.searchIcon} />
+            </div>
           </div>
         </div>
         <div css={s.actionSection}>
-          <div>
+          <div css={s.loginButtonContainer}>
             <button css={s.loginButton}>Login</button>
           </div>
-          <GiHamburgerMenu css={s.menuIcon} onClick={handleMenuOnClick} />
+          <div css={s.menuIconContainer}>
+            <GiHamburgerMenu css={s.menuIcon} onClick={handleMenuOnClick} />
+          </div>
         </div>
       </div>
       {isMenuOpen && (

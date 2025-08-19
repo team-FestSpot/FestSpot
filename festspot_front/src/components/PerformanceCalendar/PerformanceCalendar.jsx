@@ -10,13 +10,17 @@ import "tippy.js/animations/scale.css";
 import "tippy.js/animations/scale-extreme.css";
 import ReactDOM from "react-dom/client";
 import { css, Global } from "@emotion/react";
-import { performanceEventTippy } from "../tippy/performanceEventTippy";
-import { dayClickTippy } from "../tippy/dayClickTippy";
-import { getTommorowDateDashForm } from "../../utils/getDateForm";
+import {
+  getDateDashForm,
+  getTommorowDateDashForm,
+} from "../../utils/getDateForm";
+import { getLocalDate } from "../../utils/getLocalDate";
+import { DayClickTippy } from "../tippy/dayClickTippy";
+import { PerformanceEventTippy } from "../tippy/performanceEventTippy";
 
 function PerformanceCalendar({ performanceList }) {
   const setPerformanceEvents = (e) => {
-    const calendarEvents = performanceList.map((performance) =>
+    const performanceEvents = performanceList.map((performance) =>
       performance.performanceStartDate === performance.performanceEndDate
         ? {
             title: performance.performanceTitle,
@@ -41,20 +45,20 @@ function PerformanceCalendar({ performanceList }) {
           }
     );
 
-    return calendarEvents;
+    return performanceEvents;
   };
 
   const performEventBoxStyle = (info) => {
     const { isFestival, isForeign } = info.event.extendedProps;
     const eventBoxStyle = info.el.style;
 
-    // 스타일 변경하기 위한 변수
+    // 페스티벌, 내한 여부에 따라 배경 색 다르게
     if (isFestival) {
-      eventBoxStyle.backgroundColor = "#ffda77"; // 예: 노란색
+      eventBoxStyle.backgroundColor = "#ffda77";
     } else if (isForeign) {
-      eventBoxStyle.backgroundColor = "#a2d2ff"; // 예: 파란색
+      eventBoxStyle.backgroundColor = "#a2d2ff";
     } else {
-      eventBoxStyle.backgroundColor = "#FBD8D0"; // 일반 공연 회색
+      eventBoxStyle.backgroundColor = "#FBD8D0";
     }
 
     //공통 스타일
@@ -62,18 +66,12 @@ function PerformanceCalendar({ performanceList }) {
     eventBoxStyle.border = "none";
   };
 
-  const calendarRef = useRef(null);
-  const handleDateClick = (info) => {
-    const calendarApi = calendarRef.current.getApi();
-    const events = calendarApi.getEvents();
-
-    const clickedDate = info.dateStr;
-
-    const eventsListOnDate = events.filter(
-      (event) => event.startStr === clickedDate
+  const eventOnDay = (info) => {
+    const dayCellDate = getDateDashForm(getLocalDate(info.date));
+    const eventsListOnDate = performanceList.filter(
+      (event) => event.performanceStartDate === dayCellDate
     );
-
-    dayClickTippy(info, eventsListOnDate);
+    return eventsListOnDate;
   };
 
   return (
@@ -90,25 +88,28 @@ function PerformanceCalendar({ performanceList }) {
           }
         `}
       />
-      <div css={s.calendarContainer2}>
+      <div css={s.calendarContainer}>
         <FullCalendar
-          ref={calendarRef}
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           locale={ko}
           events={setPerformanceEvents()}
-          dayMaxEvents={3}
-          moreLinkContent={(eventCount) => `${eventCount.shortText}`}
+          dayMaxEvents={3} // 하루에 보여지는 최대 이벤트 갯수
+          moreLinkContent={(eventCount) => `${eventCount.shortText}`} // 더보기 글자 형식
           headerToolbar={{
             left: "prev", // 왼쪽
             center: "title", // 가운데
             right: "next", // 오른쪽
           }}
-          dayCellContent={(arg) => String(arg.date.getDate())}
-          dateClick={handleDateClick}
+          dayCellContent={(arg) => String(arg.date.getDate())} // 날짜 표시 수정
+          dayCellDidMount={(info) => {
+            const eventsListOnDate = eventOnDay(info);
+            DayClickTippy(info, eventsListOnDate);
+          }}
           eventDidMount={(info) => {
+            info.el.addEventListener("click", (e) => e.stopPropagation()); // 이벤트 클릭하면 이벤트 tippy 만 작동하게
             performEventBoxStyle(info);
-            performanceEventTippy(info);
+            PerformanceEventTippy(info);
           }}
           height={"100%"}
         ></FullCalendar>
