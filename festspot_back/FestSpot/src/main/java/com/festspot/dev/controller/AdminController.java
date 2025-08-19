@@ -1,15 +1,15 @@
 package com.festspot.dev.controller;
 
-import com.festspot.dev.domain.performance.Performance;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.service.AdminService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/admin")
@@ -36,21 +36,4 @@ public class AdminController {
         return ResponseEntity.ok("공연 정보 다중 업로드 성공");
     }
 
-    @PostMapping("/upload/custom")
-    public ResponseEntity<?> uploadCustomPerformance(@RequestPart("data") AdminUploadPerformanceReqDto dto, @RequestPart MultipartFile file) {
-        System.out.println(dto);
-        System.out.println(file);
-
-        int result = adminService.uploadCustomPerformance(dto, file);
-        if(result < 1) {
-            return ResponseEntity.badRequest().body(HttpStatus.SERVICE_UNAVAILABLE);
-        }
-        return ResponseEntity.ok("공연 정보 업로드 성공");
-    }
-
-    @GetMapping("/custom/list")
-    public ResponseEntity<?> getCustomPerformanceInfo() {
-        adminService.getCustomPerformanceInfo();
-        return ResponseEntity.ok("");
-    }
 }
