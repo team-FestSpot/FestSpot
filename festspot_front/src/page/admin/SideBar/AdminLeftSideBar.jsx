@@ -45,11 +45,10 @@ function AdminLeftSideBar(props) {
           </Link>
           <Link
             id="user"
-            to="/admin/userperformance"
+            to="/admin/performance"
             css={[
               s.navItem,
-              location.pathname.slice(7) === "userperformance" &&
-                s.activeNavItem,
+              location.pathname.slice(7) === "performance" && s.activeNavItem,
             ]}
           >
             API 외 공연 정보 관리

@@ -8,6 +8,8 @@ public interface PerformanceMapper {
 
   List<Performance> findAll();
 
+  List<Performance> findByPerformanceApiIdIsNotNull();
+
   Performance findByPerformanceApiId(String performanceApiId);
 
   Performance findById(Integer performanceId);
@@ -15,8 +17,5 @@ public interface PerformanceMapper {
   int insert(Performance performance);
 
   int insertMany(List<Performance> performanceList);
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> 370a1d7a1ed1d9e5b170a9847197b521560ba496
