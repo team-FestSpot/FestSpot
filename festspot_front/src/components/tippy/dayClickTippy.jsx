@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import { TippyInTippy } from "./tippyInTippy";
 
 export const DayClickTippy = (info, eventsListOnDate) => {
-  let backgroundColor = (isFestival, isForeign) => {
+  // 페스티벌, 내한 여부에 따라 배경 색 다르게
+  const backgroundColor = (isFestival, isForeign) => {
     if (isFestival) return "#ffda77";
     if (isForeign) return "#a2d2ff";
     return "#FBD8D0";
@@ -16,6 +17,7 @@ export const DayClickTippy = (info, eventsListOnDate) => {
     TippyInTippy(e.target, clickedEvent);
   };
 
+  // tippy 창
   const contentElement = document.createElement("div");
   const root = ReactDOM.createRoot(contentElement);
   root.render(
@@ -39,6 +41,7 @@ export const DayClickTippy = (info, eventsListOnDate) => {
   );
   contentElement.addEventListener("click", handleDayTippyOnClick);
 
+  // 날짜에 이벤트 4개 이상이여야 창 뜨게
   if (eventsListOnDate.length > 3) {
     tippy(info.el, {
       content: contentElement,

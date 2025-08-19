@@ -3,9 +3,11 @@ import { getLocalDotDate } from "../../utils/getLocalDate";
 import ReactDOM from "react-dom/client";
 
 export const PerformanceEventTippy = (info) => {
+  //FullCalendar 라이브러리랑 날짜가 안맞아서 맞춰주기
   const prevDay = new Date(info.event._instance.range.end);
   prevDay.setDate(prevDay.getDate() - 1);
 
+  // 등록할 정보 담은 객체
   const performance = {
     title: info.event._def.title,
     start: info.event._instance.range.start,
@@ -13,6 +15,7 @@ export const PerformanceEventTippy = (info) => {
     ...info.event.extendedProps,
   };
 
+  // tippy 창
   const contentElement = document.createElement("div");
   const root = ReactDOM.createRoot(contentElement);
   root.render(
@@ -93,6 +96,7 @@ export const PerformanceEventTippy = (info) => {
 
       tippyBox.style.color = "#474747";
 
+      // 페스티벌, 내한 여부에 따라 배경 색 다르게
       if (isFestival) {
         tippyBox.style.backgroundColor = "#ffda77";
         tippyArrow.style.color = "#ffda77";
