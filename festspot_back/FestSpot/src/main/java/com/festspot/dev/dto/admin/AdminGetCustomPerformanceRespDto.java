@@ -25,5 +25,5 @@ public class AdminGetCustomPerformanceRespDto {
     private String visit;
     private String festival;
     private String prfcast;
-    
+
 }
