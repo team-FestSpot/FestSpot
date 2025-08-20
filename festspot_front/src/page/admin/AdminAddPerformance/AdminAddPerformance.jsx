@@ -177,17 +177,21 @@ function AdminAddPerformance(props) {
       return;
     }
 
-    for (const [value] of Object.values(detail)) {
+    for (const value of Object.values(detail)) {
+      // console.log(value);
       if (!value) {
         alert("내용 누락");
         return;
       }
     }
+    if (detail.prfpdfrom > detail.prfpdto) {
+      alert("시작일은 종료일 이전이어야 합니다.");
+      return;
+    }
 
-    console.log(detail.relates);
-    for (let relate in detail.relates) {
-      for (const [value] of Object.values(relate)) {
-        if (!value) {
+    for (let index in detail.relates) {
+      for (const value of Object.values(detail.relates[index])) {
+        if (value < 1) {
           alert("예매처 정보 누락");
           return;
         }

@@ -66,3 +66,9 @@ export const urlAddRemoveButtonsContainer = css`
   font-size: 20px;
   align-content: center;
 `;
+
+export const modifyButtonContainer = css`
+  & > Button {
+    font-size: 14px;
+  }
+`;

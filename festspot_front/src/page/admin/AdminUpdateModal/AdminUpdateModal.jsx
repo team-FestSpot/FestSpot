@@ -6,6 +6,9 @@ import ReactModal from "react-modal";
 import { Global } from "@emotion/react";
 import { CiSquareMinus, CiSquarePlus } from "react-icons/ci";
 import { baseURL } from "../../../api/axios";
+import Button from "@mui/material/Button";
+import { reqModifyCustomPerformanceApi } from "../../../api/adminApi";
+import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPerformanceListQuery";
 
 function AdminUpdateModal({ isOpen, closeModal }) {
   const { performanceToUpdate } = useAdminPerformanceUpdateStore();
@@ -96,7 +99,6 @@ function AdminUpdateModal({ isOpen, closeModal }) {
 
   useEffect(() => {
     console.log(performance);
-    console.log(ticketingInputValue);
   }, [performance]);
 
   useEffect(() => {
@@ -118,6 +120,47 @@ function AdminUpdateModal({ isOpen, closeModal }) {
     setTicketingInputValue(
       ticketingInputValue.filter((inputValue, index) => index !== deleteIndex)
     );
+  };
+
+  const handleModifyButtonOnClick = async () => {
+    for (const value of Object.values(performance)) {
+      if (!value) {
+        alert("내용 누락");
+        return;
+      }
+    }
+    if (performance.prfpdfrom > performance.prfpdto) {
+      alert("시작일은 종료일 이전이어야 합니다.");
+      return;
+    }
+
+    for (let index in performance.relates) {
+      for (const value of Object.values(performance.relates[index])) {
+        if (value < 1) {
+          alert("예매처 정보 누락");
+          return;
+        }
+      }
+    }
+
+    const formData = new FormData();
+    formData.append(
+      "data",
+      new Blob([JSON.stringify(performance)], {
+        type: "application/json",
+      })
+    );
+    formData.append(
+      "performanceId",
+      new Blob([JSON.stringify(performance.performanceId)], {
+        type: "application/json",
+      })
+    );
+    if (newPoster.size > 0) {
+      formData.append("file", newPoster);
+    }
+
+    await reqModifyCustomPerformanceApi(formData);
   };
 
   return (
@@ -146,7 +189,7 @@ function AdminUpdateModal({ isOpen, closeModal }) {
         }}
       >
         <div css={s.mainContainer}>
-          {Object.keys(newPoster).length < 1 ? (
+          {newPosterUrl.length < 1 ? (
             <div css={s.imgContainer}>
               <img src={`${baseURL}${performance.poster}`} alt="" />
             </div>
@@ -250,6 +293,9 @@ function AdminUpdateModal({ isOpen, closeModal }) {
                 </div>
               </div>
             ))}
+          </div>
+          <div css={s.modifyButtonContainer}>
+            <Button onClick={handleModifyButtonOnClick}>수정</Button>
           </div>
         </div>
       </ReactModal>
