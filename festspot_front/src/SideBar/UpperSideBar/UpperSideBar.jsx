@@ -6,6 +6,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import * as s from "./styles";
 import UpperSideBarModal from "./UpperSideBarModal/UpperSideBarModal";
 import useUpperSideBarStore from "../../stores/upperSideBarStore";
+import { LOGO_IMG, LOGO_IMG_TEXT } from "../../constants/logoImgPath";
 
 function UpperSideBar(props) {
   const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
@@ -23,10 +24,10 @@ function UpperSideBar(props) {
       <div css={s.container}>
         <div css={s.logoSection}>
           <div css={s.logo}>
-            <img src="src\SideBar\UpperSideBar\UpperSideBarModal\img\FestSpotLogoImg.png" />
+            <img src={LOGO_IMG} />
           </div>
           <div css={s.logoText}>
-            <img src="src\SideBar\UpperSideBar\UpperSideBarModal\img\FestSpotLogoText.png" />
+            <img src={LOGO_IMG_TEXT} />
           </div>
         </div>
         <div css={s.searchSection}>
