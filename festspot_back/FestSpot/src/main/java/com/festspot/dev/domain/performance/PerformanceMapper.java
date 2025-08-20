@@ -18,4 +18,6 @@ public interface PerformanceMapper {
 
   int insertMany(List<Performance> performanceList);
 
+  int update(Performance performance);
+
 }

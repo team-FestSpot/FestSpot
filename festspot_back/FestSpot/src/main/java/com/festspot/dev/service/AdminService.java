@@ -11,6 +11,7 @@ import com.festspot.dev.domain.ticketing.TicketingUrlMapper;
 import com.festspot.dev.dto.admin.AdminGetCustomPerformanceRespDto;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
+
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -99,5 +100,24 @@ public class AdminService {
     public List<AdminGetCustomPerformanceRespDto> getCustomPerformanceInfoList() {
         List<Performance> performanceList = performanceMapper.findByPerformanceApiIdIsNull();
         return performanceList.stream().map(performance -> performance.toPerformanceDto()).toList();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateCustomPerformanceInfo(AdminUploadPerformanceReqDto dto, Integer performanceId, MultipartFile file) {
+        if(!Objects.isNull(file) && file.getSize() > 0) {
+            fileService.deleteFile(dto.getPoster());
+            dto.setPoster("/upload/poster/" + fileService.uploadFile(file, "/poster"));
+        }
+        PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
+                dto.getArea());
+        PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
+        Performance performance = dto.toEntity(performanceRegion, performanceState);
+        performance.setPerformanceId(performanceId);
+        performanceMapper.update(performance);
+
+        List<TicketingUrl> ticketingUrls = dto.getRelates().stream()
+                .map(relate -> relate.toEntity(performanceId)).toList();
+        ticketingUrlMapper.deleteMissing(ticketingUrls);
+        ticketingUrlMapper.insert(ticketingUrls);
     }
 }

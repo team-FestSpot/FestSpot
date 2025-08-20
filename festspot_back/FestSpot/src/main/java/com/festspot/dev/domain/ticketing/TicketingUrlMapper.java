@@ -13,4 +13,6 @@ public interface TicketingUrlMapper {
     int insertMany(List<List<TicketingUrl>> manyRelates);
 
     List<List<TicketingUrl>> findByPerformanceId(List<Performance> performanceList);
+
+    int deleteMissing(List<TicketingUrl> relates);
 }

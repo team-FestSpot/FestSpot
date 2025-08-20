@@ -5,14 +5,32 @@
 
 <mapper namespace="com.festspot.dev.domain.ticketing.TicketingUrlMapper">
     <insert id="insert" keyProperty="ticketingUrlId" useGeneratedKeys="true">
-        insert into ticketing_url_tb
+        insert into ticketing_url_tb (
+            ticketing_url_id,
+            performance_id,
+            ticketing_url,
+            ticketing_agency_name
+        )
         values
-        <foreach collection="list" item="ticketing_url" separator=",">
-            (default,
-            #{ticketing_url.performanceId},
-            #{ticketing_url.ticketingUrl},
-            #{ticketing_url.ticketingAgencyName})
-        </foreach>
+        <foreach collection="list" item="relates" separator=",">
+            (
+                <choose>
+                    <when test="relates.ticketingUrlId == null">
+                        default,
+                    </when>
+                    <otherwise>
+                        #{relates.ticketingUrlId},
+                    </otherwise>
+                </choose>
+                    #{relates.performanceId},
+                    #{relates.ticketingUrl},
+                    #{relates.ticketingAgencyName}
+            )
+         </foreach>
+        as new
+        on duplicate key update
+            ticketing_url = new.ticketing_url,
+            ticketing_agency_name = new.ticketing_agency_name
     </insert>
 
     <insert id="insertMany">
@@ -27,6 +45,16 @@
             </foreach>
         </foreach>
     </insert>
+
+    <delete id="deleteMissing">
+        delete from ticketing_url_tb
+        where
+        <foreach collection="list" item="relates" open="(" separator="," close=")">
+            performance_id = #{relates.performanceId}
+            and ticketing_url_id not in
+            #{relates.ticketingUrlId}
+        </foreach>
+    </delete>
 
     <select id="findByPerformanceId" resultType="java.util.List">
         select
