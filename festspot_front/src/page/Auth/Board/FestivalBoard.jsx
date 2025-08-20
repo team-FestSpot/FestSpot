@@ -124,6 +124,10 @@ function FestivalBoard() {
             <div
               key={post.postId}
               css={s.card}
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate(`/board/post/${post.postId ?? post.id}`)}        // ← 여기 추가
+              onKeyDown={(e) => e.key === "Enter" && navigate(`/board/post/${post.postId}`)} // 키보드 접근성
             >
               <div css={s.cardImageContainer}>
                 <img
@@ -140,9 +144,7 @@ function FestivalBoard() {
               <div css={s.cardContent}>
                 <h3 css={s.cardTitle}>{post.postTitle}</h3>
                 <div css={s.cardMeta}>
-                  <span css={s.cardAuthor}>
-                    {post.authorName || post.username}
-                  </span>
+                  <span css={s.cardAuthor}>{post.authorName || post.username}</span>
                   <span css={s.cardDate}>
                     {new Date(post.createdAt).toLocaleDateString()}
                   </span>
@@ -150,51 +152,6 @@ function FestivalBoard() {
               </div>
             </div>
           ))}
-        </div>
-      )}
-      {/* 빈 상태 */}
-      {boardPosts.isFetched && posts.length === 0 && (
-        <div css={s.emptyContainer}>
-          <p css={s.emptyMessage}>아직 게시글이 없습니다.</p>
-          <button css={s.writeBtn} onClick={handleWriteButtonOnClick}>
-            <AiOutlinePlus css={s.icon} />첫 번째 글 작성하기
-          </button>
-        </div>
-      )}
-
-      {/* 페이지네이션 - 항상 표시 */}
-      {!boardPosts.isLoading && !boardPosts.isError && totalPages > 0 && (
-        <div css={s.pagination}>
-          <button
-            onClick={() => handlePageOnClick(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            css={s.paginationBtn}
-          >
-            <MdChevronLeft css={s.icon} />
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageOnClick(page)}
-              css={[
-                s.paginationNumber,
-                currentPage === page && s.paginationNumberActive,
-              ]}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            onClick={() =>
-              handlePageOnClick(Math.min(totalPages, currentPage + 1))
-            }
-            disabled={currentPage === totalPages}
-            css={s.paginationBtn}
-          >
-            <MdChevronRight css={s.icon} />
-          </button>
         </div>
       )}
     </div>

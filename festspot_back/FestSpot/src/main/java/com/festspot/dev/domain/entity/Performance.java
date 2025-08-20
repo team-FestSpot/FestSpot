@@ -20,6 +20,7 @@ public class Performance {
     private String performanceApiId;
     private String performanceTitle;
     private String performancePosterUrl;
+
     private LocalDate performanceStartDate;
     private LocalDate performanceEndDate;
     private String performanceVenue;
