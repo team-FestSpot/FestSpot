@@ -2,6 +2,7 @@
 import ReactModal from "react-modal";
 import * as s from "./styles";
 import { Global } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 
 function PerformanceDetailModal({ isOpen, setOpen, performance }) {
   return (
@@ -64,10 +65,13 @@ function PerformanceDetailModal({ isOpen, setOpen, performance }) {
               <div>
                 {!!performance.ticketingUrls &&
                   performance.ticketingUrls.map((ticketingUrl, idx) => (
-                    <div key={idx}>
-                      <a href={ticketingUrl.ticketingUrl}>
-                        {ticketingUrl.ticketingAgencyName}
-                      </a>
+                    <div
+                      key={idx}
+                      onClick={() =>
+                        window.open(ticketingUrl.ticketingUrl, "_blank")
+                      }
+                    >
+                      <a>{ticketingUrl.ticketingAgencyName}</a>
                     </div>
                   ))}
               </div>

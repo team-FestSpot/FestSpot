@@ -180,6 +180,7 @@ export const urlContainer = css`
       background-color: #ef5a39;
       width: fit-content;
       padding: 2% 2%;
+      cursor: pointer;
       & > a {
         text-decoration: none;
         color: white;
