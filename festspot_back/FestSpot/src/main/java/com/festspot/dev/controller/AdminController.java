@@ -48,4 +48,12 @@ public class AdminController {
     public ResponseEntity<?> getCustomPerformanceInfoList () {
         return ResponseEntity.ok(ResponseDto.success(adminService.getCustomPerformanceInfoList()));
     }
+
+    @PutMapping("/update/custom")
+    public ResponseEntity<?> updateCustomPerformanceInfo (@RequestPart("data") AdminUploadPerformanceReqDto dto,
+                                                          @RequestPart("performanceId") Integer performanceId,
+                                                          @RequestPart(required = false) MultipartFile file) {
+        adminService.updateCustomPerformanceInfo(dto, performanceId, file);
+        return ResponseEntity.ok("");
+    }
 }

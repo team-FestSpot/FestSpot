@@ -36,8 +36,26 @@
     <result column="ticketing_url" property="ticketingUrl" />
     <result column="ticketing_agency_name" property="ticketingAgencyName" />
   </resultMap>
+    <update id="update">
+        update performance_tb
+        set
+            performance_region_id = #{performanceRegion.performanceRegionId},
+            performance_title = #{performanceTitle},
+            performance_cast= #{performanceCast},
+            performance_poster_url = #{performancePosterUrl},
+            performance_start_date = #{performanceStartDate},
+            performance_end_date = #{performanceEndDate},
+            performance_venue = #{performanceVenue},
+            performance_state_id = #{performanceState.performanceStateId},
+            performance_last_modified = #{performanceLastModified},
+            is_foreign = #{isForeign},
+            is_festival = #{isFestival},
+            updated_at = #{updatedAt}
+        where
+            performance_id = #{performanceId}
+    </update>
 
-  <select id="findAll" resultMap="PerformanceMap">
+    <select id="findAll" resultMap="PerformanceMap">
     select
     *
     from
