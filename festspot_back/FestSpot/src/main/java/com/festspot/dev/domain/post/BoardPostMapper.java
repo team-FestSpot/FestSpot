@@ -1,31 +1,32 @@
 package com.festspot.dev.domain.post;
 
 import com.festspot.dev.dto.post.PostDetailDto;
-import com.festspot.dev.dto.post.PostSummaryDto;
+import com.festspot.dev.dto.post.BoardListItemDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
 @Mapper
 public interface BoardPostMapper {
 
+    // 조회
     Integer findCategoryByKey(@Param("key") String key);
-
     int countPostByCategory(@Param("categoryId") int categoryId);
+    List<BoardListItemDto> selectPostByCategory(@Param("categoryId") int categoryId, @Param("limit") int limit, @Param("offset") int offset);
 
-    List<PostSummaryDto> selectPostByCategory(@Param("categoryId") int categoryId, @Param("limit") int limit, @Param("offset") int offset);
+    // 작성
+    int insertPost(Post post);
+    int insertPostImages(@Param("images") List<PostImage> images);
 
-    void insertPost(@Param("authorId") int authorId, @Param("categoryId") int categoryId, @Param("title") String title, @Param("content") String content);
 
     int lastInsertId();
 
-    void insertPostImage(@Param("postId") int postId, @Param("url") String url, @Param("seq") int seq);
-
+    // 전체 게시글
     PostDetailDto getPostAll();
-
-    List<PostDetailDto.PostImgDto> selectPostImages(@Param("postId") int postId);
+    // 게시글 선택
+    PostDetailDto selectPostById(@Param("postId") long postId);
+    List<PostDetailDto.PostImgDto> selectPostImages(@Param("postId") long postId);
 
 
 

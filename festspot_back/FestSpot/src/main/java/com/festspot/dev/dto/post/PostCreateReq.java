@@ -11,8 +11,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostListRespDto {
-    private List<PostSummaryDto> posts;
-    private long totalCount;
-    private int totalPages;
+public class PostCreateReq {
+    private String boardKey;
+    private Integer postCategoryId;
+    private String title;
+    private String content;
+    private Boolean allowComments;
+    private List<String> imageUrls;
 }

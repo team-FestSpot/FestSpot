@@ -12,12 +12,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostDetailDto {
+public class PostResDto {
     private Long postId;
-    private String boardKey;        // post_category_key
-    private String title;           // post_title
-    private String contentHtml;     // post_content
-    private Long authorId;          // original_poster_id
+    private String boardKey;
+    private String title;
+    private String contentHtml;
+    private Long authorId;
     private String authorName;
     private Boolean allowComments;
     private Long viewCount;
@@ -25,16 +25,7 @@ public class PostDetailDto {
     private Long commentCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<PostImgDto> images;
 
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class PostImgDto {
-        private Long postImgId;
-        private String url;
-        private Integer seq;
-    }
+    private List<String> images;          // 상세 전체 이미지
+    private String thumbnailImageUrl;     // 목록 대표 이미지(첫 장)
 }
