@@ -1,7 +1,8 @@
 package com.festspot.dev.controller;
 
+import com.festspot.dev.dto.post.PostCreateReq;
 import com.festspot.dev.dto.post.PostDetailDto;
-import com.festspot.dev.dto.post.PostListRespDto;
+import com.festspot.dev.dto.post.BoardListResDto;
 import com.festspot.dev.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -20,26 +21,27 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/board/{boardKey}/posts")
-    public ResponseEntity<PostListRespDto> getList(@PathVariable String boardKey, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(postService.getPosts(boardKey, page, size));
-    }
+    @PostMapping("/post/form")
+    public ResponseEntity<PostDetailDto> createPost( @RequestParam String boardKey,
+                                                     @RequestParam String title,
+                                                     @RequestParam String content,
+                                                     @RequestParam(defaultValue = "true") boolean allowComments,
+                                                     @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                                     Principal principal) {
 
-    @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDetailDto> detail(@PathVariable int postId) {
-        return ResponseEntity.ok(postService.getPost(postId));
-    }
+        Long userId = principal != null ? Long.parseLong(principal.getName()) : null;
+        if (userId == null) { // 사용자가 아닌 경우
+            return ResponseEntity.status(401).build();
+        }
 
-    @PostMapping(value = "/boards/{boardKey}/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Object>> create(
-            @PathVariable String boardKey,
-            @RequestPart String postTitle,
-            @RequestPart String postContent,
-            @RequestPart(required = false) List<MultipartFile> images,
-            Principal principal // 또는 @AuthenticationPrincipal
-    ) {
-        int authorId = /* principal에서 추출 */ 1;
-        int id = postService.createPost(boardKey, authorId, postTitle, postContent, images);
-        return ResponseEntity.ok(Map.of("postId", id));
+        PostCreateReq postCreateReq = PostCreateReq.builder()
+                .boardKey(boardKey)
+                .title(title)
+                .content(content)
+                .allowComments(allowComments)
+                .build();
+
+        PostDetailDto dto = postService.createPost(userId, postCreateReq, images);
+        return ResponseEntity.ok(dto);
     }
 }
