@@ -6,6 +6,9 @@ import com.festspot.dev.domain.ticketing.TicketingUrl;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.festspot.dev.dto.admin.AdminGetCustomPerformanceRespDto;
+import com.festspot.dev.dto.ticketing.TicketingRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,4 +36,30 @@ public class Performance {
   private PerformanceRegion performanceRegion;
   private PerformanceState performanceState;
   private List<TicketingUrl> ticketingUrls;
+
+  public AdminGetCustomPerformanceRespDto toPerformanceDto () {
+    return AdminGetCustomPerformanceRespDto.builder()
+            .performanceId(performanceId)
+            .prfstate(performanceState.getPerformanceState())
+            .prfcast(performanceCast)
+            .visit(isForeign == 1 ? "Y" : "N")
+            .area(performanceRegion.getRegionName())
+            .prfnm(performanceTitle)
+            .fcltynm(performanceVenue)
+            .festival(isFestival == 1 ? "Y" : "N")
+            .prfpdfrom(performanceStartDate)
+            .prfpdto(performanceEndDate)
+            .poster(performancePosterUrl)
+            .relates(ticketingUrls.stream().map(ticketingUrl -> toTicktingDto(ticketingUrl)).toList())
+            .build();
+  }
+
+  public TicketingRespDto toTicktingDto(TicketingUrl ticketingUrl) {
+    return TicketingRespDto.builder()
+            .ticketingUrlId(ticketingUrl.getTicketingUrlId())
+            .performanceId(ticketingUrl.getPerformanceId())
+            .relatenm(ticketingUrl.getTicketingAgencyName())
+            .relateurl(ticketingUrl.getTicketingUrl())
+            .build();
+  }
 }

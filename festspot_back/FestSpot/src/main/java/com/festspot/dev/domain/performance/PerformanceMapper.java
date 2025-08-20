@@ -8,7 +8,7 @@ public interface PerformanceMapper {
 
   List<Performance> findAll();
 
-  List<Performance> findByPerformanceApiIdIsNotNull();
+  List<Performance> findByPerformanceApiIdIsNull();
 
   Performance findByPerformanceApiId(String performanceApiId);
 

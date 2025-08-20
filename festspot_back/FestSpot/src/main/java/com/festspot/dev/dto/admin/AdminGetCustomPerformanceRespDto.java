@@ -1,11 +1,13 @@
 package com.festspot.dev.dto.admin;
 
+import com.festspot.dev.dto.ticketing.TicketingRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,4 +26,5 @@ public class AdminGetCustomPerformanceRespDto {
     private String festival;
     private String prfcast;
 
+    private List<TicketingRespDto> relates;
 }
