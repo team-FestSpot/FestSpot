@@ -1,13 +1,18 @@
 package com.festspot.dev.service;
 
 import com.festspot.dev.domain.post.BoardPostMapper;
+import com.festspot.dev.domain.post.Post;
+import com.festspot.dev.domain.post.PostImage;
+import com.festspot.dev.dto.post.PostCreateReq;
 import com.festspot.dev.dto.post.PostDetailDto;
-import com.festspot.dev.dto.post.PostListRespDto;
-import com.festspot.dev.dto.post.PostSummaryDto;
+import com.festspot.dev.dto.post.BoardListResDto;
+import com.festspot.dev.dto.post.BoardListItemDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -15,65 +20,59 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class PostService {
 
+    private static final int MAX_IMAGES = 10;
+
     private final BoardPostMapper boardPostMapper;
     private final PostFileStorage postFileStorage;
 
-    public int createPost(String boardKey, int authorId, String title, String content, List<MultipartFile> images) {
-        Integer categoryId = boardPostMapper.findCategoryByKey(boardKey);
+    @Transactional(rollbackFor = Exception.class)
+    public PostDetailDto createPost(Long authorId, PostCreateReq req, List<MultipartFile> images) {
+        Integer categoryId = resolveCategoryId(req);
 
-        if (categoryId == null) {
-            throw new IllegalArgumentException("Unkown board: " + boardKey);
-        }
-
-        boardPostMapper.insertPost(authorId, categoryId, title, content);
-        int postId = boardPostMapper.lastInsertId();
+        Post post = Post.builder()
+                .originalPosterId(authorId)
+                .postCategoryId(categoryId)
+                .postTitle(req.getTitle())
+                .postContent(req.getContent())
+                .allowComments(req.getAllowComments() == null ? Boolean.TRUE : req.getAllowComments())
+                .build();
+        boardPostMapper.insertPost(post);
 
         if (images != null && !images.isEmpty()) {
-            if(images.size() > 10) {
-                throw new IllegalArgumentException("이미지는 최대 10개까지 가능합니다.");
+            if (images.size() > MAX_IMAGES) {
+               throw new NoSuchElementException("이미지는 최대 10장까지 가능합니다.");
             }
-            int seq = 1;
-            for (MultipartFile f : images) {
-                String url = postFileStorage.store(f);
-                boardPostMapper.insertPostImage(postId, url, seq++);
+            List<PostImage> postImages = new ArrayList<>();
+            for (int i = 0; i < images.size(); i++) {
+                String url = postFileStorage.store(images.get(i));
+                postImages.add(PostImage.builder()
+                                .postId(post.getPostId())
+                                .postImgUrl(url)
+                                .seq(i)
+                        .build());
             }
-        }
-        return postId;
-    }
-
-    public PostListRespDto getPosts(String boardKey, int page, int size) {
-        Integer categoryId = boardPostMapper.findCategoryByKey(boardKey);
-
-        if(categoryId == null) {
-            throw new IllegalArgumentException("Unknown board: " + boardKey);
+            boardPostMapper.insertPostImages(postImages);
         }
 
-        int categoryIdVal = categoryId;
-        int pageSafe = Math.max(page, 1);
-        int sizeSafe = Math.max(size, 1);
-        int offset = (pageSafe - 1) * sizeSafe;
-
-        long total = boardPostMapper.countPostByCategory(categoryId);
-        List<PostSummaryDto> rows = boardPostMapper.selectPostByCategory(categoryIdVal, sizeSafe, offset);
-        int totalPages = (int)Math.max(1, Math.ceil((double) total / sizeSafe));
-
-        return PostListRespDto.builder()
-                .posts(rows)
-                .totalCount(total)
-                .totalPages(totalPages)
-                .build();
+        PostDetailDto postDetailDto = boardPostMapper.selectPostById(post.getPostId());
+        postDetailDto.setImages(boardPostMapper.selectPostImages(post.getPostId()));
+        return postDetailDto;
     }
 
-    public PostDetailDto getPost(int postId) {
-        PostDetailDto base = boardPostMapper.getPostAll();
-
-        if(base == null) {
-            throw new NoSuchElementException("Post Not Found");
+    private Integer resolveCategoryId(PostCreateReq req) {
+        Integer categoryId = req.getPostCategoryId();
+        if (categoryId == null) {
+            String key = req.getBoardKey();
+            if (key == null || key.isBlank()) {
+                throw new IllegalArgumentException("category 또는 boardKey가 필요합니다.");
+            }
+            Integer found = boardPostMapper.findCategoryByKey(key);
+            if (found == null) {
+                throw new IllegalArgumentException("Unknown boardKey: " + key);
+            }
+            categoryId = found;
         }
-
-        List<PostDetailDto.PostImgDto> images = boardPostMapper.selectPostImages(postId);
-        base.setImages(images);
-
-        return base;
+        return categoryId;
     }
+
 }
