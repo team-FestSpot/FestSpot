@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostSummaryDto {
+public class BoardListItemDto {
     private Integer postId;
     private String postTitle;
     private String authorName;
-    private String thumbnailImageUrl;
     private LocalDateTime createdAt;
+    private String thumbnailImageUrl;
 }
