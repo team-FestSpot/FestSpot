@@ -32,15 +32,37 @@ export const mainContainer = css`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  gap: 10px;
 `;
 
 export const imgContainer = css`
   display: flex;
-  width: 450px;
-  height: 600px;
+  max-width: 450px;
 
   & > img {
     width: 100%;
     height: 100%;
   }
+`;
+
+export const inputComponent = css`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 80%;
+  height: auto;
+  gap: 10px;
+`;
+
+export const ticketingInputContainer = css`
+  display: flex;
+  flex-direction: row;
+  width: auto;
+`;
+
+export const urlAddRemoveButtonsContainer = css`
+  font-size: 20px;
+  align-content: center;
 `;
