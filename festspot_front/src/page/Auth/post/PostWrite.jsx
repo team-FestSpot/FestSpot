@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import * as s from "./styles";
@@ -7,20 +7,32 @@ import { AiOutlineCamera, AiOutlineSave } from "react-icons/ai";
 import { MdClose, MdArrowBack } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useBoard } from "../../../constants/BoardContext";
-import { createPostForm, createPostJson } from "../../../api/boardApi";
+import { createPostReq } from "../../../api/boardApi";
 
 const PostWrite = () => {
   const navigate = useNavigate();
   const { currentBoard } = useBoard();
-  const [ title, setTitle ] = useState("");
-  const [ content, setContent ] = useState("");
-  const [ images, setImages ] = useState([]);
-  const [ allowComments, setAllowComments ] = useState(true);
-  const [ saveSubmit, setSaveSubmit ] = useState(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [images, setImages] = useState([]);
+  const [allowComments, setAllowComments] = useState(true);
+  const [saveSubmit, setSaveSubmit] = useState(true);
   const quillRef = useRef(null);
   const fileInputRef = useRef(null);
 
+  const [postData, setPostData] = useState({
+    title: "",
+    content: "",
+    images: [],
+    allowComments: true,
+  });
+
   const MAX_IMAGES = 10;
+
+  useEffect(() => {
+    console.log("content", content);
+    if (content !== (`<p><br></p>` || "")) setSaveSubmit(false);
+  }, [content]);
 
   const hanldeImgUploadOnClick = () => {
     if (images.length >= MAX_IMAGES) {
@@ -34,7 +46,9 @@ const PostWrite = () => {
     const files = Array.from(e.target.files || []);
     const remainingSlots = MAX_IMAGES - images.length;
     if (files.length > remainingSlots) {
-      alert(`이미지는 최대 ${MAX_IMAGES}장까지만 업로드 할 수 있습니다. ${remainingSlots}장 만 추가됩니다.`);
+      alert(
+        `이미지는 최대 ${MAX_IMAGES}장까지만 업로드 할 수 있습니다. ${remainingSlots}장 만 추가됩니다.`
+      );
     }
     const filesToAdd = files.slice(0, remainingSlots);
     filesToAdd.forEach((file) => {
@@ -43,7 +57,10 @@ const PostWrite = () => {
         reader.onload = (ev) => {
           const imageUrl = ev.target.result;
           insertImageToEditor(imageUrl);
-          setImages((prev) => [...prev, { file, url: imageUrl, id: Date.now() + Math.random() }]);
+          setImages((prev) => [
+            ...prev,
+            { file, url: imageUrl, id: Date.now() + Math.random() },
+          ]);
         };
         reader.readAsDataURL(file);
       }
@@ -61,69 +78,76 @@ const PostWrite = () => {
   };
 
   const removeImage = (imageId) => {
-    const img = images.find(i => i.id === imageId);
-    setImages(prev => prev.filter(i => i.id !== imageId));
+    const img = images.find((i) => i.id === imageId);
+    setImages((prev) => prev.filter((i) => i.id !== imageId));
 
     const quill = quillRef.current?.getEditor();
     if (quill && img) {
       const delta = quill.getContents();
       const newOps = [];
-      (delta.ops || []).forEach(op => {
-        if (op.insert && op.insert.image === img.url) return; 
+      (delta.ops || []).forEach((op) => {
+        if (op.insert && op.insert.image === img.url) return;
         newOps.push(op);
       });
       quill.setContents({ ops: newOps });
     }
   };
 
- const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ 'header': [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'align': [] }],
-        ['blockquote', 'code-block'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        ['link'],
-        ['clean']
-      ],
-      handlers: {
-        image: hanldeImgUploadOnClick
-      }
-    },
-  }), [images.length]);
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ color: [] }, { background: [] }],
+          [{ align: [] }],
+          ["blockquote", "code-block"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link"],
+          ["clean"],
+        ],
+        handlers: {
+          image: hanldeImgUploadOnClick,
+        },
+      },
+    }),
+    [images.length]
+  );
 
   const formats = [
-    'header', 'bold', 'italic', 'underline', 'strike',
-    'color', 'background', 'align',
-    'blockquote', 'code-block',
-    'list', 'link', 'image'
-  ]
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "color",
+    "background",
+    "align",
+    "blockquote",
+    "code-block",
+    "list",
+    "link",
+    "image",
+  ];
 
   const handleSubmitOnClick = async () => {
-    const clean = (content || "").replace(/\s/g, "");
-
     if (!title.trim()) return alert("제목을 입력해주세요.");
-    if(!content.trim() || content === '<p><br></p>') return alert("내용을 입력해주세요.");
+    if (!content.trim() || content === "<p><br></p>")
+      return alert("내용을 입력해주세요.");
 
-    setSaveSubmit(true);
+    setPostData((prev) => ({
+      title: title,
+      content: content,
+      images: images,
+      allowComments: allowComments,
+    }));
 
     try {
-      const postData = await createPostForm({
-        boardKey: currentBoard || "free",
-        title: title.trim(),
-        conten: content,
-        allowComments,
-        files: images.map((i) => i.file),
-      });
+      const postDataResponse = await createPostReq(postData);
 
-      console.log("Post Data : ", postData);
-
-      alert("게시글이 성공적으로 저장되었습니다."); 
-      navigate(-1); // 이전 페이지로 이동
-
-    } catch(error) {
+      alert("게시글이 성공적으로 저장되었습니다.");
+      // navigate(-1); // 이전 페이지로 이동
+    } catch (error) {
       console.error("Save Fail", error);
       alert("게시글 저장에 실패했습니다.");
     } finally {
@@ -183,7 +207,10 @@ const PostWrite = () => {
         <div css={s.sidebarStyle}>
           <div css={s.sidebarSectionStyle}>
             <h3>이미지 ({images.length}/10)</h3>
-            <button css={s.imageUploadButtonStyle} onClick={hanldeImgUploadOnClick}>
+            <button
+              css={s.imageUploadButtonStyle}
+              onClick={hanldeImgUploadOnClick}
+            >
               <AiOutlineCamera /> 이미지 추가
             </button>
             <input
@@ -198,8 +225,15 @@ const PostWrite = () => {
               <div css={s.imagePreviewGridStyle}>
                 {images.map((image) => (
                   <div key={image.id} css={s.imagePreviewItemStyle}>
-                    <img src={image.url} alt="preview" css={s.previewImageStyle} />
-                    <button css={s.removeImageButtonStyle} onClick={() => removeImage(image.id)}>
+                    <img
+                      src={image.url}
+                      alt="preview"
+                      css={s.previewImageStyle}
+                    />
+                    <button
+                      css={s.removeImageButtonStyle}
+                      onClick={() => removeImage(image.id)}
+                    >
                       <MdClose />
                     </button>
                   </div>

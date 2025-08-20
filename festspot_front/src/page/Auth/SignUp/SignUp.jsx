@@ -9,6 +9,7 @@ import {
   JOIN_REGEX,
   JOIN_REGEX_ERROR_MESSAGE,
 } from "../../../constants/authRegex";
+import { reqSignUp } from "../../../api/authApi";
 
 function SignUp(props) {
   const [buttonDisable, setButtonDisabled] = useState(true);
@@ -89,6 +90,17 @@ function SignUp(props) {
       email: inputValue.email,
     };
     try {
+      const response = await reqSignUp(reqData);
+      const { data } = response;
+      console.log(data);
+      await Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "가입이 완료되었습니다.",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
       // navigate("/");
     } catch (error) {
       await Swal.fire({

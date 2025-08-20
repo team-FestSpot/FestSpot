@@ -69,6 +69,7 @@ export const submitButtonContainer = css`
   flex-direction: column;
   align-items: center;
 
+
   & > p {
     color: #999;
     font-size: 0.8rem;

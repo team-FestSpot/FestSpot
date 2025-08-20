@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import * as s from "./styles";
 import Swal from "sweetalert2";
 import { css } from "@emotion/react";
+import { reqLogin } from "../../../api/authApi";
 
 function Login(props) {
   const [buttonDisable, setButtonDisabled] = useState(true);
@@ -31,6 +32,16 @@ function Login(props) {
     // 로그인 로직 구현
     try {
       // 성공 시
+      const response = await reqLogin(inputValue);
+      const { accessToken } = response.data.body;
+      localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
+      await Swal.fire({
+        icon: "success",
+        title: "로그인 성공!",
+        showConfirmButton: false,
+        timer: 1000,
+        
+      });
     } catch (error) {
       // 실패 시
       await Swal.fire({
@@ -111,13 +122,19 @@ function Login(props) {
 
         <div css={s.socialButtonContainer}>
           <div css={s.socialButton}>
-            <img src="" alt="naver logo" />
+           <a href="http://localhost:8080/oauth2/authorization/naver">
+            <img src="src\page\Auth\Login\LogoImg\naver_logo.png" alt="naver logo" /> 
+          </a>
           </div>
           <div css={s.socialButton}>
-            <img src="" alt="google logo" />
+            <a href="http://localhost:8080/oauth2/authorization/google">
+              <img src="src\page\Auth\Login\LogoImg\Google__G__logo.png" alt="google logo" />
+            </a>
           </div>
           <div css={s.socialButton}>
-            <img src="" alt="google logo" />
+            <a href="http://localhost:8080/oauth2/authorization/kakao">
+              <img src="src\page\Auth\Login\LogoImg\kakao_logo.png" alt="Kakao logo" />
+            </a>
           </div>
         </div>
 
