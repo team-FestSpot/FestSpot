@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import PerformanceCalendar from "../../components/PerformanceCalendar/PerformanceCalendar";
-import PerformanceCard from "../../components/PerformanceCard/PerformanceCard";
+import PerformanceCalendar from "../../components/homePage/PerformanceCalendar/PerformanceCalendar";
+import PerformanceCard from "../../components/homePage/PerformanceCard/PerformanceCard";
 import { usePerformanceListQuery } from "../../querys/performance/usePerformanceListQuery";
 import * as s from "./styles";
 import React from "react";
