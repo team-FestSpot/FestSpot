@@ -68,27 +68,15 @@
     where
     performance_id = #{performanceId}
   </select>
-    <select id="findByPerformanceApiIdIsNotNull" resultType="com.festspot.dev.domain.performance.Performance">
+
+    <select id="findByPerformanceApiIdIsNull" resultMap="PerformanceMap">
         select
-            pt.performance_id,
-            pt.performance_title,
-            pt.performance_cast,
-            pt.performance_poster_url,
-            pt.performance_start_date,
-            pt.performance_end_date,
-            pt.performance_venue,
-            pt.is_foreign,
-            pt.is_festival,
-            pt.performance_last_modified,
-            pt.updated_at,
-
-            prt.region_name,
-
-            pst.performance_state
+            *
         from
             performance_tb pt
-            left outer join performance_region_tb prt on prt.performance_region_id = pt.performance_region_id
-            left outer join performance_state_tb pst on pst.performance_state_id = pt.performance_state_id
+            left outer join performance_region_tb prt on (prt.performance_region_id = pt.performance_region_id)
+            left outer join performance_state_tb pst on (pst.performance_state_id = pt.performance_state_id)
+            left outer join ticketing_url_tb tut on (tut.performance_id = pt.performance_id)
         where
             pt.performance_api_id is null;
     </select>
