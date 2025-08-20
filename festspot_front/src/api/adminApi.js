@@ -15,3 +15,7 @@ export const reqUploadCustomPerformanceApi = (data) => {
 export const reqGetCustomPerformanceListApi = () => {
   return api.get("/admin/list/custom");
 };
+
+export const reqModifyCustomPerformanceApi = (data) => {
+  return api.put("/admin/update/custom", data);
+};
