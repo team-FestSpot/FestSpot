@@ -78,10 +78,8 @@ public class AdminService {
 
     @Transactional(rollbackFor = Exception.class)
     public int uploadCustomPerformance(AdminUploadPerformanceReqDto dto, MultipartFile file) {
-        System.out.println(dto);
         String newFileName = fileService.uploadFile(file, "/poster");
-        System.out.println(newFileName);
-        String url = "http://localhost:8080/upload/" + newFileName;
+        String url = "/upload/poster/" + newFileName;
         dto.setPoster(url);
         PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
                 dto.getArea());
@@ -89,12 +87,10 @@ public class AdminService {
 
         Performance performance = dto.toEntity(performanceRegion, performanceState);
 
-        System.out.println(performance);
         int performanceInsert = performanceMapper.insert(performance);
 
         List<TicketingUrl> ticketingUrls = dto.getRelates().stream()
                 .map(relate -> relate.toEntity(performance.getPerformanceId())).toList();
-        System.out.println(ticketingUrls);
         int ticketingUrlInsert = ticketingUrlMapper.insert(ticketingUrls);
 
         return performanceInsert * ticketingUrlInsert;

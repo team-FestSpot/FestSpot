@@ -11,6 +11,7 @@ import { FaRegEdit } from "react-icons/fa";
 import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
 import useAdminPerformanceUpdateStore from "../../../stores/AdminPerformanceUpdateStore";
 import AdminUpdateModal from "../AdminUpdateModal/AdminUpdateModal";
+import { baseURL } from "../../../api/axios";
 
 function AdminCustomPerformanceDataGrid(props) {
   const { data, isLoading } = useCustomPerformanceListQuery();
@@ -36,7 +37,11 @@ function AdminCustomPerformanceDataGrid(props) {
       editable: false,
       renderCell: (params) => (
         <div>
-          <img src={params.row.poster} width={"100%"} height={"100%"} />
+          <img
+            src={`${baseURL}${params.row.poster}`}
+            width={"100%"}
+            height={"100%"}
+          />
         </div>
       ),
     },
@@ -102,8 +107,8 @@ function AdminCustomPerformanceDataGrid(props) {
   };
 
   const handleModifyButtonOnClick = (e, params) => {
-    openModal();
     setPerformanceToUpdate(params.row);
+    openModal();
   };
 
   useEffect(() => {
@@ -171,9 +176,11 @@ function AdminCustomPerformanceDataGrid(props) {
 
   return (
     <div css={s.adminGridLayout}>
-      <div css={s.updateModalLayout}>
-        <AdminUpdateModal isOpen={isOpen} closeModal={closeModal} />
-      </div>
+      {Object.keys(performanceToUpdate).length > 0 && (
+        <div css={s.updateModalLayout}>
+          <AdminUpdateModal isOpen={isOpen} closeModal={closeModal} />
+        </div>
+      )}
       <Box
         sx={{
           width: "100%",
