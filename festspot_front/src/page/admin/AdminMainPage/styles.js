@@ -13,11 +13,6 @@ export const updateModal = css`
   height: 100%;
 `;
 
-export const sidebarLayout = css`
-  display: flex;
-  max-width: 200px;
-`;
-
 export const mainLayout = css`
   display: flex;
   flex-grow: 1;

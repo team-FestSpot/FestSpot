@@ -3,7 +3,9 @@ import { IoClose } from "react-icons/io5";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import { Link } from "react-router-dom";
-import useUpperSideBarStore from "../../../stores/upperSideBarStore";
+import useUpperSideBarStore from "../../../../stores/upperSideBarStore";
+import festSpotLogo from "./img/FestSpotLogoImg.png";
+import festSpotLogoText from "./img/FestSpotLogoText.png";
 
 function UpperSideBarModal(props) {
   const { isMenuOpen, closeMenu } = useUpperSideBarStore();
@@ -49,7 +51,7 @@ function UpperSideBarModal(props) {
           <IoClose onClick={handleCloseOnClick} />
         </div>
         <div css={s.modalUserInfo}>
-          <img src="로고 이미지" alt="" />
+          <img src={festSpotLogo} alt="" />
           <Link css={s.username}>nickname</Link>
           <div css={s.logoutContainer}>
             <Link css={s.logout}>로그아웃</Link>
