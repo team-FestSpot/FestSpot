@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
-import Pagination from "@mui/material/Pagination";
-import { useSearchParams } from "react-router-dom";
-import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPerformanceListQuery";
 import Button from "@mui/material/Button";
 import { FaRegEdit } from "react-icons/fa";
-import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
-import useAdminPerformanceUpdateStore from "../../../stores/AdminPerformanceUpdateStore";
-import AdminUpdateModal from "../AdminUpdateModal/AdminUpdateModal";
 
-function AdminCustomPerformanceDataGrid(props) {
-  const { data, isLoading } = useCustomPerformanceListQuery();
-  const performanceList = data?.data?.body;
-  const { rows, setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
-  const [isOpen, setIsOpen] = useState(false);
-  const { performanceToUpdate, setPerformanceToUpdate } =
-    useAdminPerformanceUpdateStore();
+import { useSearchParams } from "react-router-dom";
+import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
+import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
+import { usePublicDetailUploadMutation } from "../../../querys/admin/usePublicDetailUploadMutation";
+import Pagination from "@mui/material/Pagination";
+import { usePublicApiAllQuery } from "../../../querys/admin/usePublicApiAllQuery";
+
+function TmpDataGrid(props) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const [sortOption, setSortOption] = useState({
-    column: "performanceStartDate",
+    column: "prfpdfrom",
     direction: "asc",
   }); // 특정 컬럼 기준 오름차순/내림차순 정렬 상태
   const [paginationList, setPaginationList] = useState([]);
-
+  const { data, isLoading } = usePublicApiAllQuery(); // 공연예술통합전산망 api에 데이터 요청
+  const { rows, setRows, setRowsEmpty } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
+  const { setCheckedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
+  const uploadMutation = usePublicDetailUploadMutation(); // 등록 버튼 누르면 상세정보 받아서 백엔드에 전달하는 mutation
   const gridRef = useGridApiRef();
   const columns = [
     {
@@ -47,11 +45,16 @@ function AdminCustomPerformanceDataGrid(props) {
       editable: false,
     },
     {
+      field: "genrenm",
+      headerName: "카테고리",
+      width: 100,
+      editable: false,
+    },
+    {
       field: "area",
       headerName: "지역",
       width: 100,
       editable: false,
-      valueGetter: (params) => params,
     },
     {
       field: "fcltynm",
@@ -64,7 +67,6 @@ function AdminCustomPerformanceDataGrid(props) {
       headerName: "공연 진행 상황",
       width: 100,
       editable: false,
-      valueGetter: (params) => params,
     },
     {
       field: "prfpdfrom",
@@ -84,44 +86,32 @@ function AdminCustomPerformanceDataGrid(props) {
       width: 100,
       editable: false,
       renderCell: (params) => (
+        <Button>
+          <FaRegEdit />
+        </Button> // 수정
+      ),
+    },
+    {
+      field: "action",
+      headerName: "등록",
+      width: 100,
+      editable: false,
+      renderCell: (params) => (
         <div>
-          <Button onClick={(e) => handleModifyButtonOnClick(e, params)}>
-            <FaRegEdit />
+          <Button
+            onClick={
+              (e) => {
+                e.preventDefault();
+                uploadMutation.mutateAsync(params.row.mt20id);
+              } // 버튼 누르면 공연상세정보 받아와서 백엔드에 전달함
+            }
+          >
+            등록
           </Button>
-        </div>
+        </div> // 맨 오른쪽 등록 버튼
       ),
     },
   ];
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const handleModifyButtonOnClick = (e, params) => {
-    openModal();
-    setPerformanceToUpdate(params.row);
-  };
-
-  useEffect(() => {
-    setSearchParams({
-      page: 1,
-    });
-  }, []);
-
-  useEffect(() => {
-    if (
-      !isLoading &&
-      Array.isArray(performanceList) &&
-      performanceList.length > 0 &&
-      rows.length < 1
-    ) {
-      setRows(performanceList);
-    }
-  }, [isLoading]);
 
   // 오름차순 내림차순 정렬 기능인데 가끔 이상하게 동작함
   // 원본 rows랑 별개로 화면 표시용 displayRows 상태를 새로 만들어서 뿌려줘야 할 듯함
@@ -151,12 +141,8 @@ function AdminCustomPerformanceDataGrid(props) {
     setRows([...sortArr]);
   };
 
-  const getPaginationList = (total) => {
-    if (total < 1) return [];
-    // 구간 번호 = (n - 1) / 20 올림
-    const section = Math.ceil(total / 20);
-    // 1부터 section까지 배열 생성
-    return Array.from({ length: section }, (_, i) => i + 1);
+  const handleRowSelectionOnChange = (e) => {
+    setCheckedRows(e.ids);
   };
 
   const handlePaginationOnChange = (e) => {
@@ -166,14 +152,39 @@ function AdminCustomPerformanceDataGrid(props) {
   };
 
   useEffect(() => {
+    setSearchParams({
+      page: 1,
+    });
+  }, []);
+
+  useEffect(() => {
+    // console.log(data);
+    if (
+      !isLoading &&
+      Array.isArray(data) &&
+      data.length > 0 &&
+      rows.length < 1
+    ) {
+      setRows(data);
+    }
+  }, [isLoading]);
+
+  // 페이지네이션 번호 구해주는 함수
+  // rows가 1~20개면 [1], 21~40개면 [1, 2], 41~60개면 [1, 2, 3], 61~80개면 [1, 2, 3, 4], ...
+  const getPaginationList = (total) => {
+    if (total < 1) return [];
+    // 구간 번호 = (n - 1) / 20 올림
+    const section = Math.ceil(total / 20);
+    // 1부터 section까지 배열 생성
+    return Array.from({ length: section }, (_, i) => i + 1);
+  };
+
+  useEffect(() => {
     setPaginationList(getPaginationList(rows.length));
   }, [rows]);
 
   return (
     <div css={s.adminGridLayout}>
-      <div css={s.updateModalLayout}>
-        <AdminUpdateModal isOpen={isOpen} closeModal={closeModal} />
-      </div>
       <Box
         sx={{
           width: "100%",
@@ -184,7 +195,7 @@ function AdminCustomPerformanceDataGrid(props) {
       >
         <DataGrid
           rows={rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)} // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
-          getRowId={(row) => row.performanceId}
+          getRowId={(row) => row.mt20id}
           rowHeight={200}
           columns={columns}
           initialState={{
@@ -199,6 +210,7 @@ function AdminCustomPerformanceDataGrid(props) {
           disableRowSelectionOnClick
           hideFooter
           apiRef={gridRef}
+          onRowSelectionModelChange={handleRowSelectionOnChange}
           onColumnHeaderClick={handleColumnHeaderOnClick}
         />
         <div css={s.paginationButtonLayout}>
@@ -214,4 +226,4 @@ function AdminCustomPerformanceDataGrid(props) {
   );
 }
 
-export default AdminCustomPerformanceDataGrid;
+export default TmpDataGrid;

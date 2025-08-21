@@ -1,16 +1,24 @@
 import { css } from "@emotion/react";
 
 export const adminGridLayout = css`
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
-  flex-grow: 1;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  .MuiDataGrid-filler {
+    height: 50px !important;
+  }
 `;
 
 export const paginationButtonLayout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+
+  background-color: blue;
 `;
 
 export const updateModalLayout = css`

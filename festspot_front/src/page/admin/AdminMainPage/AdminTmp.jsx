@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import * as s from "./styles";
 import { IoSearch } from "react-icons/io5";
-import AdminDataGrid from "../../../components/admin/AdminDataGrid/AdminDataGrid";
 import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
 import { usePublicDetailUploadManyMutation } from "../../../querys/admin/usePublicDetailUploadManyMutation";
 import { usePublicApiSearchResultMutation } from "../../../querys/admin/usePublicApiSearchResultMutation";
 import Button from "@mui/material/Button";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
+import TmpDataGrid from "../../../components/admin/AdminDataGrid/TmpDataGrid";
 /** @jsxImportSource @emotion/react */
 
-function AdminMainPage(props) {
+function AdminTmp(props) {
   const [searchInput, setSearchInput] = useState({
     name: "",
     venue: "",
@@ -99,7 +99,7 @@ function AdminMainPage(props) {
             </div>
           </div>
           <div>
-            <AdminDataGrid props={searchInput} />
+            <TmpDataGrid props={searchInput} />
           </div>
         </main>
       </div>
@@ -107,4 +107,4 @@ function AdminMainPage(props) {
   );
 }
 
-export default AdminMainPage;
+export default AdminTmp;

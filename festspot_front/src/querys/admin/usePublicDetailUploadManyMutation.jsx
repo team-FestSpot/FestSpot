@@ -36,18 +36,21 @@ export const usePublicDetailUploadManyMutation = () =>
       );
       // Promise.all 해줘서 배열에 담겨서 오도록 함.
       // 필요한 데이터는 각 객체의 dbs.db에 들어있음
-      const promiseJsonDatas = await Promise.all(jsonDatas).then(result => result.map((jsonData) => {
-        const promiseJsonData = jsonData.dbs.db;
+      const promiseJsonDatas = await Promise.all(jsonDatas).then((result) =>
+        result.map((jsonData) => {
+          const promiseJsonData = jsonData.dbs.db;
 
-        // 예매처 데이터가 relates.relate에 있어서 꺼냄
-        if(promiseJsonData.relates.relate.length > 1) { // 예매처가 어러 곳이면 배열의 배열 안에 들어있어서 배열을 한겹 벗김
-          promiseJsonData.relates = [...promiseJsonData.relates.relate];
-        }
-        else { // 예매처가 한 곳이면 배열에 안 들어있어서 배열에 넣어줌
-          promiseJsonData.relates = [promiseJsonData.relates.relate];
-        }
-        return promiseJsonData;
-      }));
+          // 예매처 데이터가 relates.relate에 있어서 꺼냄
+          if (promiseJsonData.relates.relate.length > 1) {
+            // 예매처가 어러 곳이면 배열의 배열 안에 들어있어서 배열을 한겹 벗김
+            promiseJsonData.relates = [...promiseJsonData.relates.relate];
+          } else {
+            // 예매처가 한 곳이면 배열에 안 들어있어서 배열에 넣어줌
+            promiseJsonData.relates = [promiseJsonData.relates.relate];
+          }
+          return promiseJsonData;
+        })
+      );
 
       return reqUploadManyPerformanceApi(promiseJsonDatas);
     },

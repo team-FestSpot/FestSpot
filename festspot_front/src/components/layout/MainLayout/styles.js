@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 
-const uppserSideBarHeight = "5vh";
-const postSideBarHeight = "9vh";
+const uppserSideBarHeight = "4.5rem";
+const postSideBarHeight = "5.5rem";
 
 export const layout = css`
   display: flex;
@@ -14,14 +14,20 @@ export const upperSideBar = css`
   display: flex;
   width: 100%;
   height: ${uppserSideBarHeight};
-
-  background-color: red;
+  min-height: ${uppserSideBarHeight};
 `;
 
 export const postSideBar = css`
   display: flex;
+  margin: 1.5rem 0;
   width: 100%;
   height: ${postSideBarHeight};
+  min-height: ${postSideBarHeight};
+
+  @media (max-width: 768px) {
+    height: calc(2 * ${postSideBarHeight});
+    min-height: calc(2 * ${postSideBarHeight});
+  }
 `;
 
 export const container = css`
@@ -39,4 +45,9 @@ export const children = css`
   align-items: start;
   width: 82%;
   height: 100%;
+
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
