@@ -7,6 +7,7 @@ import { usePublicApiSearchResultMutation } from "../../../querys/admin/usePubli
 import Button from "@mui/material/Button";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
 import TmpDataGrid from "../../../components/admin/AdminDataGrid/TmpDataGrid";
+import TextField from "@mui/material/TextField";
 /** @jsxImportSource @emotion/react */
 
 function AdminTmp(props) {
@@ -35,74 +36,66 @@ function AdminTmp(props) {
 
   return (
     <div css={s.layout}>
-      <div css={s.mainLayout}>
-        <header css={s.header}>
-          <div>
-            <h2>공연 목록 관리</h2>
-          </div>
-        </header>
-        <main>
-          <div>
-            <div css={s.searchLayout}>
-              <div css={s.searchInputLayout}>
-                <div css={s.searchButton}>
-                  <IoSearch />
-                </div>
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="공연/페스티벌명 검색"
-                  css={s.searchInput}
-                  onChange={handleSearchInputOnChange}
-                />
-              </div>
-              <div css={s.searchInputLayout}>
-                <div css={s.searchButton}>
-                  <IoSearch />
-                </div>
-                <input
-                  id="venue"
-                  type="text"
-                  placeholder="공연장 검색"
-                  css={s.searchInput}
-                  onChange={handleSearchInputOnChange}
-                />
-              </div>
-              <div>
-                <Button
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    setRowsEmpty();
-                    while (
-                      !!(await searchMutation.mutateAsync(searchMutationParams))
-                    ) {
-                      await searchMutation
-                        .mutateAsync(searchMutationParams)
-                        .then((result) => setRows(result));
-                      searchMutationParams.page++;
-                    }
-                  }}
-                >
-                  검색
-                </Button>
-              </div>
-              <div>
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    uploadManyMutation.mutateAsync(checkedRows);
-                  }}
-                >
-                  추가
-                </Button>
-              </div>
+      <header css={s.header}>
+        <div css={s.titleContainer}>
+          <h1>공연 목록 관리</h1>
+        </div>
+        <div css={s.searchContainer}>
+          <TextField
+            placeholder="공연/페스티벌명 검색"
+            name="performanceName"
+            onChange={handleSearchInputOnChange}
+          >
+            <div>
+              <IoSearch />
             </div>
+          </TextField>
+          <div>
+            <div>
+              <IoSearch />
+            </div>
+            <input
+              id="venue"
+              type="text"
+              placeholder="공연장 검색"
+              onChange={handleSearchInputOnChange}
+            />
           </div>
           <div>
-            <TmpDataGrid props={searchInput} />
+            <Button
+              onClick={async (e) => {
+                e.preventDefault();
+                setRowsEmpty();
+                while (
+                  !!(await searchMutation.mutateAsync(searchMutationParams))
+                ) {
+                  await searchMutation
+                    .mutateAsync(searchMutationParams)
+                    .then((result) => setRows(result));
+                  searchMutationParams.page++;
+                }
+              }}
+            >
+              검색
+            </Button>
           </div>
-        </main>
-      </div>
+          <div>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                uploadManyMutation.mutateAsync(checkedRows);
+              }}
+            >
+              추가
+            </Button>
+          </div>
+        </div>
+      </header>
+      <main css={s.main}>
+        <div>
+          <TmpDataGrid props={searchInput} />
+        </div>
+      </main>
     </div>
   );
 }

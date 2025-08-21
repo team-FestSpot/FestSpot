@@ -1,5 +1,7 @@
 import { css } from "@emotion/react";
 
+const sideBarWidth = "20rem";
+
 export const adminLayout = css`
   display: flex;
   flex-direction: row;
@@ -10,14 +12,20 @@ export const adminLayout = css`
 export const adminSideBar = css`
   display: flex;
   flex-direction: column;
+  width: ${sideBarWidth};
   height: 100%;
 `;
 
-export const adminContainer = css`
+export const adminChildrenContainer = css`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: calc(100% - ${sideBarWidth});
   height: 100%;
+
+  overflow: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;

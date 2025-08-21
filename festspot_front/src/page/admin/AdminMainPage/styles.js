@@ -2,54 +2,18 @@ import { css } from "@emotion/react";
 
 export const layout = css`
   display: flex;
-  flex-direction: row;
-  margin-bottom: 0;
-`;
-
-export const updateModal = css`
-  position: absolute;
-  z-index: 1;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 `;
 
-export const mainLayout = css`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-`;
+export const header = css``;
 
-export const header = css`
-  margin-left: 20px;
-`;
+export const titleContainer = css``;
 
-export const searchLayout = css`
+export const searchContainer = css`
   display: flex;
   flex-direction: row;
-  margin-bottom: 50px;
 `;
 
-export const searchInputLayout = css`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  margin-left: 10px;
-  border: 1px solid #dbdbdb;
-  border-radius: 4px;
-  max-width: 768px;
-  min-width: 320px;
-`;
-
-export const searchButton = css`
-  display: flex;
-  width: 30px;
-  background-color: transparent;
-`;
-
-export const searchInput = css`
-  display: flex;
-  border: none;
-  outline: none;
-  width: 100%;
-  height: 20px;
-`;
+export const main = css``;
