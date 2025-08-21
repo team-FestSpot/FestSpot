@@ -7,26 +7,26 @@ import React from "react";
 
 function Home(props) {
   const performanceListQuery = usePerformanceListQuery();
-  const performanceList = performanceListQuery.isFetched
+  const performanceList = performanceListQuery.isSuccess
     ? performanceListQuery?.data?.data?.body
     : [];
 
-  return (
-    <div css={s.homeLayout}>
-      <div css={s.homeLeftSide}>
-        <div css={s.performanceCardSection}>
-          <PerformanceCard performanceList={performanceList} />
+  if (!!performanceList.length) {
+    return (
+      <div css={s.homeLayout}>
+        <div css={s.homeLeftSide}>
+          <div css={s.performanceCardSection}>
+            <PerformanceCard performanceList={performanceList} />
+          </div>
         </div>
-      </div>
-      <div css={s.homeRightSide}>
-        {performanceList.length > 0 && (
+        <div css={s.homeRightSide}>
           <div css={s.CalendarSection}>
             <PerformanceCalendar performanceList={performanceList} />
           </div>
-        )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Home;
