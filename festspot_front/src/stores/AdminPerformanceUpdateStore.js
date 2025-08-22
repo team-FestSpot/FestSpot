@@ -6,7 +6,7 @@ const useAdminPerformanceUpdateStore = create((set) => ({
   setPerformanceToUpdate: (row) =>
     set((state) => ({
       performanceToUpdate: {
-        ...state.performanceToUpdate,
+        // ...state.performanceToUpdate,
         ...row,
       },
     })),
