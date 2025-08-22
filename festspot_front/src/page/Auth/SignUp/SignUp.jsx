@@ -7,7 +7,7 @@ import {
   JOIN_REGEX_ERROR_MESSAGE,
 } from "../../../constants/authRegex";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import googleLogo from "/src/page/Auth/img/Google__G__logo.png";
 import kakaoLogo from "/src/page/Auth/img/kakao_logo.png";
 import naverLogo from "/src/page/Auth/img/naver_logo.png";
@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import { Global } from "@emotion/react";
 
 function SignUp(props) {
+  const navigate = useNavigate();
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [inputValue, setInputValue] = useState({
     userLoginId: "",
@@ -117,12 +118,13 @@ function SignUp(props) {
 
       await Swal.fire({
         title: "회원가입 성공",
-        text: `${user.userNickName}님 환영합니다.`,
+        html: `${user.userNickName}님 환영합니다.<br>로그인 화면으로 이동합니다.`,
         icon: "success",
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
       });
+      navigate("/auth/login");
     } catch (error) {
       let errorText = Object.values(error.response?.data?.body).join("<br>");
 

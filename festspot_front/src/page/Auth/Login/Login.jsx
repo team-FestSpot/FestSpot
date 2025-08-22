@@ -8,6 +8,7 @@ import {
 } from "../../../constants/authRegex";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import googleLogo from "/src/page/Auth/img/Google__G__logo.png";
 import kakaoLogo from "/src/page/Auth/img/kakao_logo.png";
 import naverLogo from "/src/page/Auth/img/naver_logo.png";
@@ -94,9 +95,12 @@ function SignUp(props) {
   };
 
   const handleLoginOnClick = async (e) => {
+  const handleLoginOnClick = async (e) => {
     try {
       const response = await reqLogin(inputValue);
+      const response = await reqLogin(inputValue);
       const { accessToken } = response?.data?.body;
+      localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
       localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
 
       await queryClient.invalidateQueries({
@@ -211,4 +215,4 @@ function SignUp(props) {
   );
 }
 
-export default SignUp;
+export default Login;
