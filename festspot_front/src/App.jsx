@@ -6,7 +6,6 @@ function App() {
   return (
     <RootLayout>
       <RooteRouter />
-      {/* <AdminRouter /> */}
     </RootLayout>
   );
 }
