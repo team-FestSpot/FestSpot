@@ -8,14 +8,20 @@ import { CiSquareMinus, CiSquarePlus } from "react-icons/ci";
 import { baseURL } from "../../../api/axios";
 import Button from "@mui/material/Button";
 import { reqModifyCustomPerformanceApi } from "../../../api/adminApi";
+import Checkbox from "@mui/material/Checkbox";
 import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPerformanceListQuery";
+import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
 
-function AdminUpdateModal({ isOpen, closeModal }) {
-  const { performanceToUpdate } = useAdminPerformanceUpdateStore();
+function AdminUpdateModal({ isOpen, closeModal, performanceToUpdate }) {
+  const { setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
+  const customPerformanceListQuery = useCustomPerformanceListQuery();
+  // const { performanceToUpdate, setPerformanceToUpdate } =
+  //   useAdminPerformanceUpdateStore();
   const [newPoster, setNewPoster] = useState({});
   const [newPosterUrl, setNewPosterUrl] = useState(""); // 화면에 업로드할 이미지 표시
   const [performance, setPerformance] = useState({});
 
+  // 새로 추가할 예매처명/url 입력란
   const [ticketingInputValue, setTicketingInputValue] = useState([
     {
       relatenm: "",
@@ -23,6 +29,12 @@ function AdminUpdateModal({ isOpen, closeModal }) {
     },
   ]);
 
+  // 기존에 있던 예매처/url 입력란
+  const [ticketingList, setTicketingList] = useState([]);
+  // 기존에 있던 예매처/url 중 체크 해제한(삭제할) url 목록
+  const [deletedTicketingList, setDeletedTicketingList] = useState([]);
+
+  // 이미지 파일 바꾸면 바꾼 이미지 표시 + 전송할 때 보내도록 상태에 저장
   const handleFileInputOnChange = (e) => {
     const file = e.target.files[0];
     if (!file) {
@@ -36,6 +48,7 @@ function AdminUpdateModal({ isOpen, closeModal }) {
     setNewPoster(...e.target.files);
   };
 
+  // 입력창 컴포넌트
   const inputComponent = (id, type, defaultValue, placeholder, index) => {
     return (
       <div css={s.inputComponent}>
@@ -55,6 +68,7 @@ function AdminUpdateModal({ isOpen, closeModal }) {
     );
   };
 
+  // 지역, 내한여부 등 select 컴포넌트
   const selectComponent = (id, defaultValue, placeholder, options) => {
     return (
       <div css={s.inputComponent}>
@@ -74,14 +88,25 @@ function AdminUpdateModal({ isOpen, closeModal }) {
     );
   };
 
+  // 입력창에 입력 시 동작하는 핸들러
   const handleInputOnChange = (e, index) => {
     const { id, value } = e.target;
-    if (id.includes("relate")) {
-      console.log(id);
-      console.log(index);
+    if (id.includes("prevrelate")) {
+      setTicketingList((prev) => {
+        const list = [...prev];
+        list[index] = {
+          ...list[index],
+          [id.replace("prev", "")]: value,
+        };
+        return list;
+      });
+    } else if (id.includes("newrelate")) {
       setTicketingInputValue((prev) => {
         const inputValue = [...prev];
-        inputValue[index] = { ...inputValue[index], [id]: value };
+        inputValue[index] = {
+          ...inputValue[index],
+          [id.replace("new", "")]: value,
+        };
         return inputValue;
       });
     } else {
@@ -92,20 +117,34 @@ function AdminUpdateModal({ isOpen, closeModal }) {
     }
   };
 
+  // 모달 열리면 수정할 공연정보를 모달 내에서 사용할 상태들에 저장
+  // performance = 공연 정보, ticketingList = 기존에 저장했던 예매처 목록
   useEffect(() => {
+    console.log(performanceToUpdate);
     setPerformance(performanceToUpdate);
-    setTicketingInputValue(performanceToUpdate.relates);
+    setTicketingList(performanceToUpdate.relates);
   }, [performanceToUpdate]);
 
-  useEffect(() => {
-    console.log(performance);
-  }, [performance]);
+  // 기존에 저장한 예매처 목록 옆 체크박스 체크 또는 해제 시 동작
+  const handleUrlCheckboxOnChange = (e, relate) => {
+    const { id, checked } = e.target;
+    if (checked === true) {
+      // 체크하면 삭제되지 않고 업데이트됨
+      setTicketingList((prev) => [...prev, relate]);
+      setDeletedTicketingList((prev) => {
+        return prev.filter((relate) => relate.ticketingUrlId !== parseInt(id));
+      });
+    }
+    // 체크 해제하고 수정 버튼 누르면 그 예매처 정보는 삭제됨
+    else if (checked === false) {
+      setTicketingList((prev) => {
+        return prev.filter((relate) => relate.ticketingUrlId !== parseInt(id));
+      });
+      setDeletedTicketingList((prev) => [...prev, relate]);
+    }
+  };
 
-  useEffect(() => {
-    console.log(ticketingInputValue);
-    setPerformance((prev) => ({ ...prev, relates: [...ticketingInputValue] }));
-  }, [ticketingInputValue]);
-
+  // 새로 추가할 예매처 목록 옆 + 누르면 입력란 한줄씩 추가
   const handleTicketingPlusOnClick = () => {
     setTicketingInputValue((prev) => [
       ...prev,
@@ -116,37 +155,62 @@ function AdminUpdateModal({ isOpen, closeModal }) {
     ]);
   };
 
+  // 새로 추가할 예매처 목록 옆 - 누르면 입력란 한줄씩 삭제(1줄만 있을 땐 -버튼은 사라짐)
   const handleTicketingMinusOnClick = (e, deleteIndex) => {
+    if (deleteIndex < 1) {
+      return;
+    }
     setTicketingInputValue(
       ticketingInputValue.filter((inputValue, index) => index !== deleteIndex)
     );
   };
 
+  // 수정 버튼 누르면 백엔드에 요청 날려서 수정 -> refetch
   const handleModifyButtonOnClick = async () => {
-    for (const value of Object.values(performance)) {
-      if (!value) {
-        alert("내용 누락");
-        return;
+    let data = {};
+    let ticketingUrlList = [];
+    for (let item of ticketingList) {
+      ticketingUrlList.push(item);
+    }
+    for (let inputValue of ticketingInputValue) {
+      if (Object.values(inputValue)[0].length < 1) {
+        continue;
       }
+      if (Object.values(inputValue)[1].length < 1) {
+        continue;
+      }
+      ticketingUrlList.push(inputValue);
     }
-    if (performance.prfpdfrom > performance.prfpdto) {
-      alert("시작일은 종료일 이전이어야 합니다.");
-      return;
-    }
+    data = { ...performance };
+    data.relates = ticketingUrlList;
 
-    for (let index in performance.relates) {
-      for (const value of Object.values(performance.relates[index])) {
-        if (value < 1) {
-          alert("예매처 정보 누락");
+    for (const [key, value] of Object.entries(data)) {
+      if (key !== "relates") {
+        if (!value) {
+          alert("내용 누락");
           return;
         }
+      } else if (key === "relates") {
+        for (let index in data.relates) {
+          for (const value of Object.values(data.relates[index])) {
+            if (!value) {
+              alert("예매처 정보 누락");
+              return;
+            }
+          }
+        }
       }
+    }
+
+    if (data.prfpdfrom > data.prfpdto) {
+      alert("시작일은 종료일 이전이어야 합니다.");
+      return;
     }
 
     const formData = new FormData();
     formData.append(
       "data",
-      new Blob([JSON.stringify(performance)], {
+      new Blob([JSON.stringify(data)], {
         type: "application/json",
       })
     );
@@ -156,11 +220,28 @@ function AdminUpdateModal({ isOpen, closeModal }) {
         type: "application/json",
       })
     );
+    formData.append(
+      "deletedTicketingList",
+      new Blob([JSON.stringify(deletedTicketingList)], {
+        type: "application/json",
+      })
+    );
     if (newPoster.size > 0) {
       formData.append("file", newPoster);
     }
 
     await reqModifyCustomPerformanceApi(formData);
+
+    const refetchResult = await customPerformanceListQuery.refetch();
+    console.log(refetchResult?.data?.data?.body);
+    setTicketingInputValue([
+      {
+        relatenm: "",
+        relateurl: "",
+      },
+    ]);
+    setRowsEmpty();
+    setRows(refetchResult?.data?.data?.body);
   };
 
   return (
@@ -264,17 +345,41 @@ function AdminUpdateModal({ isOpen, closeModal }) {
               ["Y", "N"]
             )}
 
+            {performanceToUpdate.relates.map((relate, index) => (
+              <div key={index} css={s.ticketingInputContainer}>
+                {inputComponent(
+                  "prevrelatenm",
+                  "text",
+                  relate.relatenm,
+                  "예매처명",
+                  index
+                )}
+                {inputComponent(
+                  "prevrelateurl",
+                  "text",
+                  relate.relateurl,
+                  "예매처 URL",
+                  index
+                )}
+                <Checkbox
+                  id={relate.ticketingUrlId}
+                  defaultChecked
+                  onChange={(e) => handleUrlCheckboxOnChange(e, relate)}
+                />
+              </div>
+            ))}
+
             {ticketingInputValue.map((inputValue, index) => (
               <div key={index} css={s.ticketingInputContainer}>
                 {inputComponent(
-                  "relatenm",
+                  "newrelatenm",
                   "text",
                   inputValue.relatenm,
                   "예매처명",
                   index
                 )}
                 {inputComponent(
-                  "relateurl",
+                  "newrelateurl",
                   "text",
                   inputValue.relateurl,
                   "예매처 URL",

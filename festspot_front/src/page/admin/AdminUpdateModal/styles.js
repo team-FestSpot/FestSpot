@@ -34,7 +34,6 @@ export const mainContainer = css`
   flex-direction: column;
   width: 100%;
   height: 100vh;
-  gap: 10px;
 `;
 
 export const imgContainer = css`
