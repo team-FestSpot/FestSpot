@@ -3,6 +3,7 @@ package com.festspot.dev.controller;
 import com.festspot.dev.domain.performance.Performance;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
+import com.festspot.dev.dto.ticketing.TicketingReqDto;
 import com.festspot.dev.service.AdminService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +53,9 @@ public class AdminController {
     @PutMapping("/update/custom")
     public ResponseEntity<?> updateCustomPerformanceInfo (@RequestPart("data") AdminUploadPerformanceReqDto dto,
                                                           @RequestPart("performanceId") Integer performanceId,
+                                                          @RequestPart("deletedTicketingList") List<TicketingReqDto> deletedTicketingListDto,
                                                           @RequestPart(required = false) MultipartFile file) {
-        adminService.updateCustomPerformanceInfo(dto, performanceId, file);
+        adminService.updateCustomPerformanceInfo(dto, performanceId, deletedTicketingListDto, file);
         return ResponseEntity.ok("");
     }
 }

@@ -3,13 +3,11 @@ import AdminLeftSideBar from "../SideBar/AdminLeftSideBar";
 import AdminMainPage from "../AdminMainPage/AdminMainPage";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import { useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import AdminAddPerformance from "../AdminAddPerformance/AdminAddPerformance";
 import AdminConfigCustomPerformance from "../AdminConfigCustomPerformance/AdminConfigCustomPerformance";
 
 function AdminLayout(props) {
-  const location = useLocation();
-
   return (
     <>
       <div css={s.layout}>
@@ -17,15 +15,14 @@ function AdminLayout(props) {
           <AdminLeftSideBar />
         </div>
         <div css={s.mainContainer}>
-          {location.pathname === "/admin/dashboard" ? (
-            <AdminMainPage />
-          ) : location.pathname === "/admin/detail" ? (
-            <AdminAddPerformance />
-          ) : location.pathname === "/admin/performance" ? (
-            <AdminConfigCustomPerformance />
-          ) : (
-            <></>
-          )}
+          <Routes>
+            <Route path="/dashboard" element={<AdminMainPage />} />
+            <Route path="/detail" element={<AdminAddPerformance />} />
+            <Route
+              path="/performance"
+              element={<AdminConfigCustomPerformance />}
+            />
+          </Routes>
         </div>
       </div>
     </>

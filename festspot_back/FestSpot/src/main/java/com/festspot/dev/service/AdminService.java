@@ -103,11 +103,12 @@ public class AdminService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateCustomPerformanceInfo(AdminUploadPerformanceReqDto dto, Integer performanceId, MultipartFile file) {
+    public void updateCustomPerformanceInfo(AdminUploadPerformanceReqDto dto, Integer performanceId, List<TicketingReqDto> deletedTicketingDto, MultipartFile file) {
         if(!Objects.isNull(file) && file.getSize() > 0) {
             fileService.deleteFile(dto.getPoster());
             dto.setPoster("/upload/poster/" + fileService.uploadFile(file, "/poster"));
         }
+
         PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
                 dto.getArea());
         PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
@@ -117,7 +118,12 @@ public class AdminService {
 
         List<TicketingUrl> ticketingUrls = dto.getRelates().stream()
                 .map(relate -> relate.toEntity(performanceId)).toList();
-        ticketingUrlMapper.deleteMissing(ticketingUrls);
+        List<TicketingUrl> deletedTicketingUrls = deletedTicketingDto.stream()
+                .map(relate -> relate.toEntity(performanceId)).toList();
+        System.out.println(ticketingUrls);
+        if(!deletedTicketingUrls.isEmpty()) {
+            ticketingUrlMapper.deleteMissing(deletedTicketingUrls);
+        }
         ticketingUrlMapper.insert(ticketingUrls);
     }
 }

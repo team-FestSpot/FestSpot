@@ -48,11 +48,9 @@
 
     <delete id="deleteMissing">
         delete from ticketing_url_tb
-        where
-        <foreach collection="list" item="relates" open="(" separator="," close=")">
-            performance_id = #{relates.performanceId}
-            and ticketing_url_id not in
-            #{relates.ticketingUrlId}
+        where (performance_id, ticketing_url_id) in
+        <foreach collection="list" item="relate" open="(" separator="," close=")">
+            (#{relate.performanceId}, #{relate.ticketingUrlId})
         </foreach>
     </delete>
 

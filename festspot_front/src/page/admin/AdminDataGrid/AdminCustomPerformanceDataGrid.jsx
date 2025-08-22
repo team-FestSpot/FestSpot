@@ -14,12 +14,13 @@ import AdminUpdateModal from "../AdminUpdateModal/AdminUpdateModal";
 import { baseURL } from "../../../api/axios";
 
 function AdminCustomPerformanceDataGrid(props) {
-  const { data, isLoading } = useCustomPerformanceListQuery();
+  const { data, isLoading, isRefetching } = useCustomPerformanceListQuery();
   const performanceList = data?.data?.body;
   const { rows, setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
   const [isOpen, setIsOpen] = useState(false);
-  const { performanceToUpdate, setPerformanceToUpdate } =
-    useAdminPerformanceUpdateStore();
+  // const { performanceToUpdate, setPerformanceToUpdate } =
+  //   useAdminPerformanceUpdateStore();
+  const [performanceToUpdate, setPerformanceToUpdate] = useState({});
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const [sortOption, setSortOption] = useState({
@@ -128,6 +129,15 @@ function AdminCustomPerformanceDataGrid(props) {
     }
   }, [isLoading]);
 
+  useEffect(() => {
+    const updatedRow = rows.find(
+      (row) => row.performanceId === performanceToUpdate.performanceId
+    );
+    if (!isRefetching && !!updatedRow) {
+      setPerformanceToUpdate({ ...updatedRow });
+    }
+  }, [isRefetching]);
+
   // 오름차순 내림차순 정렬 기능인데 가끔 이상하게 동작함
   // 원본 rows랑 별개로 화면 표시용 displayRows 상태를 새로 만들어서 뿌려줘야 할 듯함
   const handleColumnHeaderOnClick = (e) => {
@@ -178,7 +188,11 @@ function AdminCustomPerformanceDataGrid(props) {
     <div css={s.adminGridLayout}>
       {Object.keys(performanceToUpdate).length > 0 && (
         <div css={s.updateModalLayout}>
-          <AdminUpdateModal isOpen={isOpen} closeModal={closeModal} />
+          <AdminUpdateModal
+            isOpen={isOpen}
+            closeModal={closeModal}
+            performanceToUpdate={performanceToUpdate}
+          />
         </div>
       )}
       <Box
