@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.festspot.dev.domain.postImg.PostImgMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="postImgId">
+        insert into post_img_tb
+        values
+        <foreach collection="list" item="img" separator=",">
+            (default, #{img.seq}, #{img.postId}, #{img.postImgUrl})
+        </foreach>
+    </insert>
+</mapper>

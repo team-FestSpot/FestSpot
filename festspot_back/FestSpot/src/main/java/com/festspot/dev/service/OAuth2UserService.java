@@ -1,7 +1,11 @@
 package com.festspot.dev.service;
 
+import com.festspot.dev.domain.role.Role;
+import com.festspot.dev.domain.role.RoleMapper;
 import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
+import com.festspot.dev.domain.userRole.UserRole;
+import com.festspot.dev.domain.userRole.UserRoleMapper;
 import com.festspot.dev.security.model.PrincipalUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +16,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,7 +25,9 @@ import java.util.UUID;
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final UserRoleMapper userRoleMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -71,11 +78,20 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .providerId(providerId)
                     .build();
 
+            userMapper.insert(user);
+
+            final String DEFAULT_USER_ROLE = "ROLE_USER";
+            Role role = roleMapper.findByRole(DEFAULT_USER_ROLE);
+
+            UserRole userRole = UserRole.builder()
+                    .roleId(role.getRoleId())
+                    .userId(user.getUserId())
+                    .build();
+
+            userRoleMapper.insert(userRole);
+            userRole.setRole(role);
+            user.setUserRoles(List.of(userRole));
         }
-
-        System.out.println("user - " + user);
-
-        userMapper.insert(user);
 
         return PrincipalUser.builder()
                 .user(user)
