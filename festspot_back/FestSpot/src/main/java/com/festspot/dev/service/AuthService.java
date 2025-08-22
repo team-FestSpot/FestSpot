@@ -1,7 +1,11 @@
 package com.festspot.dev.service;
 
+import com.festspot.dev.domain.role.Role;
+import com.festspot.dev.domain.role.RoleMapper;
 import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
+import com.festspot.dev.domain.userRole.UserRole;
+import com.festspot.dev.domain.userRole.UserRoleMapper;
 import com.festspot.dev.dto.auth.TokenDto;
 import com.festspot.dev.dto.auth.UserLoginDto;
 import com.festspot.dev.dto.auth.UserSignUpDto;
@@ -16,6 +20,8 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +30,8 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
+    private final UserRoleMapper userRoleMapper;
 
     @Transactional(rollbackFor = Exception.class)
     public User signUp(UserSignUpDto dto) throws BindException {
@@ -39,6 +47,18 @@ public class AuthService {
         User signUpUser = dto.toUser(passwordEncoder);
         userMapper.insert(signUpUser);
 
+        final String DEFAULT_USER_ROLE = "ROLE_USER";
+        Role foundRole = roleMapper.findByRole(DEFAULT_USER_ROLE);
+
+        UserRole userRole = UserRole.builder()
+                .userId(signUpUser.getUserId())
+                .roleId(foundRole.getRoleId())
+                .build();
+        userRoleMapper.insert(userRole);
+
+        userRole.setRole(foundRole);
+        signUpUser.setUserRoles(List.of(userRole));
+
         return signUpUser;
     }
 
@@ -50,7 +70,7 @@ public class AuthService {
         }
 
         if(!passwordEncoder.matches(dto.getUserPassword(), foundUser.getUserPassword())) {
-            throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
+            throw new LoginException("로그인 오류", "비밀번호를 다시 확인하세요.");
         }
 
         return TokenDto.builder()
