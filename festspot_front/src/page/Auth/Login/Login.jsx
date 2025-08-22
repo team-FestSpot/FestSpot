@@ -8,7 +8,6 @@ import {
 } from "../../../constants/authRegex";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
 import googleLogo from "/src/page/Auth/img/Google__G__logo.png";
 import kakaoLogo from "/src/page/Auth/img/kakao_logo.png";
 import naverLogo from "/src/page/Auth/img/naver_logo.png";
@@ -19,7 +18,7 @@ import { reqLogin } from "../../../api/authApi";
 import Swal from "sweetalert2";
 import { useQueryClient } from "@tanstack/react-query";
 
-function SignUp(props) {
+function Login(props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -95,12 +94,9 @@ function SignUp(props) {
   };
 
   const handleLoginOnClick = async (e) => {
-  const handleLoginOnClick = async (e) => {
     try {
       const response = await reqLogin(inputValue);
-      const response = await reqLogin(inputValue);
       const { accessToken } = response?.data?.body;
-      localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
       localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
 
       await queryClient.invalidateQueries({

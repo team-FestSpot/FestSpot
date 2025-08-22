@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCommentLike {
-    private Integer postCommentLikeId;
-    private Integer userId;
-    private Integer postCommentId;
+public class PostSearchOption {
+
+  private Integer startIndex;
+  private Integer endIndex;
+  private Integer size;
+  private Integer categoryId;
 }

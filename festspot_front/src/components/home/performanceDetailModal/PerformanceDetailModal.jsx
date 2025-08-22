@@ -6,10 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function PerformanceDetailModal({ isOpen, setOpen, performance }) {
   const { isFestival, isForeign } = performance;
-<<<<<<< HEAD
-=======
 
->>>>>>> 68f468a57b4d1a95f88204fef2b41a80b5f53581
   return (
     <>
       <Global styles={s.container} />
