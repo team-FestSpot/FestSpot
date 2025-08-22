@@ -14,6 +14,8 @@ import naverLogo from "/src/page/Auth/img/naver_logo.png";
 import festSpotLogo from "/src/page/Auth/img/FestSpotLogoImg.png";
 import festSpotLogoText from "/src/page/Auth/img/FestSpotLogoText.png";
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
+import { reqLogin } from "../../../api/authApi";
+import Swal from "sweetalert2";
 
 function SignUp(props) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -77,7 +79,7 @@ function SignUp(props) {
 
   const handleOnKeyDown = (e) => {
     if (e.keyCode === 13 && e.target.name === "userPassword") {
-      handleSignUpOnClick();
+      handleLoginOnClick();
     }
   };
 
@@ -86,6 +88,40 @@ function SignUp(props) {
       ...prev,
       [key]: !prev[key],
     }));
+  };
+
+  const handleLoginOnClick = (e) => {
+    try {
+      const response = reqLogin(inputValue);
+      const { accessToken } = response?.data?.body;
+      console.log(accessToken);
+
+      Swal.fire({
+        title: { accessToken },
+      });
+    } catch (error) {}
+
+    // try {
+    //         const response = await reqLogin(inputValue);
+    //         const {accessToken} = response.data.body;
+    //         localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
+    //         await Swal.fire({
+    //             icon: "success",
+    //             title: "로그인 성공",
+    //             showConfirmButton: false,
+    //             timer: 1000,
+    //         });
+    //         await queryClient.invalidateQueries({
+    //             queryKey: ["principal"],
+    //         });
+    //         navigate("/");
+    //     } catch(error) {
+    //         const {response} = error;
+    //         await Swal.fire({
+    //             icon: "error",
+    //             title: response.data.body.errorMessage,
+    //         });
+    //     }
   };
 
   return (
@@ -142,6 +178,7 @@ function SignUp(props) {
               disabled={buttonDisabled}
               variant="contained"
               css={s.signUpButton}
+              onClick={handleLoginOnClick}
             >
               로그인
             </Button>
