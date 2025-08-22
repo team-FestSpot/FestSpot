@@ -5,20 +5,14 @@ export const adminGridLayout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 90%;
   height: 100%;
-
-  .MuiDataGrid-filler {
-    height: 50px !important;
-  }
 `;
 
 export const paginationButtonLayout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  background-color: blue;
 `;
 
 export const updateModalLayout = css`

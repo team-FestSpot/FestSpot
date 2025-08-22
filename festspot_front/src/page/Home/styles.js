@@ -12,17 +12,21 @@ export const homeLayout = css`
 `;
 
 export const homeLeftSide = css`
-  @media (max-width: 1024px) {
-    width: 100%;
-    border-right: none;
-  }
-
   height: 100%;
   box-sizing: border-box;
-  box-shadow: inset -0.5px 0 0 #ccc;
   width: 45%;
   margin: 0;
   padding-right: 10px;
+`;
+
+export const divider = css`
+  height: 100%;
+  width: 0.05rem;
+  background-color: #ccc;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
 `;
 
 export const performanceCardSection = css`
