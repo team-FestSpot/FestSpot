@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import * as s from "./styles";
 import React from "react";
 import {
@@ -9,10 +9,23 @@ import {
 } from "react-icons/md";
 import { IoTicketOutline } from "react-icons/io5";
 import { usePostsQuery } from "../../../querys/post/usePostsQuery";
+import { useAllPostsQuery } from "../../../querys/post/useAllPostsQuery";
 
 function FestivalBoard(props) {
   const location = useLocation();
-  const response = usePostsQuery(location.pathname, 1);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const boardKey = location.pathname.slice(7);
+  const page = parseInt(searchParams.get("page")) || 1;
+
+  let response;
+  if (!!boardKey) {
+    response = usePostsQuery(boardKey, page);
+  } else {
+    response = useAllPostsQuery(page);
+  }
+
+  console.log(response);
 
   const boards = [
     {

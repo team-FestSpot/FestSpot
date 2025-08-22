@@ -8,7 +8,7 @@ export const reqAllPosts = async (page) =>
 
 export const reqPosts = async (boardKey, page) =>
   await api.get(`/api/board/${boardKey}`, {
-    params: { boardKey, page, size: 8 },
+    params: { page: page, size: 8 },
   });
 
 // 상세 게시글
