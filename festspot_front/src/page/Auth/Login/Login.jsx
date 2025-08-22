@@ -7,7 +7,7 @@ import {
   JOIN_REGEX_ERROR_MESSAGE,
 } from "../../../constants/authRegex";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import googleLogo from "/src/page/Auth/img/Google__G__logo.png";
 import kakaoLogo from "/src/page/Auth/img/kakao_logo.png";
 import naverLogo from "/src/page/Auth/img/naver_logo.png";
@@ -16,8 +16,11 @@ import festSpotLogoText from "/src/page/Auth/img/FestSpotLogoText.png";
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 import { reqLogin } from "../../../api/authApi";
 import Swal from "sweetalert2";
+import { useQueryClient } from "@tanstack/react-query";
 
 function SignUp(props) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [inputValue, setInputValue] = useState({
     userLoginId: "",
@@ -90,38 +93,35 @@ function SignUp(props) {
     }));
   };
 
-  const handleLoginOnClick = (e) => {
+  const handleLoginOnClick = async (e) => {
     try {
-      const response = reqLogin(inputValue);
+      const response = await reqLogin(inputValue);
       const { accessToken } = response?.data?.body;
-      console.log(accessToken);
+      localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
 
-      Swal.fire({
-        title: { accessToken },
+      await queryClient.invalidateQueries({
+        queryKey: ["principal"],
       });
-    } catch (error) {}
 
-    // try {
-    //         const response = await reqLogin(inputValue);
-    //         const {accessToken} = response.data.body;
-    //         localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
-    //         await Swal.fire({
-    //             icon: "success",
-    //             title: "로그인 성공",
-    //             showConfirmButton: false,
-    //             timer: 1000,
-    //         });
-    //         await queryClient.invalidateQueries({
-    //             queryKey: ["principal"],
-    //         });
-    //         navigate("/");
-    //     } catch(error) {
-    //         const {response} = error;
-    //         await Swal.fire({
-    //             icon: "error",
-    //             title: response.data.body.errorMessage,
-    //         });
-    //     }
+      await Swal.fire({
+        title: "로그인 성공",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      });
+
+      navigate("/");
+    } catch (error) {
+      let errorText = Object.values(error.response?.data?.body).join("<br>");
+      console.log(error);
+
+      await Swal.fire({
+        title: "회원가입 실패",
+        html: `${errorText}`,
+        icon: "error",
+      });
+    }
   };
 
   return (
