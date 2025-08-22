@@ -233,7 +233,7 @@ function AdminUpdateModal({ isOpen, closeModal, performanceToUpdate }) {
     await reqModifyCustomPerformanceApi(formData);
 
     const refetchResult = await customPerformanceListQuery.refetch();
-    console.log(refetchResult?.data?.data?.body);
+    // console.log(refetchResult?.data?.data?.body);
     setTicketingInputValue([
       {
         relatenm: "",
@@ -242,6 +242,7 @@ function AdminUpdateModal({ isOpen, closeModal, performanceToUpdate }) {
     ]);
     setRowsEmpty();
     setRows(refetchResult?.data?.data?.body);
+    closeModal();
   };
 
   return (

@@ -136,6 +136,7 @@ function AdminCustomPerformanceDataGrid(props) {
     if (!isRefetching && !!updatedRow) {
       setPerformanceToUpdate({ ...updatedRow });
     }
+    openModal();
   }, [isRefetching]);
 
   // 오름차순 내림차순 정렬 기능인데 가끔 이상하게 동작함
