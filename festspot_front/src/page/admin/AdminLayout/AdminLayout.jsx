@@ -5,7 +5,7 @@ import AdminMainPage from "../AdminMainPage/AdminMainPage";
 import * as s from "./styles";
 import { Route, Routes } from "react-router-dom";
 import AdminAddPerformance from "../AdminAddPerformance/AdminAddPerformance";
-import AdminConfigCustomPerformance from "../AdminConfigCustomPerformance/AdminConfigCustomPerformance";
+import AdminModifyCustomPerformance from "../AdminModifyCustomPerformance/AdminModifyCustomPerformance";
 
 function AdminLayout(props) {
   return (
@@ -20,7 +20,7 @@ function AdminLayout(props) {
             <Route path="/detail" element={<AdminAddPerformance />} />
             <Route
               path="/performance"
-              element={<AdminConfigCustomPerformance />}
+              element={<AdminModifyCustomPerformance />}
             />
           </Routes>
         </div>

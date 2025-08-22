@@ -9,7 +9,6 @@ import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPe
 import Button from "@mui/material/Button";
 import { FaRegEdit } from "react-icons/fa";
 import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
-import useAdminPerformanceUpdateStore from "../../../stores/AdminPerformanceUpdateStore";
 import AdminUpdateModal from "../AdminUpdateModal/AdminUpdateModal";
 import { baseURL } from "../../../api/axios";
 
@@ -99,25 +98,30 @@ function AdminCustomPerformanceDataGrid(props) {
     },
   ];
 
+  // 모달창 열기
   const openModal = () => {
     setIsOpen(true);
   };
 
+  // 모달창 닫기
   const closeModal = () => {
     setIsOpen(false);
   };
 
+  // 수정 버튼 눌렀을 때 모달창 열림
   const handleModifyButtonOnClick = (e, params) => {
     setPerformanceToUpdate(params.row);
     openModal();
   };
 
+  // 처음 들어왔을 때 or 새로고침했을 때 주소에 ?page=1 param 붙임
   useEffect(() => {
     setSearchParams({
       page: 1,
     });
   }, []);
 
+  // 직접 등록한 공연 목록 가져오는 query 로딩 끝나면 row에 넣어서 표에 표시되게 함
   useEffect(() => {
     if (
       !isLoading &&
@@ -129,6 +133,8 @@ function AdminCustomPerformanceDataGrid(props) {
     }
   }, [isLoading]);
 
+  // 수정 모달 열고 값 수정하면 직접 등록한 공연 목록 가져오는 query가 refetch됨
+  // refetch됐을 때 modal 다시 열어줌 (modal 화면에 수정한 값 즉시 반영)
   useEffect(() => {
     const updatedRow = rows.find(
       (row) => row.performanceId === performanceToUpdate.performanceId
