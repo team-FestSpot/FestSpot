@@ -5,14 +5,9 @@ import { IoSearch } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import * as s from "./styles";
 import UpperSideBarModal from "./UpperSideBarModal/UpperSideBarModal";
-<<<<<<< HEAD:festspot_front/src/SideBar/UpperSideBar/UpperSideBar.jsx
-import useUpperSideBarStore from "../../stores/upperSideBarStore";
-import { useNavigate } from "react-router-dom";
-=======
 import useUpperSideBarStore from "../../../stores/upperSideBarStore";
 import festSpotLogo from "./UpperSideBarModal/img/FestSpotLogoImg.png";
 import festSpotLogoText from "./UpperSideBarModal/img/FestSpotLogoText.png";
->>>>>>> fb44a73779a1409b066a050d81dad80779ba4216:festspot_front/src/components/sideBar/UpperSideBar/UpperSideBar.jsx
 
 function UpperSideBar(props) {
   const navigate = useNavigate();
