@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as s from "./styles";
 import { IoSearch } from "react-icons/io5";
-import AdminDataGrid from "../AdminDataGrid/AdminDataGrid";
+import AdminDataGrid from "../../../components/admin/AdminDataGrid/AdminDataGrid";
 import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
 import { usePublicDetailUploadManyMutation } from "../../../querys/admin/usePublicDetailUploadManyMutation";
 import { usePublicApiSearchResultMutation } from "../../../querys/admin/usePublicApiSearchResultMutation";
@@ -35,7 +35,6 @@ function AdminMainPage(props) {
 
   return (
     <div css={s.layout}>
-      <div css={s.sidebarLayout}></div>
       <div css={s.mainLayout}>
         <header css={s.header}>
           <div>

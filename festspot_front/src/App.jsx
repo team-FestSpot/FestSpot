@@ -5,8 +5,7 @@ import RooteRouter from "./routes/RooteRouter";
 function App() {
   return (
     <RootLayout>
-      {/* <RooteRouter /> */}
-      <AdminRouter />
+      <RooteRouter />
     </RootLayout>
   );
 }

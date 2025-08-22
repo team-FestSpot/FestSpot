@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { BoardContext } from "../../../constants/BoardContext";
-import PostSideBar from "../../../SideBar/PostSideBar/PostSideBar";
-import UpperSideBar from "../../../SideBar/UpperSideBar/UpperSideBar";
+import PostSideBar from "../../sideBar/PostSideBar/PostSideBar";
+import UpperSideBar from "../../sideBar/UpperSideBar/UpperSideBar";
 import * as s from "./styles";
 import React, { useState } from "react";
 

@@ -2,6 +2,9 @@ package com.festspot.dev.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.festspot.dev.domain.userRole.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +25,6 @@ public class User {
     private LocalDateTime createdAt;
     private String provider;
     private String providerId;
+
+    private List<UserRole> userRoles;
 }
