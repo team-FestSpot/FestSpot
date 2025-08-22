@@ -26,6 +26,7 @@ export const logoSection = css`
   height: 100%;
   width: 6%;
   flex-grow: 1;
+  cursor: pointer;
 `;
 
 export const logo = css`

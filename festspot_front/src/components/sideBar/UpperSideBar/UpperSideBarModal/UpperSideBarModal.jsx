@@ -2,12 +2,16 @@ import React from "react";
 import { IoClose } from "react-icons/io5";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useUpperSideBarStore from "../../../../stores/upperSideBarStore";
 import festSpotLogo from "./img/FestSpotLogoImg.png";
 import festSpotLogoText from "./img/FestSpotLogoText.png";
+import { useQueryClient } from "@tanstack/react-query";
+import Swal from "sweetalert2";
 
 function UpperSideBarModal(props) {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { isMenuOpen, closeMenu } = useUpperSideBarStore();
 
   const modalMenus = [
@@ -31,17 +35,35 @@ function UpperSideBarModal(props) {
     },
     {
       id: 3,
-      majorCategory: { content: "커뮤니티", link: "/community" },
+      majorCategory: { content: "커뮤니티", link: "/board" },
       minorCategory: [
-        { content: "자유 게시판", link: "/community/public" },
-        { content: "양도 게시판", link: "/community/review" },
-        { content: "후기 게시판", link: "/community/assignment" },
+        { content: "자유 게시판", link: "/board/free" },
+        { content: "양도 게시판", link: "/board/review" },
+        { content: "후기 게시판", link: "/board/transfer" },
+        { content: "소규모 축제 게시판", link: "/board/small" },
       ],
     },
   ];
 
   const handleCloseOnClick = () => {
     closeMenu();
+  };
+
+  const handleLogoutOnClick = async () => {
+    localStorage.removeItem("AccessToken");
+    await queryClient.invalidateQueries({
+      queryKey: ["principal"],
+    });
+
+    await Swal.fire({
+      title: "로그아웃 성공",
+      icon: "success",
+      showConfirmButton: false,
+      timer: 1000,
+      timerProgressBar: true,
+    });
+
+    navigate("/");
   };
 
   return (
@@ -54,7 +76,9 @@ function UpperSideBarModal(props) {
           <img src={festSpotLogo} alt="" />
           <Link css={s.username}>nickname</Link>
           <div css={s.logoutContainer}>
-            <Link css={s.logout}>로그아웃</Link>
+            <Link onClick={handleLogoutOnClick} css={s.logout}>
+              로그아웃
+            </Link>
           </div>
         </div>
         {modalMenus.map((modalMenu, index) => {
