@@ -13,7 +13,7 @@
         <result property="userProfileImgUrl" column="use_profile_img_url" />
         <result property="provider" column="provider" />
         <result property="providerId" column="provider_id" />
-        <collection property="roles" javaType="list" resultMap="UserRoleMap" />
+        <collection property="userRoles" javaType="list" resultMap="UserRoleMap" />
     </resultMap>
     <resultMap id="UserRoleMap" type="com.festspot.dev.domain.userRole.UserRole">
         <id property="userRoleId" column="user_role_id" />
@@ -53,5 +53,7 @@
         where
             user_id = #{userId}
     </select>
+
+
 
 </mapper>
