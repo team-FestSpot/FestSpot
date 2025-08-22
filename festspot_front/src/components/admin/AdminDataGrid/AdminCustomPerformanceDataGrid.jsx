@@ -192,6 +192,7 @@ function AdminCustomPerformanceDataGrid(props) {
               },
             },
           }}
+          sx={{}}
           pageSizeOptions={[20]}
           checkboxSelection
           disableRowSelectionOnClick
