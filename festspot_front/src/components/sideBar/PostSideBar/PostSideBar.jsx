@@ -7,8 +7,10 @@ import {
   MdOutlineFestival,
   MdOutlineRateReview,
 } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 function PostSideBar({ currentBoard, onBoardChange, loading }) {
+  const navigate = useNavigate();
   const boards = [
     {
       id: "free",
