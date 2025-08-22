@@ -1,22 +1,22 @@
 import { css } from "@emotion/react";
 
-export const layout = css`
-  display: flex;
-  flex-direction: row;
-`;
-
-export const mainLayout = css`
+export const adminGridLayout = css`
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
-  width: 100%;
+  align-items: center;
+  width: 90%;
   height: 100%;
+`;
+
+export const paginationButtonLayout = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const updateModalLayout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: #d5d5d577;
 `;
