@@ -1,136 +1,177 @@
 /** @jsxImportSource @emotion/react */
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import * as s from "./styles";
-import Swal from "sweetalert2";
-import { css } from "@emotion/react";
+import TextField from "@mui/material/TextField";
+import React, { useEffect, useState } from "react";
+import {
+  JOIN_REGEX,
+  JOIN_REGEX_ERROR_MESSAGE,
+} from "../../../constants/authRegex";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
+import googleLogo from "/src/page/Auth/img/Google__G__logo.png";
+import kakaoLogo from "/src/page/Auth/img/kakao_logo.png";
+import naverLogo from "/src/page/Auth/img/naver_logo.png";
+import festSpotLogo from "/src/page/Auth/img/FestSpotLogoImg.png";
+import festSpotLogoText from "/src/page/Auth/img/FestSpotLogoText.png";
+import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 
-function Login(props) {
-  const [buttonDisable, setButtonDisabled] = useState(true);
+function SignUp(props) {
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [inputValue, setInputValue] = useState({
-    username: "",
-    password: "",
+    userLoginId: "",
+    userPassword: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState({
+    userLoginId: false,
+    userPassword: false,
+  });
+
+  const [helpText, setHelpText] = useState({
+    userLoginId: "",
+    userPassword: "",
+  });
+
+  const [visible, setVisible] = useState({
+    userPassword: false,
   });
 
   useEffect(() => {
-    setButtonDisabled(
-      !!Object.values(inputValue).filter((value) => !value.trim()).length
-    );
-  }, [inputValue]);
+    const isEmptyValue = !!Object.values(inputValue).filter(
+      (value) => !value.trim()
+    ).length;
+    const isError = !!Object.values(errorMessage).filter((value) => !!value)
+      .length;
+    setButtonDisabled(isEmptyValue || isError);
 
-  const handleOnChange = (e) => {
+    const errorEntries = Object.entries(errorMessage);
+    errorEntries.forEach(([key, value]) => {
+      setHelpText((prev) => ({
+        ...prev,
+        [key]: !value ? "" : JOIN_REGEX_ERROR_MESSAGE[key],
+      }));
+    });
+  }, [errorMessage]);
+
+  const hanleInputValueOnChange = (e) => {
     setInputValue((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
-  };
 
-  const handleLoginOnClick = async () => {
-    // 로그인 로직 구현
-    try {
-      // 성공 시
-    } catch (error) {
-      // 실패 시
-      await Swal.fire({
-        icon: "error",
-        title: response.data.body.errorMessage,
-      });
+    // 빈값 검사
+    if (!JOIN_REGEX["notEmpty"].test(e.target.value)) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        [e.target.name]: false,
+      }));
+      return;
     }
+
+    //valid 검사
+    setErrorMessage((prev) => ({
+      ...prev,
+      [e.target.name]: !JOIN_REGEX[e.target.name].test(e.target.value),
+    }));
   };
 
   const handleOnKeyDown = (e) => {
-    if (e.keyCode === 13 && e.target.name === "password") {
-      handleLoginOnClick();
+    if (e.keyCode === 13 && e.target.name === "userPassword") {
+      handleSignUpOnClick();
     }
   };
 
+  const handlePasswordVisibleOnClick = (key) => {
+    setVisible((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
   return (
-    <div css={s.loginContainer}>
-      <div css={s.logoContainer}>
-        <div css={s.logoIcon}>
-          <img src="" alt="FestSpot Logo" />
-        </div>
-      </div>
-
-      <div css={s.inputSection}>
-        <div css={s.textFieldContainer}>
-          <TextField
-            fullWidth={true}
-            label="아이디를 입력하세요."
-            variant="outlined"
-            name="username"
-            value={inputValue.username}
-            onChange={handleOnChange}
-            css={s.textField}
-          />
-        </div>
-        <div css={s.textFieldContainer}>
-          <TextField
-            fullWidth={true}
-            type="password"
-            label="비밀번호를 입력하세요."
-            variant="outlined"
-            name="password"
-            value={inputValue.password}
-            onChange={handleOnChange}
-            onKeyDown={handleOnKeyDown}
-            css={s.textField}
-          />
-        </div>
-      </div>
-
-      <div css={s.submitButtonContainer}>
-        <Button
-          fullWidth={true}
-          disabled={buttonDisable}
-          variant="contained"
-          onClick={handleLoginOnClick}
-          css={s.loginButton}
-        >
-          로그인
-        </Button>
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 0.8rem;
-            font-size: 0.9rem;
-            color: #999;
-          `}
-        >
-          <span>아직 회원이 아니신가요?</span>
-          <a href="">회원가입</a>
-        </div>
-
+    <div css={s.loginLayout}>
+      <div css={s.loginContainer}>
+        <header css={s.header}>
+          <div css={s.logoIcon}>
+            <img src={festSpotLogo} alt="FestSpot Logo" />
+            <img src={festSpotLogoText} alt="FestSpot Logo" />
+          </div>
+        </header>
+        <main css={s.main}>
+          <div css={s.textField}>
+            <TextField
+              fullWidth={true}
+              error={errorMessage.userLoginId}
+              label="아이디를 입력하세요."
+              variant="outlined"
+              name="userLoginId"
+              value={inputValue.userLoginId}
+              onChange={hanleInputValueOnChange}
+              css={s.textField}
+            />
+            {errorMessage.userLoginId && (
+              <p css={s.textFieldHelp}>{helpText.userLoginId}</p>
+            )}
+          </div>
+          <div css={s.textField}>
+            <TextField
+              fullWidth={true}
+              error={errorMessage.userPassword}
+              type={visible.userPassword ? `text` : `password`}
+              label="비밀번호를 입력하세요."
+              variant="outlined"
+              name="userPassword"
+              value={inputValue.userPassword}
+              onKeyDown={handleOnKeyDown}
+              onChange={hanleInputValueOnChange}
+              css={s.textField}
+            />
+            <div
+              css={s.visiblePassword}
+              onClick={() => handlePasswordVisibleOnClick("userPassword")}
+            >
+              {visible.userPassword ? <IoEyeSharp /> : <IoEyeOffSharp />}
+            </div>
+            {errorMessage.userPassword && (
+              <p css={s.textFieldHelp}>{helpText.userPassword}</p>
+            )}
+          </div>
+          <div css={s.buttonContainer}>
+            <Button
+              fullWidth={true}
+              disabled={buttonDisabled}
+              variant="contained"
+              css={s.signUpButton}
+            >
+              로그인
+            </Button>
+          </div>
+          <div css={s.toLoginContainer}>
+            <span>계정이 없으신가요?</span>
+            <Link to={"/auth/signup"}>회원가입</Link>
+          </div>
+        </main>
         <div css={s.divider}>
-          <span css={s.dividerText}>간편 로그인</span>
+          <div />
+          <span>간편 로그인</span>
+          <div />
         </div>
-
-        <div css={s.socialButtonContainer}>
-          <div css={s.socialButton}>
-            <img src="" alt="naver logo" />
+        <footer css={s.footer}>
+          <div css={s.OAuth2Container}>
+            <Link>
+              <img src={googleLogo} />
+            </Link>
+            <Link>
+              <img src={kakaoLogo} />
+            </Link>
+            <Link>
+              <img src={naverLogo} />
+            </Link>
           </div>
-          <div css={s.socialButton}>
-            <img src="" alt="google logo" />
-          </div>
-          <div css={s.socialButton}>
-            <img src="" alt="google logo" />
-          </div>
-        </div>
-
-        <div css={s.socialLoginInfo}>
-          <p css={s.socialLoginText}>
-            SNS 계정으로 로그인하실 경우,
-            <br />
-            일부 서비스 이용에 제한이 있을 수 있습니다.
-          </p>
-        </div>
+        </footer>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default SignUp;

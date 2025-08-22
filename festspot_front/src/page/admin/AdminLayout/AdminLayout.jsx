@@ -1,32 +1,21 @@
 import React from "react";
-import AdminLeftSideBar from "../SideBar/AdminLeftSideBar";
-import AdminMainPage from "../AdminMainPage/AdminMainPage";
+import AdminLeftSideBar from "../../sideBar/AdminLeftSideBar/AdminLeftSideBar";
+import AdminMainPage from "../../../page/admin/AdminMainPage/AdminMainPage";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import { useLocation } from "react-router-dom";
-import AdminAddPerformance from "../AdminAddPerformance/AdminAddPerformance";
+import AdminAddPerformance from "../../../page/admin/AdminAddPerformance/AdminAddPerformance";
 import AdminConfigCustomPerformance from "../AdminConfigCustomPerformance/AdminConfigCustomPerformance";
+import AdminTmp from "../AdminMainPage/tmp";
 
-function AdminLayout(props) {
-  const location = useLocation();
-
+function AdminLayout({ children }) {
   return (
     <>
-      <div css={s.layout}>
-        <div css={s.sideBar}>
+      <div css={s.adminLayout}>
+        <div css={s.adminSideBar}>
           <AdminLeftSideBar />
         </div>
-        <div css={s.mainContainer}>
-          {location.pathname === "/admin/dashboard" ? (
-            <AdminMainPage />
-          ) : location.pathname === "/admin/detail" ? (
-            <AdminAddPerformance />
-          ) : location.pathname === "/admin/performance" ? (
-            <AdminConfigCustomPerformance />
-          ) : (
-            <></>
-          )}
-        </div>
+        <div css={s.adminContainer}>{children}</div>
       </div>
     </>
   );

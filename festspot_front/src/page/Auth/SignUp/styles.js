@@ -1,154 +1,156 @@
 import { css } from "@emotion/react";
 
-export const signUpContainer = css`
-  background-color: #fff5f3;
-  border-radius: 1rem;
-  padding: 4rem;
-  width: 25rem;
-  max-width: 90vw;
-  margin: 0 auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+export const signUpLayout = css`
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
 `;
 
-export const logoContainer = css`
+export const signUpContainer = css`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  box-sizing: border-box;
+  border-radius: 2rem;
+  width: 40rem;
+  height: auto;
+  padding: 3rem;
+  background-color: #fbd8d056;
+`;
+
+export const header = css`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 5%;
 `;
 
 export const logoIcon = css`
   display: flex;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
-
-  img {
-    width: 10rem;
-    height: 10rem;
-  }
-`;
-
-export const inputSection = css`
-  width: 100%;
-  margin-bottom: 1rem;
-`;
-
-export const textFieldContainer = css`
-  margin-bottom: 0.8rem;
-  width: 100%;
-`;
-
-export const textField = css`
-  & .MuiOutlinedInput-root {
-    background-color: white;
-    border-radius: 0.8rem;
-
-    &:hover fieldset {
-      border-color: #ff6b47;
-    }
-
-    &.Mui-focused fieldset {
-      border-color: #ff6b47;
-    }
-  }
-
-  & .MuiInputLabel-root {
-    color: #999;
-
-    &.Mui-focused {
-      color: #ff6b47;
-    }
-  }
-`;
-
-export const submitButtonContainer = css`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-`;
-
-export const signUpButton = css`
-  background-color: #50c7a3;
-  color: white;
-  padding: 0.8rem 0;
-  border-radius: 0.8rem;
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 1.8rem;
-
-  &:hover {
-    background-color: #45b393;
-  }
-
-  &:disabled {
-    background-color: #ccc;
-  }
-`;
-
-export const divider = css`
-  position: relative;
-  width: 100%;
-  text-align: center;
-  margin: 1.5rem 0;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 0.01rem;
-    background-color: #ddd;
-  }
-`;
-
-export const dividerText = css`
-  background-color: #fff5f3;
-  padding: 0 1rem;
-  color: #999;
-  font-size: 0.8rem;
-`;
-
-export const socialButtonContainer = css`
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  margin-top: 1.3rem;
-`;
-
-export const socialButton = css`
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 24px;
-  cursor: pointer;
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.05);
-  }
+  width: auto;
+  height: 4.5rem;
 
   & > img {
     height: 100%;
   }
 `;
 
-export const socialLoginInfo = css`
-  margin-top: 2rem;
-  text-align: center;
+export const main = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
-export const socialLoginText = css`
-  color: #999;
-  font-size: 0.7rem;
-  line-height: 1.4;
+export const textField = css`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 3%;
+
+  .MuiInputBase-input,
+  .MuiInputLabel-root,
+  .MuiOutlinedInput-notchedOutline {
+    font-size: 1.4rem;
+  }
+
+  .MuiInputBase-root {
+    & > input {
+      width: 85%;
+    }
+  }
+
+  .MuiTextField-root {
+    margin-bottom: 0;
+  }
+`;
+
+export const visiblePassword = css`
+  position: absolute;
+  top: 1.4rem;
+  right: 1rem;
+  width: auto;
+  height: fit-content;
+  font-size: 1.8rem;
+  cursor: pointer;
+`;
+
+export const textFieldHelp = css`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  font-size: 1rem;
+  color: red;
   margin: 0;
+  margin-bottom: 2%;
+`;
+
+export const buttonContainer = css`
+  width: 100%;
+  margin-bottom: 1%;
+  .MuiButtonBase-root {
+    font-size: 1.4rem;
+  }
+`;
+
+export const toLoginContainer = css`
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  margin-bottom: 5%;
+  font-size: 1.2rem;
+
+  & > span {
+    margin: 0 2%;
+  }
+`;
+
+export const divider = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 5%;
+
+  & > span {
+    margin: 0 1.5rem;
+  }
+
+  & > div {
+    box-shadow: 0 0 0 0.01rem #000;
+    flex-grow: 1;
+  }
+`;
+
+export const footer = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
+export const OAuth2Container = css`
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
+
+  & > a {
+    border-radius: 50%;
+    padding: 1vh;
+    width: auto;
+    height: 4vh;
+    background-color: #fbd8d0;
+
+    & > img {
+      height: 100%;
+    }
+  }
 `;
