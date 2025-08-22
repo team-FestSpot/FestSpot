@@ -24,11 +24,13 @@ public class AuthController {
   @PostMapping("/signup")
   public ResponseEntity<ResponseDto<?>> signup(@RequestBody @Valid UserSignUpDto dto)
       throws BindException {
+    System.out.println(dto);
     return ResponseEntity.ok(ResponseDto.success(authService.signUp(dto)));
   }
 
   @PostMapping("/login")
   public ResponseEntity<ResponseDto<?>> login(@RequestBody UserLoginDto dto) {
+    System.out.println(dto);
     return ResponseEntity.ok(ResponseDto.success(authService.login(dto)));
   }
 }

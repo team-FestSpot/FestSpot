@@ -14,6 +14,7 @@ import naverLogo from "/src/page/Auth/img/naver_logo.png";
 import festSpotLogo from "/src/page/Auth/img/FestSpotLogoImg.png";
 import festSpotLogoText from "/src/page/Auth/img/FestSpotLogoText.png";
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
+import { reqSignup } from "../../../api/authApi";
 
 function SignUp(props) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -82,7 +83,7 @@ function SignUp(props) {
     if (e.target.name === "passwordCheck") {
       setErrorMessage((prev) => ({
         ...prev,
-        [e.target.name]: e.target.value !== inputValue.password,
+        [e.target.name]: e.target.value !== inputValue.userPassword,
       }));
       return;
     }
@@ -106,6 +107,10 @@ function SignUp(props) {
       [key]: !prev[key],
     }));
   };
+
+  const handleSignupOnClick = (e) => {
+    reqSignup(inputValue);
+  }
 
   return (
     <div css={s.signUpLayout}>
@@ -214,6 +219,7 @@ function SignUp(props) {
               disabled={buttonDisabled}
               variant="contained"
               css={s.signUpButton}
+              onClick={handleSignupOnClick}
             >
               회원가입
             </Button>

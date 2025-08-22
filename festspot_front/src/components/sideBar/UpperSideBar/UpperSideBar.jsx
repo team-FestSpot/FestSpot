@@ -8,8 +8,10 @@ import UpperSideBarModal from "./UpperSideBarModal/UpperSideBarModal";
 import useUpperSideBarStore from "../../../stores/upperSideBarStore";
 import festSpotLogo from "./UpperSideBarModal/img/FestSpotLogoImg.png";
 import festSpotLogoText from "./UpperSideBarModal/img/FestSpotLogoText.png";
+import { useNavigate } from "react-router-dom";
 
 function UpperSideBar(props) {
+  const navigate = useNavigate();
   const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
 
   const handleMenuOnClick = () => {
@@ -18,6 +20,10 @@ function UpperSideBar(props) {
 
   const handleModalOnClose = () => {
     closeMenu();
+  };
+
+  const handleLoginOnClick = () => {
+    navigate(`/auth/login`);
   };
 
   return (
@@ -45,7 +51,9 @@ function UpperSideBar(props) {
         </div>
         <div css={s.actionSection}>
           <div css={s.loginButtonContainer}>
-            <button css={s.loginButton}>Login</button>
+            <button css={s.loginButton} onClick={handleLoginOnClick}>
+              Login
+            </button>
           </div>
           <div css={s.menuIconContainer}>
             <GiHamburgerMenu css={s.menuIcon} onClick={handleMenuOnClick} />
