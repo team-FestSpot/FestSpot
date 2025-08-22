@@ -172,27 +172,26 @@ function AdminAddPerformance(props) {
   };
 
   const handleAddPerformanceButtonOnClick = async () => {
-    console.log(imageFile);
-    console.log(Object.keys(imageFile).length);
-    if (Object.keys(imageFile).length < 1) {
+    if (imageFile.size < 1) {
       alert("이미지 없음");
       return;
     }
 
-    for (const [value] of Object.values(detail)) {
+    for (const value of Object.values(detail)) {
       // console.log(value);
-      // console.log(!value);
       if (!value) {
         alert("내용 누락");
         return;
       }
     }
+    if (detail.prfpdfrom > detail.prfpdto) {
+      alert("시작일은 종료일 이전이어야 합니다.");
+      return;
+    }
 
-    for (let relate in detail.relates) {
-      for (const [value] of Object.values(relate)) {
-        console.log(value);
-        console.log(!value);
-        if (!value < 1) {
+    for (let index in detail.relates) {
+      for (const value of Object.values(detail.relates[index])) {
+        if (value < 1) {
           alert("예매처 정보 누락");
           return;
         }
@@ -209,11 +208,10 @@ function AdminAddPerformance(props) {
     formData.append("file", imageFile);
 
     try {
-      const response = await reqUploadCustomPerformanceApi(formData);
-      if (response > 0) {
-        setDetailEmpty();
-        setImageFile({});
-      }
+      await reqUploadCustomPerformanceApi(formData);
+      // setDetailEmpty();
+      // setImageFile({});
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }

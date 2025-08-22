@@ -9,16 +9,17 @@ import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPe
 import Button from "@mui/material/Button";
 import { FaRegEdit } from "react-icons/fa";
 import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
-import useAdminPerformanceUpdateStore from "../../../stores/AdminPerformanceUpdateStore";
 import AdminUpdateModal from "../AdminUpdateModal/AdminUpdateModal";
+import { baseURL } from "../../../api/axios";
 
 function AdminCustomPerformanceDataGrid(props) {
-  const { data, isLoading } = useCustomPerformanceListQuery();
+  const { data, isLoading, isRefetching } = useCustomPerformanceListQuery();
   const performanceList = data?.data?.body;
   const { rows, setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
   const [isOpen, setIsOpen] = useState(false);
-  const { performanceToUpdate, setPerformanceToUpdate } =
-    useAdminPerformanceUpdateStore();
+  // const { performanceToUpdate, setPerformanceToUpdate } =
+  //   useAdminPerformanceUpdateStore();
+  const [performanceToUpdate, setPerformanceToUpdate] = useState({});
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const [sortOption, setSortOption] = useState({
@@ -36,7 +37,11 @@ function AdminCustomPerformanceDataGrid(props) {
       editable: false,
       renderCell: (params) => (
         <div>
-          <img src={params.row.poster} width={"100%"} height={"100%"} />
+          <img
+            src={`${baseURL}${params.row.poster}`}
+            width={"100%"}
+            height={"100%"}
+          />
         </div>
       ),
     },
@@ -93,25 +98,30 @@ function AdminCustomPerformanceDataGrid(props) {
     },
   ];
 
+  // 모달창 열기
   const openModal = () => {
     setIsOpen(true);
   };
 
+  // 모달창 닫기
   const closeModal = () => {
     setIsOpen(false);
   };
 
+  // 수정 버튼 눌렀을 때 모달창 열림
   const handleModifyButtonOnClick = (e, params) => {
-    openModal();
     setPerformanceToUpdate(params.row);
+    openModal();
   };
 
+  // 처음 들어왔을 때 or 새로고침했을 때 주소에 ?page=1 param 붙임
   useEffect(() => {
     setSearchParams({
       page: 1,
     });
   }, []);
 
+  // 직접 등록한 공연 목록 가져오는 query 로딩 끝나면 row에 넣어서 표에 표시되게 함
   useEffect(() => {
     if (
       !isLoading &&
@@ -122,6 +132,18 @@ function AdminCustomPerformanceDataGrid(props) {
       setRows(performanceList);
     }
   }, [isLoading]);
+
+  // 수정 모달 열고 값 수정하면 직접 등록한 공연 목록 가져오는 query가 refetch됨
+  // refetch됐을 때 modal 다시 열어줌 (modal 화면에 수정한 값 즉시 반영)
+  useEffect(() => {
+    const updatedRow = rows.find(
+      (row) => row.performanceId === performanceToUpdate.performanceId
+    );
+    if (!isRefetching && !!updatedRow) {
+      setPerformanceToUpdate({ ...updatedRow });
+    }
+    openModal();
+  }, [isRefetching]);
 
   // 오름차순 내림차순 정렬 기능인데 가끔 이상하게 동작함
   // 원본 rows랑 별개로 화면 표시용 displayRows 상태를 새로 만들어서 뿌려줘야 할 듯함
@@ -171,9 +193,15 @@ function AdminCustomPerformanceDataGrid(props) {
 
   return (
     <div css={s.adminGridLayout}>
-      <div css={s.updateModalLayout}>
-        <AdminUpdateModal isOpen={isOpen} closeModal={closeModal} />
-      </div>
+      {Object.keys(performanceToUpdate).length > 0 && (
+        <div css={s.updateModalLayout}>
+          <AdminUpdateModal
+            isOpen={isOpen}
+            closeModal={closeModal}
+            performanceToUpdate={performanceToUpdate}
+          />
+        </div>
+      )}
       <Box
         sx={{
           width: "100%",
