@@ -4,14 +4,12 @@ import AdminLeftSideBar from "../../sideBar/AdminLeftSideBar/AdminLeftSideBar";
 import * as s from "./styles";
 function AdminLayout({ children }) {
   return (
-    <>
-      <div css={s.adminLayout}>
-        <div css={s.adminSideBar}>
-          <AdminLeftSideBar />
-        </div>
-        <div css={s.adminContainer}>{children}</div>
+    <div css={s.adminLayout}>
+      <div css={s.adminSideBar}>
+        <AdminLeftSideBar />
       </div>
-    </>
+      <div css={s.adminChildrenContainer}>{children}</div>
+    </div>
   );
 }
 
