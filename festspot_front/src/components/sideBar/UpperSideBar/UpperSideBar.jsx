@@ -26,10 +26,14 @@ function UpperSideBar(props) {
     navigate(`/auth/login`);
   };
 
+  const handleToHomeOnClick = (e) => {
+    navigate("/");
+  };
+
   return (
     <div css={s.upperBarLayout}>
       <div css={s.container}>
-        <div css={s.logoSection}>
+        <div css={s.logoSection} onClick={handleToHomeOnClick}>
           <div css={s.logo}>
             <img src={festSpotLogo} />
           </div>
