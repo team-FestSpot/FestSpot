@@ -2,12 +2,12 @@ import { css } from "@emotion/react";
 
 export const container = css`
   display: flex;
-  max-width: 200px;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 `;
 
 export const sidebar = css`
-  width: 200px;
+  width: 100%;
   background-color: #ffffff;
   border-right: 1px solid #e5e7eb;
   display: flex;

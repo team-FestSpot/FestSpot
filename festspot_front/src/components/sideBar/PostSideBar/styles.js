@@ -34,7 +34,7 @@ export const boardBtn = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50%;
+  height: 80%;
   width: 23.5%;
   gap: 8px;
   border: none;

@@ -1,56 +1,67 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import * as s from "./styles";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import * as s from "./styles";
+import React, { useEffect, useState } from "react";
 import {
   JOIN_REGEX,
   JOIN_REGEX_ERROR_MESSAGE,
 } from "../../../constants/authRegex";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
+import googleLogo from "/src/page/Auth/img/Google__G__logo.png";
+import kakaoLogo from "/src/page/Auth/img/kakao_logo.png";
+import naverLogo from "/src/page/Auth/img/naver_logo.png";
+import festSpotLogo from "/src/page/Auth/img/FestSpotLogoImg.png";
+import festSpotLogoText from "/src/page/Auth/img/FestSpotLogoText.png";
+import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 
 function SignUp(props) {
-  const [buttonDisable, setButtonDisabled] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [inputValue, setInputValue] = useState({
-    username: "",
-    password: "",
+    userLoginId: "",
+    userPassword: "",
     passwordCheck: "",
-    nickname: "",
-    email: "",
+    userNickName: "",
+    userEmail: "",
   });
 
-  const [error, setError] = useState({
-    username: false,
-    password: false,
+  const [errorMessage, setErrorMessage] = useState({
+    userLoginId: false,
+    userPassword: false,
     passwordCheck: false,
-    nickname: false,
-    email: false,
+    userNickName: false,
+    userEmail: false,
   });
 
   const [helpText, setHelpText] = useState({
-    username: "",
-    password: "",
+    userLoginId: "",
+    userPassword: "",
     passwordCheck: "",
-    nickname: "",
-    email: "",
+    userNickName: "",
+    userEmail: "",
+  });
+
+  const [visible, setVisible] = useState({
+    userPassword: false,
+    passwordCheck: false,
   });
 
   useEffect(() => {
     const isEmptyValue = !!Object.values(inputValue).filter(
       (value) => !value.trim()
     ).length;
-    const isError = !!Object.values(error).filter((value) => !!value).length;
+    const isError = !!Object.values(errorMessage).filter((value) => !!value)
+      .length;
     setButtonDisabled(isEmptyValue || isError);
 
-    const errorEntries = Object.entries(error);
+    const errorEntries = Object.entries(errorMessage);
     errorEntries.forEach(([key, value]) => {
       setHelpText((prev) => ({
         ...prev,
         [key]: !value ? "" : JOIN_REGEX_ERROR_MESSAGE[key],
       }));
     });
-  }, [error]);
+  }, [errorMessage]);
 
   const hanleInputValueOnChange = (e) => {
     setInputValue((prev) => ({
@@ -58,44 +69,29 @@ function SignUp(props) {
       [e.target.name]: e.target.value,
     }));
 
+    // 빈값 검사
     if (!JOIN_REGEX["notEmpty"].test(e.target.value)) {
-      setError((prev) => ({
+      setErrorMessage((prev) => ({
         ...prev,
         [e.target.name]: false,
       }));
       return;
     }
 
+    // 비밀번호 확인 검사
     if (e.target.name === "passwordCheck") {
-      setError((prev) => ({
+      setErrorMessage((prev) => ({
         ...prev,
         [e.target.name]: e.target.value !== inputValue.password,
       }));
       return;
     }
 
-    setError((prev) => ({
+    //valid 검사
+    setErrorMessage((prev) => ({
       ...prev,
       [e.target.name]: !JOIN_REGEX[e.target.name].test(e.target.value),
     }));
-  };
-
-  const handleSignUpOnClick = async () => {
-    // 회원가입 로직 구현
-    const reqData = {
-      username: inputValue.username,
-      password: inputValue.password,
-      nickname: inputValue.nickname,
-      email: inputValue.email,
-    };
-    try {
-      // navigate("/");
-    } catch (error) {
-      await Swal.fire({
-        icon: "error",
-        title: response.data.body.errorMessage,
-      });
-    }
   };
 
   const handleOnKeyDown = (e) => {
@@ -104,124 +100,147 @@ function SignUp(props) {
     }
   };
 
+  const handlePasswordVisibleOnClick = (key) => {
+    setVisible((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
   return (
-    <div css={s.signUpContainer}>
-      <div css={s.logoContainer}>
-        <div css={s.logoIcon}>
-          <img src="" alt="FestSpot Logo" />
-        </div>
-      </div>
-
-      <div css={s.inputSection}>
-        <div css={s.textFieldContainer}>
-          <TextField
-            fullWidth={true}
-            label="아이디를 입력하세요."
-            variant="outlined"
-            name="username"
-            value={inputValue.username}
-            onChange={hanleInputValueOnChange}
-            css={s.textField}
-          />
-        </div>
-        <div css={s.textFieldContainer}>
-          <TextField
-            fullWidth={true}
-            type="password"
-            label="비밀번호를 입력하세요."
-            variant="outlined"
-            name="password"
-            value={inputValue.password}
-            onChange={hanleInputValueOnChange}
-            css={s.textField}
-          />
-        </div>
-        <div css={s.textFieldContainer}>
-          <TextField
-            fullWidth={true}
-            type="password"
-            label="비밀번호를 다시 입력하세요."
-            variant="outlined"
-            name="passwordCheck"
-            value={inputValue.passwordCheck}
-            onChange={hanleInputValueOnChange}
-            css={s.textField}
-          />
-        </div>
-        <div css={s.textFieldContainer}>
-          <TextField
-            fullWidth={true}
-            label="이름을 입력하세요."
-            variant="outlined"
-            name="nickname"
-            value={inputValue.nickname}
-            onChange={hanleInputValueOnChange}
-            css={s.textField}
-          />
-        </div>
-        <div css={s.textFieldContainer}>
-          <TextField
-            fullWidth={true}
-            type="email"
-            label="이메일을 입력하세요."
-            variant="outlined"
-            name="email"
-            value={inputValue.email}
-            onChange={hanleInputValueOnChange}
-            onKeyDown={handleOnKeyDown}
-            css={s.textField}
-          />
-        </div>
-      </div>
-
-      <div css={s.submitButtonContainer}>
-        <Button
-          fullWidth={true}
-          disabled={buttonDisable}
-          variant="contained"
-          onClick={handleSignUpOnClick}
-          css={s.signUpButton}
-        >
-          회원가입
-        </Button>
-
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 0.8rem;
-            font-size: 0.9rem;
-            color: #999;
-          `}
-        >
-          <span>계정이 있으신가요?</span>
-          <a href="">로그인</a>
-        </div>
-
+    <div css={s.signUpLayout}>
+      <div css={s.signUpContainer}>
+        <header css={s.header}>
+          <div css={s.logoIcon}>
+            <img src={festSpotLogo} alt="FestSpot Logo" />
+            <img src={festSpotLogoText} alt="FestSpot Logo" />
+          </div>
+        </header>
+        <main css={s.main}>
+          <div css={s.textField}>
+            <TextField
+              fullWidth={true}
+              error={errorMessage.userLoginId}
+              label="아이디를 입력하세요."
+              variant="outlined"
+              name="userLoginId"
+              value={inputValue.userLoginId}
+              onChange={hanleInputValueOnChange}
+              css={s.textField}
+            />
+            {errorMessage.userLoginId && (
+              <p css={s.textFieldHelp}>{helpText.userLoginId}</p>
+            )}
+          </div>
+          <div css={s.textField}>
+            <TextField
+              fullWidth={true}
+              error={errorMessage.userPassword}
+              type={visible.userPassword ? `text` : `password`}
+              label="비밀번호를 입력하세요."
+              variant="outlined"
+              name="userPassword"
+              value={inputValue.userPassword}
+              onChange={hanleInputValueOnChange}
+              css={s.textField}
+            />
+            <div
+              css={s.visiblePassword}
+              onClick={() => handlePasswordVisibleOnClick("userPassword")}
+            >
+              {visible.userPassword ? <IoEyeSharp /> : <IoEyeOffSharp />}
+            </div>
+            {errorMessage.userPassword && (
+              <p css={s.textFieldHelp}>{helpText.userPassword}</p>
+            )}
+          </div>
+          <div css={s.textField}>
+            <TextField
+              fullWidth={true}
+              error={errorMessage.passwordCheck}
+              type={visible.passwordCheck ? `text` : `password`}
+              label="비밀번호를 다시 입력하세요."
+              variant="outlined"
+              name="passwordCheck"
+              value={inputValue.passwordCheck}
+              onChange={hanleInputValueOnChange}
+              css={s.textField}
+            />
+            <div
+              css={s.visiblePassword}
+              onClick={() => handlePasswordVisibleOnClick("passwordCheck")}
+            >
+              {visible.passwordCheck ? <IoEyeSharp /> : <IoEyeOffSharp />}
+            </div>
+            {errorMessage.passwordCheck && (
+              <p css={s.textFieldHelp}>{helpText.passwordCheck}</p>
+            )}
+          </div>
+          <div css={s.textField}>
+            <TextField
+              fullWidth={true}
+              error={errorMessage.userNickName}
+              label="이름을 입력하세요."
+              variant="outlined"
+              name="userNickName"
+              value={inputValue.userNickName}
+              onChange={hanleInputValueOnChange}
+              css={s.textField}
+            />
+            {errorMessage.userNickName && (
+              <p css={s.textFieldHelp}>{helpText.userNickName}</p>
+            )}
+          </div>
+          <div css={s.textField}>
+            <TextField
+              fullWidth={true}
+              error={errorMessage.userEmail}
+              type="email"
+              label="이메일을 입력하세요."
+              variant="outlined"
+              name="userEmail"
+              value={inputValue.userEmail}
+              onChange={hanleInputValueOnChange}
+              onKeyDown={handleOnKeyDown}
+              css={s.textField}
+            />
+            {errorMessage.userEmail && (
+              <p css={s.textFieldHelp}>{helpText.userEmail}</p>
+            )}
+          </div>
+          <div css={s.buttonContainer}>
+            <Button
+              fullWidth={true}
+              disabled={buttonDisabled}
+              variant="contained"
+              css={s.signUpButton}
+            >
+              회원가입
+            </Button>
+          </div>
+          <div css={s.toLoginContainer}>
+            <span>계정이 있으신가요?</span>
+            <Link to={"/auth/login"}>로그인</Link>
+          </div>
+        </main>
         <div css={s.divider}>
-          <span css={s.dividerText}>간편 회원가입</span>
+          <div />
+          <span>간편 회원가입</span>
+          <div />
         </div>
-
-        <div css={s.socialButtonContainer}>
-          <div css={s.socialButton}>
-            <img src="" alt="naver logo" />
+        <footer css={s.footer}>
+          <div css={s.OAuth2Container}>
+            <Link>
+              <img src={googleLogo} />
+            </Link>
+            <Link>
+              <img src={kakaoLogo} />
+            </Link>
+            <Link>
+              <img src={naverLogo} />
+            </Link>
           </div>
-          <div css={s.socialButton}>
-            <img src="" alt="google logo" />
-          </div>
-          <div css={s.socialButton}>
-            <img src="" alt="google logo" />
-          </div>
-        </div>
-
-        <div css={s.socialLoginInfo}>
-          <p css={s.socialLoginText}>
-            SNS 계정으로 가입하실 경우,
-            <br />
-            일부 서비스 이용에 제한이 있을 수 있습니다.
-          </p>
-        </div>
+        </footer>
       </div>
     </div>
   );

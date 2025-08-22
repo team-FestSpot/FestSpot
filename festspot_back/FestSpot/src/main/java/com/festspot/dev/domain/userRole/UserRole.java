@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserRole {
 
-    private Integer userRoleId;
-    private Integer userId;
-    private Integer roleId;
+  private Integer userRoleId;
+  private Integer userId;
+  private Integer roleId;
 
-    private Role role;
+  private Role role;
 }

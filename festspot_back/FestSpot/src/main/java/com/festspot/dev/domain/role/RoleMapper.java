@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface RoleMapper {
 
-    Role findById(Integer roleId);
+  Role findById(Integer roleId);
 
-    Role findByRole(String role);
+  Role findByRole(String role);
 }
