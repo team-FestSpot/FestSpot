@@ -3,7 +3,7 @@ import AdminCustomPerformanceDataGrid from "../AdminDataGrid/AdminCustomPerforma
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 
-function AdminConfigCustomPerformance(props) {
+function AdminModifyCustomPerformance(props) {
   return (
     <div css={s.layout}>
       <div css={s.mainLayout}>
@@ -13,4 +13,4 @@ function AdminConfigCustomPerformance(props) {
   );
 }
 
-export default AdminConfigCustomPerformance;
+export default AdminModifyCustomPerformance;
