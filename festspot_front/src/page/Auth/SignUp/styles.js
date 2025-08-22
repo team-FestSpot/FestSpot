@@ -8,6 +8,15 @@ export const signUpLayout = css`
   height: 100%;
 `;
 
+export const sweetAlert = css`
+  .swal2-popup {
+    font-size: 1.4rem;
+  }
+  .swal2-html-container {
+    color: #f27474;
+  }
+`;
+
 export const signUpContainer = css`
   display: flex;
   flex-direction: column;

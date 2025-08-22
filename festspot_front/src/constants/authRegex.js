@@ -1,5 +1,5 @@
 export const JOIN_REGEX = {
-  userLoginId: /^(?=.*[a-z]).{6,20}$/,
+  userLoginId: /^(?=.*[A-Za-z])[A-Za-z0-9]{6,20}$/,
   userPassword:
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{8,20}$/,
   userNickName: /^(?=.*[가-힣A-Za-z])[가-힣A-Za-z0-9-_]{2,20}$/,
