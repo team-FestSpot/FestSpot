@@ -25,6 +25,7 @@ public class User {
     private LocalDateTime createdAt;
     private String provider;
     private String providerId;
+    private LocalDateTime deletedAt;
 
     private List<UserRole> userRoles;
 }

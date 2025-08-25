@@ -6,14 +6,16 @@
 <mapper namespace="com.festspot.dev.domain.user.UserMapper">
     <resultMap id="UserMap" type="com.festspot.dev.domain.user.User">
         <id property="userId" column="user_id" />
-        <result property="userLoginId" column="use_logi_id" />
+        <result property="userLoginId" column="use_login_id" />
         <result property="userPassword" column="user_password" />
         <result property="userEmail" column="user_email" />
         <result property="userNickName" column="user_nickname" />
-        <result property="userProfileImgUrl" column="use_profile_img_url" />
+        <result property="userProfileImgUrl" column="user_profile_img_url" />
+        <result property="createdAt" column="created_at" />
         <result property="provider" column="provider" />
         <result property="providerId" column="provider_id" />
-        <collection property="roles" javaType="list" resultMap="UserRoleMap" />
+        <result property="deletedAt" column="deleted_at" />
+        <collection property="userRoles" javaType="list" resultMap="UserRoleMap" />
     </resultMap>
     <resultMap id="UserRoleMap" type="com.festspot.dev.domain.userRole.UserRole">
         <id property="userRoleId" column="user_role_id" />
@@ -23,7 +25,7 @@
     </resultMap>
     <resultMap id="RoleMap" type="com.festspot.dev.domain.role.Role">
         <id property="roleId" column="role_id" />
-        <result property="role" column="role" />
+        <result property="role" column="role_name" />
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="userId">
@@ -33,6 +35,16 @@
 
     <update id="updateProfileImgPathById">
         update user_tb set user_profile_img_url = #{path}
+        where
+            user_id = #{userId}
+    </update>
+
+    <update id="updateByUserId">
+        update
+            user_tb
+        set
+            user_nickname = #{userNickName},
+            user_profile_img_url = #{userProfileImgUrl}
         where
             user_id = #{userId}
     </update>
@@ -52,6 +64,29 @@
             user_tb
         where
             user_id = #{userId}
+    </select>
+
+    <select id="findAllUsers" resultMap="UserMap">
+        select
+            ut.user_id,
+            ut.user_email,
+            ut.user_nickname,
+            ut.user_profile_img_url,
+            ut.created_at,
+            ut.provider,
+            ut.deleted_at,
+
+            urt.user_id as urt_user_id,
+            urt.user_role_id,
+            urt.role_id as urt_role_id,
+
+            rt.role_id,
+            rt.role_name
+
+        from
+            user_tb ut
+            left outer join user_role_tb urt on (urt.user_id = ut.user_id)
+            left outer join role_tb rt on (urt.role_id = rt.role_id)
     </select>
 
 </mapper>

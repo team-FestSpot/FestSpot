@@ -9,14 +9,5 @@ export const mainLayout = css`
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100%;
-`;
-
-export const updateModalLayout = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: #d5d5d577;
+  height: 80vh;
 `;
