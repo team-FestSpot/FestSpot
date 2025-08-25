@@ -1,39 +1,38 @@
 /** @jsxImportSource @emotion/react */
+import { useLocation } from "react-router-dom";
 import { BoardContext } from "../../../constants/BoardContext";
 import PostSideBar from "../../sideBar/PostSideBar/PostSideBar";
 import UpperSideBar from "../../sideBar/UpperSideBar/UpperSideBar";
 import * as s from "./styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function MainLayout({ children }) {
-  const [currentBoard, setCurrentBoard] = useState("free");
-  const [loading, setLoading] = useState(false);
+  const location = useLocation();
+  const [hidePostSideBar, setHidePostSideBar] = useState(true);
 
-  const handleBoardOnChange = (boardId) => {
-    console.log("MainLayout: 게시판 변경됨 ->", boardId);
-    setCurrentBoard(boardId);
-  };
+  //게시글 쓰기 화면에서는 PostSideBar 안보여줌
+  const hiddenSidebarPaths = ["/board/write"];
+
+  useEffect(() => {
+    setHidePostSideBar(
+      hiddenSidebarPaths.some((path) => location.pathname.startsWith(path))
+    );
+  }, [location]);
 
   return (
-    <BoardContext.Provider
-      value={{ currentBoard, onBoardChange: handleBoardOnChange, loading }}
-    >
-      <div css={s.layout}>
-        <div css={s.upperSideBar}>
-          <UpperSideBar />
-        </div>
-        <div css={s.postSideBar}>
-          <PostSideBar
-            currentBoard={currentBoard}
-            onBoardChange={handleBoardOnChange}
-            loading={loading}
-          />
-        </div>
-        <div css={s.container}>
-          <div css={s.children}>{children}</div>
-        </div>
+    <div css={s.layout}>
+      <div css={s.upperSideBar}>
+        <UpperSideBar />
       </div>
-    </BoardContext.Provider>
+      {hidePostSideBar || (
+        <div css={s.postSideBar}>
+          <PostSideBar />
+        </div>
+      )}
+      <div css={s.container}>
+        <div css={s.children}>{children}</div>
+      </div>
+    </div>
   );
 }
 

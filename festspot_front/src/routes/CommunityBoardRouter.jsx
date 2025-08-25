@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import FestivalBoard from "../page/Auth/Board/FestivalBoard";
 import PostWrite from "../page/Auth/post/PostWrite";
+import FestivalBoard from "../page/Auth/Post/Board/FestivalBoard";
 
 function CommunityBoardRouter(props) {
   return (
