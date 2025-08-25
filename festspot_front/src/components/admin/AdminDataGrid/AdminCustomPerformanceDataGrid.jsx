@@ -7,18 +7,17 @@ import Pagination from "@mui/material/Pagination";
 import { useSearchParams } from "react-router-dom";
 import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPerformanceListQuery";
 import Button from "@mui/material/Button";
-import { FaRegEdit } from "react-icons/fa";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
-import AdminUpdateModal from "../AdminUpdateModal/AdminUpdateModal";
 import { baseURL } from "../../../api/axios";
+import { useDeletePerformanceMutation } from "../../../querys/performance/useDeletePerformanceMutation";
+import AdminPerformanceUpdateModal from "../AdminUpdateModal/AdminPerformanceUpdateModal/AdminPerformanceUpdateModal";
 
 function AdminCustomPerformanceDataGrid(props) {
   const { data, isLoading, isRefetching } = useCustomPerformanceListQuery();
   const performanceList = data?.data?.body;
   const { rows, setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
   const [isOpen, setIsOpen] = useState(false);
-  // const { performanceToUpdate, setPerformanceToUpdate } =
-  //   useAdminPerformanceUpdateStore();
   const [performanceToUpdate, setPerformanceToUpdate] = useState({});
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
@@ -27,6 +26,7 @@ function AdminCustomPerformanceDataGrid(props) {
     direction: "asc",
   }); // 특정 컬럼 기준 오름차순/내림차순 정렬 상태
   const [paginationList, setPaginationList] = useState([]);
+  const deleteMutation = useDeletePerformanceMutation();
 
   const gridRef = useGridApiRef();
   const columns = [
@@ -96,6 +96,23 @@ function AdminCustomPerformanceDataGrid(props) {
         </div>
       ),
     },
+    {
+      field: "delete",
+      headerName: "삭제",
+      width: 100,
+      editable: false,
+      renderCell: (params) => (
+        <div>
+          <Button
+            onClick={(e) =>
+              deleteMutation.mutateAsync(params.row.performanceId)
+            }
+          >
+            <FaRegTrashAlt />
+          </Button>
+        </div>
+      ),
+    },
   ];
 
   // 모달창 열기
@@ -113,6 +130,10 @@ function AdminCustomPerformanceDataGrid(props) {
     setPerformanceToUpdate(params.row);
     openModal();
   };
+
+  // const handleDeleteButtonOnClick = async (e, params) => {
+  // await reqDeletePerformanceApi(params.row.performanceId);
+  // };
 
   // 처음 들어왔을 때 or 새로고침했을 때 주소에 ?page=1 param 붙임
   useEffect(() => {
@@ -140,7 +161,9 @@ function AdminCustomPerformanceDataGrid(props) {
       (row) => row.performanceId === performanceToUpdate.performanceId
     );
     if (!isRefetching && !!updatedRow) {
-      setPerformanceToUpdate({ ...updatedRow });
+      if (!!updatedRow) {
+        setPerformanceToUpdate({ ...updatedRow });
+      }
     }
     openModal();
   }, [isRefetching]);
@@ -195,7 +218,7 @@ function AdminCustomPerformanceDataGrid(props) {
     <div css={s.adminGridLayout}>
       {Object.keys(performanceToUpdate).length > 0 && (
         <div css={s.updateModalLayout}>
-          <AdminUpdateModal
+          <AdminPerformanceUpdateModal
             isOpen={isOpen}
             closeModal={closeModal}
             performanceToUpdate={performanceToUpdate}
@@ -220,7 +243,7 @@ function AdminCustomPerformanceDataGrid(props) {
               },
             },
           }}
-          sx={{}}
+          sx={{ fontSize: "1rem" }}
           pageSizeOptions={[20]}
           checkboxSelection
           disableRowSelectionOnClick

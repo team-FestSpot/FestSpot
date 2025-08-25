@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import useAdminPerformanceUpdateStore from "../../../stores/AdminPerformanceUpdateStore";
+import useAdminPerformanceUpdateStore from "../../../../stores/AdminPerformanceUpdateStore";
 import ReactModal from "react-modal";
 import { Global } from "@emotion/react";
 import { CiSquareMinus, CiSquarePlus } from "react-icons/ci";
-import { baseURL } from "../../../api/axios";
+import { baseURL } from "../../../../api/axios";
 import Button from "@mui/material/Button";
-import { reqModifyCustomPerformanceApi } from "../../../api/adminApi";
+import { reqModifyCustomPerformanceApi } from "../../../../api/adminApi";
 import Checkbox from "@mui/material/Checkbox";
-import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPerformanceListQuery";
-import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
+import { useCustomPerformanceListQuery } from "../../../../querys/admin/useCustomPerformanceListQuery";
+import useAdminCustomPerformanceRowsStore from "../../../../stores/AdminPerformanceCustomRowsStore";
 
-function AdminUpdateModal({ isOpen, closeModal, performanceToUpdate }) {
+function AdminPerformanceUpdateModal({
+  isOpen,
+  closeModal,
+  performanceToUpdate,
+}) {
   const { setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
   const customPerformanceListQuery = useCustomPerformanceListQuery();
   // const { performanceToUpdate, setPerformanceToUpdate } =
@@ -409,4 +413,4 @@ function AdminUpdateModal({ isOpen, closeModal, performanceToUpdate }) {
   );
 }
 
-export default AdminUpdateModal;
+export default AdminPerformanceUpdateModal;
