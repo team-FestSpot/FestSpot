@@ -43,22 +43,21 @@ const PostWrite = () => {
       );
     }
 
-    const filesArray = [...e.target.files];
+    files.forEach((file) => {
+      if (!file.type.startsWith("image/")) return;
 
-    Promise.all(
-      filesArray.map((file) => {
-        return new Promise((resolve) => {
-          const fileReader = new FileReader();
-          fileReader.onload = (e) => {
-            console.log(e.target.result);
-            resolve({ file, dataUrl: e.target.result });
-          };
-          fileReader.readAsDataURL(file);
-        });
-      })
-    ).then((resolves) => {
-      setImages((prev) => [...prev, ...resolves]);
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const imageUrl = ev.target.result;
+        insertImageToEditor(imageUrl);
+        setImages((prev) => [
+          ...prev,
+          { file, url: imageUrl, id: Date.now() + Math.random() },
+        ]);
+      };
+      reader.readAsDataURL(file);
     });
+    e.target.value = "";
   };
 
   const insertImageToEditor = (imageUrl) => {
