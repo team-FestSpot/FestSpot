@@ -1,5 +1,6 @@
-import { PAGE_SIZE } from "../constants/BoardContext";
 import api from "./axios";
+
+const PAGE_SIZE = 8;
 
 // 목록의 게시글
 export const reqAllPosts = async (page) =>
@@ -15,3 +16,5 @@ export const reqPosts = async (boardKey, page) =>
 // 상세 게시글
 export const reqPostDetail = (boardKey, postId) =>
   get(`/api/board/${boardKey}/${postId}`);
+
+export const reqPostCategory = () => api.get(`/api/board/category`);

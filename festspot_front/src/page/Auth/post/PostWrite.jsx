@@ -3,106 +3,30 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import * as s from "./styles";
-import { AiOutlineCamera, AiOutlineSave } from "react-icons/ai";
-import { MdClose, MdArrowBack } from "react-icons/md";
+import { AiOutlineSave } from "react-icons/ai";
+import { MdArrowBack } from "react-icons/md";
+import { FaCaretDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useBoard } from "../../../constants/BoardContext";
-import { css } from "@emotion/react";
+import { useFixQuillToolBarStore } from "../../../stores/useFixQuillToolBarStore";
+import usePostCategoryQuery from "../../../querys/post/usePostCategoryQuery";
+import { dataURLtoFile } from "../../../utils/dataUrlToFileObject";
+import QuillEditor from "../../../components/post/QuillEditor";
 
 const PostWrite = () => {
   const navigate = useNavigate();
-  const { currentBoard } = useBoard();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
-  const [isFixed, setIsFixed] = useState(false);
-  const [allowComments, setAllowComments] = useState(true);
-  const [saveSubmit, setSaveSubmit] = useState(false);
+  const { isFixed } = useFixQuillToolBarStore();
+  const [selectedCategory, setSelectedCategory] = useState({});
+  const [selectIsOpen, setSelecteIsOpen] = useState(false);
 
+  const dropdownRef = useRef();
   const quillRef = useRef(null);
-  const fileInputRef = useRef(null);
   const titleInputRef = useRef(null);
 
-  const MAX_IMAGES = 10;
-
-  const hanldeImgUploadOnClick = () => {
-    if (images.length >= MAX_IMAGES) {
-      alert(`이미지는 최대 ${MAX_IMAGES}장까지만 업로드할 수 있습니다.`);
-      return;
-    }
-    fileInputRef.current?.click();
-  };
-
-  const handleFileOnChange = async (e) => {
-    const files = [...e.target.files];
-    const remainingSlots = MAX_IMAGES - images.length;
-
-    if (files.length > remainingSlots) {
-      alert(
-        `이미지는 최대 ${MAX_IMAGES}장까지만 업로드 할 수 있습니다. ${remainingSlots}장 만 추가됩니다.`
-      );
-    }
-
-    Promise.all(
-      files.map((file) => {
-        if (!file.type.startsWith("image/")) return;
-
-        return new Promise((resolve) => {
-          const fileReader = new FileReader();
-          fileReader.onload = (e) => {
-            resolve({ file, url: e.target.result });
-          };
-          fileReader.readAsDataURL(file);
-        });
-      })
-    ).then((resolves) => {
-      resolves.map((resolve) => insertImageToEditor(resolve.url));
-      setImages((prev) => [...prev, ...resolves]);
-    });
-
-    e.target.value = "";
-  };
-
-  const insertImageToEditor = (imageUrl) => {
-    const quill = quillRef.current?.getEditor();
-    if (!quill) return;
-    const range = quill.getSelection();
-    const index = range ? range.index : quill.getLength();
-    quill.insertEmbed(index, "image", imageUrl);
-    quill.setSelection(index + 1);
-  };
-
-  const removeImage = (imageUrl) => {
-    const img = images.find((image) => image.url === imageUrl);
-    setImages((prev) => prev.filter((image) => image.url !== imageUrl));
-
-    const quill = quillRef.current?.getEditor();
-    if (!!quill && !!img) {
-      const contents = quill.getContents();
-      const newOps = [];
-      (contents.ops || []).forEach((op) => {
-        //remove 누른 이미지면 패스
-        if (op.insert.image === img.url) return;
-        newOps.push(op);
-      });
-      quill.setContents({ ops: newOps });
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = (e) => {
-      if (window.scrollY > 0) {
-        setIsFixed(true);
-      } else {
-        setIsFixed(false);
-      }
-      console.log("e", e);
-      console.log("scroll", window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const postCategoryQuery = usePostCategoryQuery();
+  const postCategories = postCategoryQuery.data?.data?.body || [];
 
   const modules = {
     toolbar: {
@@ -113,6 +37,7 @@ const PostWrite = () => {
           "italic",
           "underline",
           "strike",
+          "image",
           { color: [] },
           { background: [] },
           { align: [] },
@@ -127,39 +52,119 @@ const PostWrite = () => {
     },
   };
 
-  const handleSubmitOnClick = async () => {
-    const clean = (content || "").replace(/\s/g, "");
+  //기본 select 등록
+  useEffect(() => {
+    if (postCategoryQuery.isSuccess && !!postCategories[0]) {
+      setSelectedCategory(postCategories[0]);
+    }
+  }, [postCategoryQuery.isSuccess]);
 
+  //ref 등록
+  useEffect(() => {
+    //이미지 핸들러 커스텀
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor();
+      const toolbar = quill.getModule("toolbar");
+      toolbar.addHandler("image", hanldeImgUploadOnClick);
+    }
+
+    //selectTitle 드롭다운
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setSelecteIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  //커스텀 이미지 핸들러
+  const hanldeImgUploadOnClick = function (e) {
+    const fileInput = document.createElement("input");
+    fileInput.setAttribute("type", "file");
+    fileInput.setAttribute("accept", "image/*");
+    fileInput.setAttribute("name", "file");
+    fileInput.setAttribute("multiple", "true");
+    fileInput.click();
+
+    fileInput.onchange = async (e) => {
+      const filesArray = [...e.target.files];
+
+      Promise.all(
+        filesArray.map((file, idx) => {
+          return new Promise((resolve) => {
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+              resolve({ file, dataUrl: e.target.result, seq: idx });
+            };
+            fileReader.readAsDataURL(file);
+          });
+        })
+      ).then((resolves) => {
+        resolves.map((resolve) => insertImageToEditor(resolve.dataUrl));
+        setImages((prev) => [...prev, ...resolves]);
+      });
+    };
+  };
+
+  //quill에 이미지 추가
+  const insertImageToEditor = (imageUrl) => {
+    const quill = quillRef.current?.getEditor();
+    if (!quill) return;
+    const range = quill.getSelection();
+    const index = range ? range.index : quill.getLength();
+    quill.insertEmbed(index, "image", imageUrl);
+    quill.setSelection(index + 1);
+  };
+
+  useEffect(() => {
+    console.log(images);
+  }, [images]);
+
+  //selct 선택
+  const handleSelectOnClick = (e, category) => {
+    setSelectedCategory(category);
+    setSelecteIsOpen(false);
+  };
+
+  const handleOpenSelectOnClick = (e) => {
+    if (selectIsOpen) {
+      setSelecteIsOpen(false);
+      return;
+    }
+    setSelecteIsOpen(true);
+  };
+
+  //제목 클릭
+  const handleTitleOnClick = (e) => {
+    titleInputRef.current?.focus();
+  };
+
+  //저장 버튼
+  const handleSubmitOnClick = async () => {
     if (!title.trim()) return alert("제목을 입력해주세요.");
     if (!content.trim() || content === "<p><br></p>")
       return alert("내용을 입력해주세요.");
 
-    setSaveSubmit(true);
+    const delta = quillRef.current.getEditor().root;
+    // const reqContent = delta.map((row) =>
+    //   !!row.insert.image ? dataURLtoFile(row.insert.image) : row
+    // );
+    console.log(delta);
 
     try {
-      const postData = await createPostForm({
-        boardKey: currentBoard || "free",
-        title: title.trim(),
-        conten: content,
-        allowComments,
-        files: images.map((i) => i.file),
-      });
-
-      console.log("Post Data : ", postData);
-
-      alert("게시글이 성공적으로 저장되었습니다.");
-      navigate(-1); // 이전 페이지로 이동
+      // navigate("/board/free"); // 이전 페이지로 이동
     } catch (error) {
       console.error("Save Fail", error);
       alert("게시글 저장에 실패했습니다.");
-    } finally {
-      setSaveSubmit(false);
     }
   };
 
-  const handleTitleOnClick = (e) => {
-    titleInputRef.current?.focus();
-  };
+  useEffect(() => {
+    const content = quillRef.current.getEditor().getContents();
+    console.log(content);
+  }, [content]);
 
   return (
     <div css={s.postWriteLayout}>
@@ -167,23 +172,22 @@ const PostWrite = () => {
         <button css={s.backButton} onClick={() => navigate(-1)}>
           <MdArrowBack /> 뒤로가기
         </button>
-        <h1 css={s.headerTitle}>게시판 명</h1>
-        <div css={s.commentableButton}>
-          <label>댓글 허용</label>
-          <select
-            value={allowComments ? "Y" : "N"}
-            onChange={(e) => setAllowComments(e.target.value === "Y")}
-          >
-            <option value="Y">허용</option>
-            <option value="N">비허용</option>
-          </select>
+        <div css={s.selectCategory} ref={dropdownRef}>
+          <div css={s.selected(selectIsOpen)} onClick={handleOpenSelectOnClick}>
+            {selectedCategory.postCategoryName} <FaCaretDown />
+          </div>
+          {selectIsOpen && (
+            <div css={s.options}>
+              {postCategories.map((postCategory) => (
+                <div onClick={(e) => handleSelectOnClick(e, postCategory)}>
+                  {postCategory.postCategoryName}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        <button
-          css={[s.saveButton, saveSubmit && s.disabledButtonStyle]}
-          onClick={handleSubmitOnClick}
-          disabled={saveSubmit}
-        >
-          <AiOutlineSave /> {saveSubmit ? "저장 중..." : "저장"}
+        <button css={s.saveButton} onClick={handleSubmitOnClick}>
+          <AiOutlineSave /> 저장
         </button>
       </header>
 
@@ -220,37 +224,8 @@ const PostWrite = () => {
               }}
               placeholder="내용을 작성해주세요..."
             />
+            <QuillEditor />
           </div>
-        </div>
-
-        <div css={s.extensionContainer}>
-          <h3>이미지 ({images.length}/10)</h3>
-          <button css={s.imageUploadButton} onClick={hanldeImgUploadOnClick}>
-            <AiOutlineCamera /> 이미지 추가
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileOnChange}
-            css={s.hiddenFileInput}
-          />
-          {images.length > 0 && (
-            <div css={s.imagePreviewContainer}>
-              {images.map((image, idx) => (
-                <div key={idx} css={s.imagePreviewItem}>
-                  <img src={image.url} alt="preview" />
-                  <button
-                    css={s.removeImageButton}
-                    onClick={() => removeImage(image.id)}
-                  >
-                    <MdClose />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </main>
     </div>

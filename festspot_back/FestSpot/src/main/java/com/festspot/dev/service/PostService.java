@@ -2,8 +2,10 @@ package com.festspot.dev.service;
 
 import com.festspot.dev.domain.post.PostMapper;
 import com.festspot.dev.domain.post.PostSearchOption;
+import com.festspot.dev.domain.postCategory.PostCategory;
 import com.festspot.dev.domain.postCategory.PostCategoryMapper;
 import com.festspot.dev.dto.post.PostsRespDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +32,9 @@ public class PostService {
         .postList(postMapper.findByCategoryId(postSearchOption))
         .totalPage((int) Math.ceil(postMapper.countByCategoryId(postSearchOption)))
         .build();
+  }
+
+  public List<PostCategory> getPostCategory() {
+    return postCategoryMapper.findAll();
   }
 }
