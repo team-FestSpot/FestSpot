@@ -42,4 +42,11 @@ public class PostController {
         )
     ));
   }
+
+  @GetMapping("/{boardKey}/{postId}")
+  public ResponseEntity<ResponseDto<?>> getPost(@PathVariable Integer postId) {
+    System.out.println(postId);
+    postService.getPost(postId);
+    return ResponseEntity.ok(ResponseDto.success(postService.getPost(postId)));
+  }
 }
