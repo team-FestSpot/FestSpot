@@ -49,4 +49,18 @@ public class PostController {
     postService.getPost(postId);
     return ResponseEntity.ok(ResponseDto.success(postService.getPost(postId)));
   }
+
+  @GetMapping("/{boardKey}/{postId}/like")
+  public ResponseEntity<ResponseDto<?>> like(@PathVariable Integer postId) {
+    System.out.println(postId);
+    postService.like(postId);
+    return ResponseEntity.ok(ResponseDto.success("좋아요 요청 완료"));
+  }
+
+  @GetMapping("/{boardKey}/{postId}/dislike")
+  public ResponseEntity<ResponseDto<?>> disLike(@PathVariable Integer postId) {
+    System.out.println(postId);
+    postService.disLike(postId);
+    return ResponseEntity.ok(ResponseDto.success("좋아요 요청 취소 완료"));
+  }
 }
