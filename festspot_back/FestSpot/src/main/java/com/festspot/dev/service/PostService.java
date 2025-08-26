@@ -1,6 +1,7 @@
 package com.festspot.dev.service;
 
 import com.festspot.dev.domain.post.Post;
+import com.festspot.dev.domain.post.PostLikeMapper;
 import com.festspot.dev.domain.post.PostMapper;
 import com.festspot.dev.domain.post.PostSearchOption;
 import com.festspot.dev.domain.postCategory.PostCategoryMapper;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
   private final PostMapper postMapper;
+  private final PostLikeMapper postLikeMapper;
   private final PostCategoryMapper postCategoryMapper;
   private final PrincipalUtil principalUtil;
 
@@ -35,9 +37,22 @@ public class PostService {
         .build();
   }
 
+  // 게시글 가져오기
   public Post getPost(Integer postId) {
     Integer userId = principalUtil.getUserIdOrNull();
     return postMapper.findByPostId(postId, userId);
+  }
+
+  // 좋아요
+  public void like(Integer postId) {
+    Integer userId = principalUtil.getPrincipal().getUser().getUserId();
+    postLikeMapper.insert(postId, userId);
+  }
+
+  // 좋아요 취소
+  public void disLike(Integer postId) {
+    Integer userId = principalUtil.getPrincipal().getUser().getUserId();
+    postLikeMapper.delete(postId, userId);
   }
 
 }
