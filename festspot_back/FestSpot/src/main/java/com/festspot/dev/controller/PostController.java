@@ -33,6 +33,13 @@ public class PostController {
   @GetMapping("/{boardKey}")
   public ResponseEntity<ResponseDto<?>> getPosts(@PathVariable String boardKey,
       @RequestParam Integer page, Integer size) {
-    return ResponseEntity.ok(ResponseDto.success(null));
+    return ResponseEntity.ok(ResponseDto.success(postService.getPostsByCategory(
+            PostSearchOption.builder()
+                .startIndex((page - 1) * size)
+                .size(size)
+                .build(),
+            boardKey
+        )
+    ));
   }
 }

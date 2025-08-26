@@ -12,6 +12,10 @@ public interface PostMapper {
 
   List<Post> findAll(PostSearchOption postSearchOption);
 
+  double countAll(PostSearchOption postSearchOption);
+
   List<Post> findByCategoryId(PostSearchOption postSearchOption);
+
+  double countByCategoryId(PostSearchOption postSearchOption);
 
 }
