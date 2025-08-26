@@ -7,3 +7,5 @@ export const BoardContext = createContext({
 });
 
 export const useBoard = () => useContext(BoardContext);
+
+export const PAGE_SIZE = 8;

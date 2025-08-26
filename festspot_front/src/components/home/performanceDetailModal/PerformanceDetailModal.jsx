@@ -5,6 +5,8 @@ import { Global } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 
 function PerformanceDetailModal({ isOpen, setOpen, performance }) {
+  const { isFestival, isForeign } = performance;
+
   return (
     <>
       <Global styles={s.container} />
@@ -39,6 +41,14 @@ function PerformanceDetailModal({ isOpen, setOpen, performance }) {
             </div>
           </div>
           <div css={s.infoContainer}>
+            <div css={s.categoryContainer} id="category">
+              <div css={s.categoryBox(isFestival, isForeign)} />
+              <div>
+                {!!isFestival && "페스티벌"}
+                {!!isForeign && "내한공연"}
+                {!(!!isFestival || !!isForeign) && "일반공연"}
+              </div>
+            </div>
             <div css={s.dateContainer}>
               <div>
                 {performance.performanceStartDate ===

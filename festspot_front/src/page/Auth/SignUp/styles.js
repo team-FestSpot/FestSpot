@@ -1,5 +1,14 @@
 import { css } from "@emotion/react";
 
+export const sweetAlert = css`
+  .swal2-popup {
+    font-size: 1.4rem;
+  }
+  .swal2-html-container {
+    color: #f27474;
+  }
+`;
+
 export const signUpLayout = css`
   display: flex;
   justify-content: center;
