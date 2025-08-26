@@ -5,8 +5,7 @@ export const adminGridLayout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90%;
-  height: 100%;
+  flex-grow: 1;
 `;
 
 export const paginationButtonLayout = css`
