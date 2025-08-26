@@ -33,8 +33,8 @@ const PostWrite = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileOnChange = (e) => {
-    const files = Array.from(e.target.files || []);
+  const handleFileOnChange = async (e) => {
+    const files = [...e.target.files];
     const remainingSlots = MAX_IMAGES - images.length;
 
     if (files.length > remainingSlots) {
@@ -43,20 +43,23 @@ const PostWrite = () => {
       );
     }
 
-    files.forEach((file) => {
-      if (!file.type.startsWith("image/")) return;
+    Promise.all(
+      files.map((file) => {
+        if (!file.type.startsWith("image/")) return;
 
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const imageUrl = ev.target.result;
-        insertImageToEditor(imageUrl);
-        setImages((prev) => [
-          ...prev,
-          { file, url: imageUrl, id: Date.now() + Math.random() },
-        ]);
-      };
-      reader.readAsDataURL(file);
+        return new Promise((resolve) => {
+          const fileReader = new FileReader();
+          fileReader.onload = (e) => {
+            resolve({ file, url: e.target.result });
+          };
+          fileReader.readAsDataURL(file);
+        });
+      })
+    ).then((resolves) => {
+      resolves.map((resolve) => insertImageToEditor(resolve.url));
+      setImages((prev) => [...prev, ...resolves]);
     });
+
     e.target.value = "";
   };
 
@@ -69,12 +72,12 @@ const PostWrite = () => {
     quill.setSelection(index + 1);
   };
 
-  const removeImage = (imageId) => {
-    const img = images.find((i) => i.id === imageId);
-    setImages((prev) => prev.filter((i) => i.id !== imageId));
+  const removeImage = (imageUrl) => {
+    const img = images.find((image) => image.url === imageUrl);
+    setImages((prev) => prev.filter((image) => image.url !== imageUrl));
 
     const quill = quillRef.current?.getEditor();
-    if (!!quill && img) {
+    if (!!quill && !!img) {
       const contents = quill.getContents();
       const newOps = [];
       (contents.ops || []).forEach((op) => {
@@ -121,9 +124,6 @@ const PostWrite = () => {
           "clean",
         ],
       ],
-      handlers: {
-        image: hanldeImgUploadOnClick,
-      },
     },
   };
 
@@ -238,8 +238,8 @@ const PostWrite = () => {
           />
           {images.length > 0 && (
             <div css={s.imagePreviewContainer}>
-              {images.map((image) => (
-                <div key={image.id} css={s.imagePreviewItem}>
+              {images.map((image, idx) => (
+                <div key={idx} css={s.imagePreviewItem}>
                   <img src={image.url} alt="preview" />
                   <button
                     css={s.removeImageButton}
