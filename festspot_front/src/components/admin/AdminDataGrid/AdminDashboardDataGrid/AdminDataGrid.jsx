@@ -1,19 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import { FaRegEdit } from "react-icons/fa";
 
 import { useSearchParams } from "react-router-dom";
-import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
-import useAdminPerformanceCheckBoxStore from "../../../stores/AdminPerformanceCheckboxStore";
-import { usePublicDetailUploadMutation } from "../../../querys/admin/usePublicDetailUploadMutation";
+import useAdminPerformanceRowsStore from "../../../../stores/AdminPerformanceRowsStore";
+import useAdminPerformanceCheckBoxStore from "../../../../stores/AdminPerformanceCheckboxStore";
+import { usePublicDetailUploadMutation } from "../../../../querys/admin/usePublicDetailUploadMutation";
 import Pagination from "@mui/material/Pagination";
-import { usePublicApiAllQuery } from "../../../querys/admin/usePublicApiAllQuery";
+import { usePublicApiAllQuery } from "../../../../querys/admin/usePublicApiAllQuery";
 
-function TmpDataGrid(props) {
+function AdminDataGrid(props) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const [sortOption, setSortOption] = useState({
@@ -185,14 +184,7 @@ function TmpDataGrid(props) {
 
   return (
     <div css={s.adminGridLayout}>
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: "1600px",
-          height: "100vh",
-          maxHeight: "700px",
-        }}
-      >
+      <div css={s.dataGridContainer}>
         <DataGrid
           rows={rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)} // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
           getRowId={(row) => row.mt20id}
@@ -213,17 +205,17 @@ function TmpDataGrid(props) {
           onRowSelectionModelChange={handleRowSelectionOnChange}
           onColumnHeaderClick={handleColumnHeaderOnClick}
         />
-        <div css={s.paginationButtonLayout}>
-          <Pagination
-            count={paginationList.length}
-            onChange={handlePaginationOnChange}
-            hideNextButton
-            hidePrevButton
-          />
-        </div>
-      </Box>
+      </div>
+      <div css={s.paginationButtonLayout}>
+        <Pagination
+          count={paginationList.length}
+          onChange={handlePaginationOnChange}
+          hideNextButton
+          hidePrevButton
+        />
+      </div>
     </div>
   );
 }
 
-export default TmpDataGrid;
+export default AdminDataGrid;

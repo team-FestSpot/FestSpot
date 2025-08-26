@@ -8,8 +8,11 @@ import com.festspot.dev.domain.performance.performanceState.PerformanceState;
 import com.festspot.dev.domain.performance.performanceState.PerformanceStateMapper;
 import com.festspot.dev.domain.ticketing.TicketingUrl;
 import com.festspot.dev.domain.ticketing.TicketingUrlMapper;
+import com.festspot.dev.domain.user.User;
+import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.dto.admin.AdminGetCustomPerformanceRespDto;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
+import com.festspot.dev.dto.admin.AdminUserInfoModifyReqDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public class AdminService {
     private final PerformanceStateMapper performanceStateMapper;
     private final TicketingUrlMapper ticketingUrlMapper;
     private final FileService fileService;
+    private final UserMapper userMapper;
 
     @Transactional(rollbackFor = Exception.class)
     public int uploadPerformance(AdminUploadPerformanceReqDto dto) {
@@ -102,6 +106,10 @@ public class AdminService {
         return performanceList.stream().map(performance -> performance.toPerformanceDto()).toList();
     }
 
+    public List<User> getUserInfoList() {
+        return userMapper.findAllUsers();
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public void updateCustomPerformanceInfo(AdminUploadPerformanceReqDto dto, Integer performanceId, List<TicketingReqDto> deletedTicketingDto, MultipartFile file) {
         if(!Objects.isNull(file) && file.getSize() > 0) {
@@ -125,5 +133,37 @@ public class AdminService {
             ticketingUrlMapper.deleteMissing(deletedTicketingUrls);
         }
         ticketingUrlMapper.insert(ticketingUrls);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int updateUserInfo(AdminUserInfoModifyReqDto dto, MultipartFile file) {
+        if(!Objects.isNull(file) && file.getSize() > 0) {
+            fileService.deleteFile(dto.getUserProfileImgUrl());
+            dto.setUserProfileImgUrl("/upload/profile/" + fileService.uploadFile(file, "/profile"));
+        }
+            if(dto.getUserId() > -1) {
+            User user = dto.toEntity();
+            User beforeUser = userMapper.findByUserId(user.getUserId());
+            User userBefore = User.builder()
+                    .userId(beforeUser.getUserId())
+                    .userNickName(beforeUser.getUserNickName())
+                    .userProfileImgUrl(beforeUser.getUserProfileImgUrl())
+                    .build();
+            if(userBefore.equals(user) && Objects.isNull(file)) {
+                System.out.println("수정된 값 없음");
+                return 0;
+            }
+            return userMapper.updateByUserId(user);
+        }
+        return 0;
+    }
+
+    public void deletePerformanceInfo (Integer performanceId) {
+        System.out.println(performanceId);
+        performanceMapper.deleteById(performanceId);
+    }
+
+    public void deleteUser (Integer userId) {
+        userMapper.updateDeletedDateByUserId(userId);
     }
 }
