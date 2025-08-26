@@ -2,8 +2,9 @@ import { css } from "@emotion/react";
 
 // 메인 컨테이너
 export const mainContainer = css`
-  max-width: 1400px;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   padding: 0 20px;
 
   @media (max-width: 768px) {

@@ -17,6 +17,10 @@ export const homeLeftSide = css`
   width: 45%;
   margin: 0;
   padding-right: 10px;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 `;
 
 export const divider = css`

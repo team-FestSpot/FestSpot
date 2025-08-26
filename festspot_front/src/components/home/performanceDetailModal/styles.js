@@ -22,6 +22,7 @@ export const container = css`
 `;
 
 export const PerformanceDetailModalLayout = css`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,6 +93,7 @@ export const infoContainer = css`
   box-sizing: border-box;
   align-items: start;
   width: 30vw;
+  height: 100%;
   padding: 2%;
   object-fit: contain;
 
@@ -101,6 +103,36 @@ export const infoContainer = css`
     padding: 5%;
   }
 `;
+
+export const categoryContainer = css`
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  top: 1.5rem;
+  right: 2rem;
+`;
+
+export const categoryBox = (isFestival, isForeign) => {
+  let backgroundColor;
+  if (isFestival) {
+    backgroundColor = "#ffda77";
+  } else if (isForeign) {
+    backgroundColor = "#a2d2ff";
+  } else {
+    backgroundColor = "#FBD8D0";
+  }
+
+  return css`
+    box-sizing: border-box;
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    background-color: ${backgroundColor};
+  `;
+};
 
 export const dateContainer = css`
   width: 100%;

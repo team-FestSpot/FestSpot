@@ -71,7 +71,12 @@ function PerformanceCard({ performanceList }) {
                       )}
                     </div>
                   </div>
-                  <div css={s.content}>
+                  <div
+                    css={s.content(
+                      performance.isFestival,
+                      performance.isForeign
+                    )}
+                  >
                     <div>{performance.performanceVenue}</div>
                     <div>
                       <h3>{performance.performanceTitle}</h3>
