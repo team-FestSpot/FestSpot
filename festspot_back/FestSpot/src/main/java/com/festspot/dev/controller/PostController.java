@@ -42,4 +42,9 @@ public class PostController {
         )
     ));
   }
+
+  @GetMapping("/category")
+  public ResponseEntity<ResponseDto<?>> getPostCategory() {
+    return ResponseEntity.ok(ResponseDto.success(postService.getPostCategory()));
+  }
 }

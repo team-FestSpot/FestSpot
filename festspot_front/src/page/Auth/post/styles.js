@@ -1,4 +1,7 @@
 import { css } from "@emotion/react";
+import { uppserSideBarHeight } from "../../../components/layout/MainLayout/styles";
+
+const mainSidePadding = "2.4rem";
 
 export const postWriteLayout = css`
   display: flex;
@@ -43,13 +46,86 @@ export const backButton = css`
     background: #f8f9fa;
     border-color: #adb5bd;
   }
+
+  @media (max-width: 768px) {
+    gap: 0.3rem;
+    padding: 0.4rem 1rem;
+    font-size: 12px;
+  }
+  @media (max-width: 495px) {
+    padding: 0.4rem 1rem;
+  }
 `;
 
-export const headerTitle = css`
+export const selectCategory = css`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
   margin: 0;
+  padding: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #212529;
+  color: #495057;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+  @media (max-width: 780px) {
+    font-size: 14px;
+    width: 30%;
+  }
+  @media (max-width: 530px) {
+    width: 40%;
+    font-size: 12px;
+  }
+`;
+
+export const selected = (selectIsOpen) => css`
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+  padding: 0.4rem 1.6rem;
+  padding-right: 0.6rem;
+  box-sizing: border-box;
+  border: 1px solid ${selectIsOpen ? "#ef5a39" : "#c0c0c0ff"};
+  border-radius: 0.6rem;
+
+  &:hover {
+    border-color: #ef5a39;
+  }
+
+  @media (max-width: 1024px) {
+    padding: 0.6rem 1rem;
+  }
+  @media (max-width: 780px) {
+    gap: 4px;
+  }
+`;
+
+export const options = css`
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #c0c0c0ff;
+  border-radius: 0.6rem;
+  background-color: white;
+
+  & > div {
+    padding: 0.4rem 1.6rem;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  & > div:hover {
+    background-color: #ef5a39;
+    color: white;
+  }
 `;
 
 export const saveButton = css`
@@ -70,18 +146,13 @@ export const saveButton = css`
     background: #dc4f2e;
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 768px) {
     gap: 0.3rem;
-    padding: 0.4rem 0.4rem;
+    padding: 0.4rem 1rem;
+    font-size: 12px;
   }
-`;
-
-export const disabledButtonStyle = css`
-  background: #adb5bd;
-  cursor: not-allowed;
-
-  &:hover {
-    background: #adb5bd;
+  @media (max-width: 495px) {
+    padding: 0.4rem 1rem;
   }
 `;
 
@@ -92,11 +163,10 @@ export const main = css`
   flex-grow: 1;
   width: 100%;
   margin: 0 auto;
-  padding: 3.2rem 2.4rem;
+  padding: 3.2rem ${mainSidePadding};
   gap: 0.8rem;
 
   @media (max-width: 1024px) {
-    flex-direction: column;
     padding: 2.4rem 1.6rem;
   }
 `;
@@ -155,9 +225,6 @@ export const quillContainer = css`
   flex-grow: 1;
   width: 100%;
 
-  .quill {
-  }
-
   .ql-container {
     position: relative;
     border: none;
@@ -169,6 +236,7 @@ export const quillContainer = css`
     box-sizing: border-box;
     flex-grow: 1;
     padding: 2.4rem;
+    z-index: 1;
 
     &.ql-blank::before {
       color: #adb5bd;
@@ -199,6 +267,8 @@ export const quillContainer = css`
 
   //헤더(아이콘들)
   .ql-toolbar {
+    width: 100%;
+    z-index: 5;
     ::-webkit-scrollbar {
       display: none;
     }
@@ -264,12 +334,14 @@ export const quillContainer = css`
 
 export const fixedQuillContainer = css`
   .ql-toolbar {
+    width: calc(82% - ${mainSidePadding}*2);
     position: absolute;
-    top: 50rem;
+    top: calc(${uppserSideBarHeight});
     border: none;
     border-bottom: 0.1rem solid #e9ecef;
     background: #f8f9fa;
     padding: 1.2rem 2.4rem;
+    z-index: 5;
   }
 `;
 
@@ -322,144 +394,5 @@ export const unfixedQuillContainer = css`
         border-color: #ef5a39;
       }
     }
-  }
-`;
-
-export const extensionContainer = css`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  box-sizing: border-box;
-  border-radius: 0.8rem;
-  width: 30%;
-  height: fit-content;
-  padding: 2rem;
-  margin-bottom: 2em;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-
-  h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #212529;
-    margin: 0;
-    margin-bottom: 1.6rem;
-  }
-
-  @media (max-width: 1024px) {
-    width: 100%;
-  }
-`;
-
-export const imageUploadButton = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  border: 2px dashed #dee2e6;
-  border-radius: 0.8rem;
-  margin-bottom: 1.6rem;
-  padding: 1.2rem;
-  gap: 8px;
-  width: 100%;
-  font-size: 14px;
-  color: #6c757d;
-  background-color: #f8f9fa;
-  transition: all 0.2s;
-  cursor: pointer;
-
-  &:hover {
-    border-color: #ef5a39;
-    background-color: #fff5f3;
-    color: #ef5a39;
-  }
-`;
-
-export const hiddenFileInput = css`
-  display: none;
-`;
-
-export const imagePreviewContainer = css`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  width: 100%;
-  gap: 8px;
-`;
-
-export const imagePreviewItem = css`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  border: 1px solid #e9ecef;
-  border-radius: 0.8rem;
-  width: 45%;
-  aspect-ratio: 1;
-  transition: ease-in-out 0.2s;
-
-  &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  & > img {
-    width: 100%;
-    height: 100%;
-  }
-
-  @media (max-width: 1024px) {
-    width: 15%;
-  }
-`;
-
-export const removeImageButton = css`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 4px;
-  right: 4px;
-  background-color: #000000b3;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 2rem;
-  height: 2rem;
-  font-size: 12px;
-  transition: ease-in-out 0.2s;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #ef5a39;
-  }
-
-  @media (max-width: 1024px) {
-    width: 3rem;
-    height: 3rem;
-  }
-`;
-
-export const commentableButton = css`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-
-  label {
-    font-size: 1.4rem;
-    color: #495057;
-  }
-
-  select {
-    padding: 6px 8px;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    font-size: 1.4rem;
-    background: white;
-    color: #495057;
   }
 `;

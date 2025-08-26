@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 
-const uppserSideBarHeight = "4.5rem";
+export const uppserSideBarHeight = "4.5rem";
 const postSideBarHeight = "5.5rem";
 
 export const layout = css`
