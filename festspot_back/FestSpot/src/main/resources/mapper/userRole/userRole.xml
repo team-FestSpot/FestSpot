@@ -14,6 +14,7 @@
     values
       (default, #{userId}, #{roleId})
   </insert>
+
   <delete id="deleteByUserId">
     delete from
       user_role_tb
@@ -26,4 +27,13 @@
     where
       user_id in <foreach item="userId" collection="userIds" separator="," open="(" close=")"> #{userId}</foreach>
   </delete>
+
+  <select id="findByUserId" resultType="com.festspot.dev.domain.userRole.UserRole">
+    select
+      *
+    from
+      user_role_tb urt
+    where
+      urt.user_id = #{userId}
+  </select>
 </mapper>

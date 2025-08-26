@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.festspot.dev.domain.performance.Performance;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.admin.AdminUserInfoModifyReqDto;
+import com.festspot.dev.dto.auth.UserLoginDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
 import com.festspot.dev.service.AdminService;
@@ -83,5 +84,11 @@ public class AdminController {
     public ResponseEntity<?> deleteUser (@PathVariable Integer userId) {
         adminService.deleteUser(userId);
         return ResponseEntity.ok("사용자 삭제 성공");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseDto<?>> login(@RequestBody UserLoginDto dto) {
+        System.out.println(dto);
+        return ResponseEntity.ok(ResponseDto.success(adminService.adminLogin(dto)));
     }
 }

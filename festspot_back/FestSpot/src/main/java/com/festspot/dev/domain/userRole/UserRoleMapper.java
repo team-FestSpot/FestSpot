@@ -12,4 +12,6 @@ public interface UserRoleMapper {
     int deleteByUserId(Integer userId);
 
     int deleteByUserIds(List<Integer> userIds);
+
+    List<UserRole> findByUserId(Integer userId);
 }
