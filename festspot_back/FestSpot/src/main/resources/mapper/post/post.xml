@@ -83,7 +83,36 @@
         left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
       limit #{startIndex}, #{size}
   </select>
-    <select id="findByCategoryId" resultType="com.festspot.dev.domain.post.Post"></select>
+
+    <select id="countAll" resultType="java.lang.Double">
+        select
+            count(*) / #{size}
+        from
+            post_tb
+    </select>
+
+    <select id="findByCategoryId" resultType="com.festspot.dev.domain.post.Post">
+        select
+            *
+        from
+            post_tb pt
+            left outer join post_img_tb pit on (pt.post_id = pit.post_id)
+            left outer join post_comment_tb pcot on (pt.post_id = pcot.post_id)
+            left outer join post_like_tb plt on (pt.post_id = plt.post_id)
+            left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
+        where
+            pt.post_category_id = #{categoryId}
+        limit #{startIndex}, #{size}
+    </select>
+
+    <select id="countByCategoryId" resultType="java.lang.Double">
+        select
+            count(*) / #{size}
+        from
+            post_tb
+        where
+            post_category_id = #{categoryId}
+    </select>
 
 
 </mapper>
