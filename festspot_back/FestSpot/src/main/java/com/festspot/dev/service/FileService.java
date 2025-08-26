@@ -52,13 +52,28 @@ public class FileService {
     }
 
     public void deleteFile(String path) {
-        if (path.substring(path.lastIndexOf("/")).contains("default")) {
-            return ;
+        // null 체크 추가
+        if (path == null || path.isEmpty()) {
+            return;
         }
 
-        File file = new File(rootPath + "/upload/" +path);
+        // lastIndexOf가 -1을 반환하는 경우를 고려
+        int lastSlashIndex = path.lastIndexOf("/");
+        String fileName;
+
+        if (lastSlashIndex == -1) { // 맨 앞에 "/"가 없는 경우 전체 path가 파일명
+            fileName = path;
+        } else { // 맨 앞에 "/"가 있는 경우 마지막 "/" 이후가 파일명
+            fileName = path.substring(lastSlashIndex + 1);
+        }
+
+        if (fileName.contains("default")) {
+            return;
+        }
+
+        File file = new File(rootPath + "/upload/" + path);
         if (!file.exists()) {
-            return ;
+            return;
         }
 
         file.delete();

@@ -20,4 +20,5 @@ public interface PerformanceMapper {
 
   int update(Performance performance);
 
+  int deleteById(Integer performanceId);
 }

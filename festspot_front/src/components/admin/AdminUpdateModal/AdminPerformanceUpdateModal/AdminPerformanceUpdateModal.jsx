@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import useAdminPerformanceUpdateStore from "../../../stores/AdminPerformanceUpdateStore";
+import useAdminPerformanceUpdateStore from "../../../../stores/AdminPerformanceUpdateStore";
 import ReactModal from "react-modal";
 import { Global } from "@emotion/react";
 import { CiSquareMinus, CiSquarePlus } from "react-icons/ci";
-import { baseURL } from "../../../api/axios";
+import { baseURL } from "../../../../api/axios";
 import Button from "@mui/material/Button";
-import { reqModifyCustomPerformanceApi } from "../../../api/adminApi";
+import { reqModifyCustomPerformanceApi } from "../../../../api/adminApi";
 import Checkbox from "@mui/material/Checkbox";
-import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPerformanceListQuery";
-import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
+import { useCustomPerformanceListQuery } from "../../../../querys/admin/useCustomPerformanceListQuery";
+import useAdminCustomPerformanceRowsStore from "../../../../stores/AdminPerformanceCustomRowsStore";
 
-function AdminUpdateModal({ isOpen, closeModal, performanceToUpdate }) {
+function AdminPerformanceUpdateModal({
+  isOpen,
+  closeModal,
+  performanceToUpdate,
+}) {
   const { setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
   const customPerformanceListQuery = useCustomPerformanceListQuery();
   // const { performanceToUpdate, setPerformanceToUpdate } =
@@ -120,7 +124,7 @@ function AdminUpdateModal({ isOpen, closeModal, performanceToUpdate }) {
   // 모달 열리면 수정할 공연정보를 모달 내에서 사용할 상태들에 저장
   // performance = 공연 정보, ticketingList = 기존에 저장했던 예매처 목록
   useEffect(() => {
-    console.log(performanceToUpdate);
+    // console.log(performanceToUpdate);
     setPerformance(performanceToUpdate);
     setTicketingList(performanceToUpdate.relates);
   }, [performanceToUpdate]);
@@ -409,4 +413,4 @@ function AdminUpdateModal({ isOpen, closeModal, performanceToUpdate }) {
   );
 }
 
-export default AdminUpdateModal;
+export default AdminPerformanceUpdateModal;

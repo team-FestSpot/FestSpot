@@ -55,6 +55,11 @@
             performance_id = #{performanceId}
     </update>
 
+    <delete id="deleteById">
+        delete from performance_tb
+        where performance_id = #{performanceId}
+    </delete>
+
     <select id="findAll" resultMap="PerformanceMap">
     select
     *
