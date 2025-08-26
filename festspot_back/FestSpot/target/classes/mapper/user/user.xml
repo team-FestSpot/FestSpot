@@ -25,12 +25,12 @@
     </resultMap>
     <resultMap id="RoleMap" type="com.festspot.dev.domain.role.Role">
         <id property="roleId" column="role_id" />
-        <result property="role" column="role_name" />
+        <result property="roleName" column="role_name" />
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="userId">
         insert into user_tb
-        values (default, #{userLoginId}, #{userPassword}, #{userEmail}, #{userNickName}, #{userProfileImgUrl}, now(), #{provider}, #{providerId})
+        values (default, #{userLoginId}, #{userPassword}, #{userEmail}, #{userNickName}, #{userProfileImgUrl}, now(), #{provider}, #{providerId}, null)
     </insert>
 
     <update id="updateProfileImgPathById">
