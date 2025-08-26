@@ -11,6 +11,7 @@ import com.festspot.dev.domain.ticketing.TicketingUrlMapper;
 import com.festspot.dev.dto.admin.AdminGetCustomPerformanceRespDto;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
+
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -78,10 +79,8 @@ public class AdminService {
 
     @Transactional(rollbackFor = Exception.class)
     public int uploadCustomPerformance(AdminUploadPerformanceReqDto dto, MultipartFile file) {
-        System.out.println(dto);
         String newFileName = fileService.uploadFile(file, "/poster");
-        System.out.println(newFileName);
-        String url = "http://localhost:8080/upload/" + newFileName;
+        String url = "/upload/poster/" + newFileName;
         dto.setPoster(url);
         PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
                 dto.getArea());
@@ -89,12 +88,10 @@ public class AdminService {
 
         Performance performance = dto.toEntity(performanceRegion, performanceState);
 
-        System.out.println(performance);
         int performanceInsert = performanceMapper.insert(performance);
 
         List<TicketingUrl> ticketingUrls = dto.getRelates().stream()
                 .map(relate -> relate.toEntity(performance.getPerformanceId())).toList();
-        System.out.println(ticketingUrls);
         int ticketingUrlInsert = ticketingUrlMapper.insert(ticketingUrls);
 
         return performanceInsert * ticketingUrlInsert;
@@ -103,5 +100,30 @@ public class AdminService {
     public List<AdminGetCustomPerformanceRespDto> getCustomPerformanceInfoList() {
         List<Performance> performanceList = performanceMapper.findByPerformanceApiIdIsNull();
         return performanceList.stream().map(performance -> performance.toPerformanceDto()).toList();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateCustomPerformanceInfo(AdminUploadPerformanceReqDto dto, Integer performanceId, List<TicketingReqDto> deletedTicketingDto, MultipartFile file) {
+        if(!Objects.isNull(file) && file.getSize() > 0) {
+            fileService.deleteFile(dto.getPoster());
+            dto.setPoster("/upload/poster/" + fileService.uploadFile(file, "/poster"));
+        }
+
+        PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
+                dto.getArea());
+        PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
+        Performance performance = dto.toEntity(performanceRegion, performanceState);
+        performance.setPerformanceId(performanceId);
+        performanceMapper.update(performance);
+
+        List<TicketingUrl> ticketingUrls = dto.getRelates().stream()
+                .map(relate -> relate.toEntity(performanceId)).toList();
+        List<TicketingUrl> deletedTicketingUrls = deletedTicketingDto.stream()
+                .map(relate -> relate.toEntity(performanceId)).toList();
+        System.out.println(ticketingUrls);
+        if(!deletedTicketingUrls.isEmpty()) {
+            ticketingUrlMapper.deleteMissing(deletedTicketingUrls);
+        }
+        ticketingUrlMapper.insert(ticketingUrls);
     }
 }
