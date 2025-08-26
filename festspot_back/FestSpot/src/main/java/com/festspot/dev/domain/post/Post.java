@@ -18,10 +18,8 @@ public class Post {
 
   private Integer postId;
   private Integer userId;
-  private Integer postCategoryId;
   private String postTitle;
   private String postContent;
-  private Integer allowComments;
   private Integer viewCount;
   private Integer likeCount;
   private Integer commentCount;
