@@ -7,15 +7,20 @@ import {
   JOIN_REGEX_ERROR_MESSAGE,
 } from "../../../constants/authRegex";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import googleLogo from "/src/page/Auth/img/Google__G__logo.png";
 import kakaoLogo from "/src/page/Auth/img/kakao_logo.png";
 import naverLogo from "/src/page/Auth/img/naver_logo.png";
 import festSpotLogo from "/src/page/Auth/img/FestSpotLogoImg.png";
 import festSpotLogoText from "/src/page/Auth/img/FestSpotLogoText.png";
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
+import { reqLogin } from "../../../api/authApi";
+import Swal from "sweetalert2";
+import { useQueryClient } from "@tanstack/react-query";
 
-function SignUp(props) {
+function Login(props) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [inputValue, setInputValue] = useState({
     userLoginId: "",
@@ -77,7 +82,7 @@ function SignUp(props) {
 
   const handleOnKeyDown = (e) => {
     if (e.keyCode === 13 && e.target.name === "userPassword") {
-      handleSignUpOnClick();
+      handleLoginOnClick();
     }
   };
 
@@ -86,6 +91,37 @@ function SignUp(props) {
       ...prev,
       [key]: !prev[key],
     }));
+  };
+
+  const handleLoginOnClick = async (e) => {
+    try {
+      const response = await reqLogin(inputValue);
+      const { accessToken } = response?.data?.body;
+      localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
+
+      await queryClient.invalidateQueries({
+        queryKey: ["principal"],
+      });
+
+      await Swal.fire({
+        title: "로그인 성공",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      });
+
+      navigate("/");
+    } catch (error) {
+      let errorText = Object.values(error.response?.data?.body).join("<br>");
+      console.log(error);
+
+      await Swal.fire({
+        title: "회원가입 실패",
+        html: `${errorText}`,
+        icon: "error",
+      });
+    }
   };
 
   return (
@@ -142,6 +178,7 @@ function SignUp(props) {
               disabled={buttonDisabled}
               variant="contained"
               css={s.signUpButton}
+              onClick={handleLoginOnClick}
             >
               로그인
             </Button>
@@ -174,4 +211,4 @@ function SignUp(props) {
   );
 }
 
-export default SignUp;
+export default Login;

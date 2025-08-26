@@ -67,69 +67,80 @@ export const posterContainer = css`
   }
 `;
 
-export const content = css`
-  padding: 10px;
-  background-color: #fbd8d0;
-
-  @media (min-width: 1025px) {
-    font-size: 12px;
-    height: 8vh;
-  }
-  @media (max-width: 1023px) {
-    font-size: 10px;
-    height: 7vh;
-  }
-  @media (max-width: 767px) {
-    font-size: 8px;
-    height: 3vh;
+export const content = (isFestival, isForeign) => {
+  let contentBackgroundColor;
+  if (isFestival) {
+    contentBackgroundColor = "#ffda77";
+  } else if (isForeign) {
+    contentBackgroundColor = "#a2d2ff";
+  } else {
+    contentBackgroundColor = "#FBD8D0";
   }
 
-  & > div:first-of-type {
+  return css`
+    padding: 10px;
+    background-color: ${contentBackgroundColor};
+
     @media (min-width: 1025px) {
-      font-size: 10px;
-      margin-bottom: 5px;
+      font-size: 12px;
+      height: 8vh;
     }
     @media (max-width: 1023px) {
       font-size: 10px;
-      margin-bottom: 3px;
-    }
-    @media (max-width: 767px) {
-      font-size: 6px;
-    }
-
-    height: fit-content;
-    color: #ef5a39;
-    font-weight: 500;
-    margin: 0;
-    padding: 0;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  & > div:last-of-type {
-    @media (min-width: 1025px) {
-      font-size: 10px;
-    }
-    @media (max-width: 1023px) {
-      font-size: 10px;
+      height: 7vh;
     }
     @media (max-width: 767px) {
       font-size: 8px;
+      height: 3vh;
     }
 
-    height: fit-content;
-    font-weight: 600;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    & > div:first-of-type {
+      @media (min-width: 1025px) {
+        font-size: 10px;
+        margin-bottom: 5px;
+      }
+      @media (max-width: 1023px) {
+        font-size: 10px;
+        margin-bottom: 3px;
+      }
+      @media (max-width: 767px) {
+        font-size: 6px;
+      }
 
-    & > h3 {
+      height: fit-content;
+      color: #ef5a39;
+      font-weight: 500;
       margin: 0;
+      padding: 0;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-  }
-`;
+
+    & > div:last-of-type {
+      @media (min-width: 1025px) {
+        font-size: 10px;
+      }
+      @media (max-width: 1023px) {
+        font-size: 10px;
+      }
+      @media (max-width: 767px) {
+        font-size: 8px;
+      }
+
+      height: fit-content;
+      font-weight: 600;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+
+      & > h3 {
+        margin: 0;
+      }
+    }
+  `;
+};

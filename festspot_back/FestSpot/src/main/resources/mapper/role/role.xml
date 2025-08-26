@@ -20,6 +20,6 @@
         from
             role_tb
         where
-            role = #{role}
+            role_name = #{roleName}
     </select>
 </mapper>

@@ -1,265 +1,323 @@
 import { css } from "@emotion/react";
 
-export const containerStyle = css`
-  background: #f8f9fa;
-  min-height: 100vh;
-  padding: 0;
-`;
-
-export const headerStyle = css`
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: white;
-  border-bottom: 1px solid #e9ecef;
-  padding: 16px 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-`;
-
-export const headerContentStyle = css`
-  max-width: 1200px;
-  margin: 0 auto;
+export const postWriteLayout = css`
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  padding: 0;
+  margin: 0;
+  background: #f8f9fa;
+`;
+
+export const header = css`
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  border-bottom: 0.1rem solid #e9ecef;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05);
+  padding: 1.6rem 2.4rem;
+  background: white;
 `;
 
-export const backButtonStyle = css`
+export const backButton = css`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: 1px solid #dee2e6;
-  background: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
+  box-sizing: border-box;
+  border: 0.1rem solid #dee2e6;
+  border-radius: 0.6rem;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
   color: #495057;
+  background: white;
   transition: all 0.2s;
-  
+  cursor: pointer;
+
   &:hover {
     background: #f8f9fa;
     border-color: #adb5bd;
   }
 `;
 
-export const headerTitleStyle = css`
+export const headerTitle = css`
+  margin: 0;
   font-size: 18px;
   font-weight: 600;
   color: #212529;
-  margin: 0;
 `;
 
-export const saveButtonStyle = css`
+export const saveButton = css`
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  background: #ef5a39;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  border: 0.1rem solid #ef5a39;
+  border-radius: 0.6rem;
   font-weight: 500;
+  color: white;
+  background: #ef5a39;
   transition: all 0.2s;
-  
+  cursor: pointer;
+
   &:hover {
     background: #dc4f2e;
+  }
+
+  @media (max-width: 1024px) {
+    gap: 0.3rem;
+    padding: 0.4rem 0.4rem;
   }
 `;
 
 export const disabledButtonStyle = css`
   background: #adb5bd;
   cursor: not-allowed;
-  
+
   &:hover {
     background: #adb5bd;
   }
 `;
 
-export const mainContentStyle = css`
-  max-width: 1200px;
+export const main = css`
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  width: 100%;
   margin: 0 auto;
-  padding: 32px 24px;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 32px;
-  
+  padding: 3.2rem 2.4rem;
+  gap: 0.8rem;
+
   @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    padding: 24px 16px;
+    flex-direction: column;
+    padding: 2.4rem 1.6rem;
   }
 `;
 
-export const editorWrapperStyle = css`
+export const postContainer = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  border-radius: 0.8rem;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05);
 `;
 
-export const titleSectionStyle = css`
-  padding: 24px;
-  border-bottom: 1px solid #e9ecef;
+export const title = css`
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2.4rem;
+  border-bottom: 0.1rem solid #e9ecef;
+  cursor: text;
 `;
 
-export const titleInputStyle = css`
+export const titleInput = css`
   width: 100%;
   padding: 0;
   border: none;
-  font-size: 28px;
+  font-size: 2.8rem;
   font-weight: 700;
   color: #212529;
-  line-height: 1.4;
-  resize: none;
-  overflow: hidden;
-  
+
   &:focus {
     outline: none;
   }
-  
+
   &::placeholder {
     color: #adb5bd;
     font-weight: 400;
   }
 `;
 
-export const titleCountStyle = css`
-  margin-top: 8px;
-  font-size: 13px;
+export const titleCount = css`
+  margin-top: 0.6rem;
+  font-size: 1.2rem;
   color: #6c757d;
   text-align: right;
 `;
 
-export const editorSectionStyle = css`
-  .ql-container {
-    border: none;
-    font-size: 16px;
-    line-height: 1.6;
-    min-height: 600px;
+export const quillContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-grow: 1;
+  width: 100%;
+
+  .quill {
   }
-  
+
+  .ql-container {
+    position: relative;
+    border: none;
+    font-size: 1.6rem;
+    z-index: 1;
+  }
+
   .ql-editor {
-    padding: 24px;
-    
+    box-sizing: border-box;
+    flex-grow: 1;
+    padding: 2.4rem;
+
     &.ql-blank::before {
       color: #adb5bd;
       font-style: normal;
-      left: 24px;
-      top: 24px;
+      left: 2.4rem;
     }
-    
-    p {
-      margin-bottom: 16px;
-      line-height: 1.7;
-    }
-    
+
     img {
+      display: block;
+      justify-content: center;
+      align-items: start;
       max-width: 100%;
       height: auto;
       border-radius: 8px;
-      margin: 20px 0;
+      margin: 1rem 0;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
-    
-    h1, h2, h3 {
-      margin-top: 32px;
-      margin-bottom: 16px;
-      color: #212529;
-      font-weight: 700;
-    }
-    
-    h1 { font-size: 32px; }
-    h2 { font-size: 24px; }
-    h3 { font-size: 20px; }
-    
+
     blockquote {
-      border-left: 4px solid #ef5a39;
-      padding-left: 20px;
-      margin: 20px 0;
+      border-left: 0.4rem solid #ef5a39;
+      padding-left: 2rem;
+      margin: 1.6rem 0;
       color: #6c757d;
       font-style: italic;
       background: none;
     }
-    
-    ul, ol {
-      margin: 16px 0;
-      padding-left: 28px;
+  }
+
+  //헤더(아이콘들)
+  .ql-toolbar {
+    ::-webkit-scrollbar {
+      display: none;
     }
-    
-    li {
-      margin-bottom: 8px;
-      line-height: 1.6;
-    }
-    
-    pre {
-      background: #f8f9fa;
-      padding: 16px;
-      border-radius: 6px;
-      overflow-x: auto;
-      margin: 20px 0;
-      border: 1px solid #e9ecef;
-    }
-    
-    code {
-      background: #f8f9fa;
-      padding: 3px 6px;
-      border-radius: 4px;
-      font-size: 14px;
-      border: 1px solid #e9ecef;
+
+    .ql-formats {
+      flex-direction: row;
+      justify-content: center;
+      align-items: start;
+      margin: 0 0.8rem !important;
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      & > button,
+      .ql-picker:not(.ql-header) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 3.2rem;
+        height: 3.2rem;
+        padding: 0.4rem;
+        transition: all 0.2s;
+
+        svg {
+          width: 100%;
+          height: 100%;
+        }
+
+        .ql-picker-label {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        &:hover {
+          background: #ef5a39;
+        }
+
+        &:hover .ql-stroke {
+          stroke: white;
+        }
+
+        &:hover .ql-fill {
+          fill: white;
+        }
+
+        &.ql-active {
+          background: #ef5a39;
+        }
+
+        &.ql-active .ql-stroke {
+          stroke: white;
+        }
+
+        &.ql-active .ql-fill {
+          fill: white;
+        }
+      }
     }
   }
-  
+`;
+
+export const fixedQuillContainer = css`
+  .ql-toolbar {
+    position: absolute;
+    top: 50rem;
+    border: none;
+    border-bottom: 0.1rem solid #e9ecef;
+    background: #f8f9fa;
+    padding: 1.2rem 2.4rem;
+  }
+`;
+
+export const unfixedQuillContainer = css`
   .ql-toolbar {
     border: none;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 0.1rem solid #e9ecef;
     background: #f8f9fa;
-    padding: 12px 24px;
-    
+    padding: 1.2rem 2.4rem;
+
     .ql-formats {
-      margin-right: 16px;
-      
-      &:last-child {
-        margin-right: 0;
+      & > button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 32px;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #ef5a39;
+        }
+
+        &:hover .ql-stroke {
+          stroke: white;
+        }
+
+        &:hover .ql-fill {
+          fill: white;
+        }
+
+        &.ql-active {
+          background: #ef5a39;
+        }
+
+        &.ql-active .ql-stroke {
+          stroke: white;
+        }
+
+        &.ql-active .ql-fill {
+          fill: white;
+        }
       }
     }
-    
-    button {
-      width: 32px;
-      height: 32px;
-      margin: 0 2px;
-      border-radius: 4px;
-      transition: all 0.2s;
-      
-      &:hover {
-        background: #ef5a39;
-      }
-      
-      &:hover .ql-stroke {
-        stroke: white;
-      }
-      
-      &:hover .ql-fill {
-        fill: white;
-      }
-      
-      &.ql-active {
-        background: #ef5a39;
-      }
-      
-      &.ql-active .ql-stroke {
-        stroke: white;
-      }
-      
-      &.ql-active .ql-fill {
-        fill: white;
-      }
-    }
-    
+
     .ql-picker {
       color: #495057;
-      
+
       &.ql-expanded .ql-picker-label {
         border-color: #ef5a39;
       }
@@ -267,137 +325,140 @@ export const editorSectionStyle = css`
   }
 `;
 
-export const sidebarStyle = css`
-  @media (max-width: 1024px) {
-    order: -1;
-  }
-`;
-
-export const sidebarSectionStyle = css`
+export const extensionContainer = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 0.8rem;
+  width: 30%;
+  height: fit-content;
+  padding: 2rem;
+  margin-bottom: 2em;
   background: white;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  
+
   h3 {
     font-size: 16px;
     font-weight: 600;
     color: #212529;
-    margin: 0 0 16px 0;
+    margin: 0;
+    margin-bottom: 1.6rem;
+  }
+
+  @media (max-width: 1024px) {
+    width: 100%;
   }
 `;
 
-export const imageUploadButtonStyle = css`
+export const imageUploadButton = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  border: 2px dashed #dee2e6;
+  border-radius: 0.8rem;
+  margin-bottom: 1.6rem;
+  padding: 1.2rem;
   gap: 8px;
   width: 100%;
-  padding: 12px;
-  background: #f8f9fa;
-  border: 2px dashed #dee2e6;
-  border-radius: 8px;
-  cursor: pointer;
   font-size: 14px;
   color: #6c757d;
+  background-color: #f8f9fa;
   transition: all 0.2s;
-  margin-bottom: 16px;
-  
+  cursor: pointer;
+
   &:hover {
     border-color: #ef5a39;
-    background: #fff5f3;
+    background-color: #fff5f3;
     color: #ef5a39;
   }
 `;
 
-export const hiddenFileInputStyle = css`
+export const hiddenFileInput = css`
   display: none;
 `;
 
-export const imagePreviewGridStyle = css`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+export const imagePreviewContainer = css`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
   gap: 8px;
 `;
 
-export const imagePreviewItemStyle = css`
+export const imagePreviewItem = css`
   position: relative;
-  aspect-ratio: 1;
-  border-radius: 6px;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
   border: 1px solid #e9ecef;
-  transition: all 0.2s;
-  
+  border-radius: 0.8rem;
+  width: 45%;
+  aspect-ratio: 1;
+  transition: ease-in-out 0.2s;
+
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
+
+  & > img {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    width: 15%;
+  }
 `;
 
-export const previewImageStyle = css`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
-
-export const removeImageButtonStyle = css`
+export const removeImageButton = css`
   position: absolute;
-  top: 4px;
-  right: 4px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  top: 4px;
+  right: 4px;
+  background-color: #000000b3;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
   font-size: 12px;
-  transition: background 0.2s;
-  
+  transition: ease-in-out 0.2s;
+  cursor: pointer;
+
   &:hover {
-    background: rgba(220, 53, 69, 0.9);
+    background-color: #ef5a39;
+  }
+
+  @media (max-width: 1024px) {
+    width: 3rem;
+    height: 3rem;
   }
 `;
 
-export const editorInfoStyle = css`
-  padding: 16px 24px;
-  font-size: 13px;
-  color: #6c757d;
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-  
-  code {
-    background: #e9ecef;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 12px;
-  }
-`;
-
-export const settingsStyle = css`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-export const settingItemStyle = css`
+export const commentableButton = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+  gap: 1rem;
+
   label {
-    font-size: 14px;
+    font-size: 1.4rem;
     color: #495057;
   }
-  
+
   select {
     padding: 6px 8px;
     border: 1px solid #dee2e6;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 1.4rem;
     background: white;
     color: #495057;
   }
