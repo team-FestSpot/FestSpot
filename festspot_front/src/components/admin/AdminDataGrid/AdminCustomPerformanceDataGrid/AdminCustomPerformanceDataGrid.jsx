@@ -5,28 +5,24 @@ import Box from "@mui/material/Box";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import Pagination from "@mui/material/Pagination";
 import { useSearchParams } from "react-router-dom";
-import { useCustomPerformanceListQuery } from "../../../querys/admin/useCustomPerformanceListQuery";
+import { useCustomPerformanceListQuery } from "../../../../querys/admin/useCustomPerformanceListQuery";
 import Button from "@mui/material/Button";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import useAdminCustomPerformanceRowsStore from "../../../stores/AdminPerformanceCustomRowsStore";
-import { baseURL } from "../../../api/axios";
-import { useDeletePerformanceMutation } from "../../../querys/performance/useDeletePerformanceMutation";
-import AdminPerformanceUpdateModal from "../AdminUpdateModal/AdminPerformanceUpdateModal/AdminPerformanceUpdateModal";
+import useAdminCustomPerformanceRowsStore from "../../../../stores/AdminPerformanceCustomRowsStore";
+import { baseURL } from "../../../../api/axios";
+import { useDeletePerformanceMutation } from "../../../../querys/performance/useDeletePerformanceMutation";
+import AdminPerformanceUpdateModal from "../../AdminUpdateModal/AdminPerformanceUpdateModal/AdminPerformanceUpdateModal";
 
-function AdminCustomPerformanceDataGrid(props) {
+function AdminCustomPerformanceDataGrid({ searchResult }) {
   const { data, isLoading, isRefetching } = useCustomPerformanceListQuery();
   const performanceList = data?.data?.body;
-  const { rows, setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
+  const { rows, setRows } = useAdminCustomPerformanceRowsStore();
   const [isOpen, setIsOpen] = useState(false);
   const [performanceToUpdate, setPerformanceToUpdate] = useState({});
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
-  const [sortOption, setSortOption] = useState({
-    column: "performanceStartDate",
-    direction: "asc",
-  }); // 특정 컬럼 기준 오름차순/내림차순 정렬 상태
   const [paginationList, setPaginationList] = useState([]);
-  const deleteMutation = useDeletePerformanceMutation();
+  const deletePerformanceMutation = useDeletePerformanceMutation();
 
   const gridRef = useGridApiRef();
   const columns = [
@@ -48,7 +44,7 @@ function AdminCustomPerformanceDataGrid(props) {
     {
       field: "prfnm",
       headerName: "공연/페스티벌명",
-      width: 300,
+      width: 250,
       editable: false,
     },
     {
@@ -104,9 +100,11 @@ function AdminCustomPerformanceDataGrid(props) {
       renderCell: (params) => (
         <div>
           <Button
-            onClick={(e) =>
-              deleteMutation.mutateAsync(params.row.performanceId)
-            }
+            onClick={async () => {
+              await deletePerformanceMutation.mutateAsync(
+                params.row.performanceId
+              );
+            }}
           >
             <FaRegTrashAlt />
           </Button>
@@ -131,16 +129,16 @@ function AdminCustomPerformanceDataGrid(props) {
     openModal();
   };
 
-  // const handleDeleteButtonOnClick = async (e, params) => {
-  // await reqDeletePerformanceApi(params.row.performanceId);
-  // };
-
   // 처음 들어왔을 때 or 새로고침했을 때 주소에 ?page=1 param 붙임
   useEffect(() => {
     setSearchParams({
       page: 1,
     });
   }, []);
+
+  // useEffect(() => {
+  //   console.log(rows);
+  // }, [rows]);
 
   // 직접 등록한 공연 목록 가져오는 query 로딩 끝나면 row에 넣어서 표에 표시되게 함
   useEffect(() => {
@@ -161,40 +159,10 @@ function AdminCustomPerformanceDataGrid(props) {
       (row) => row.performanceId === performanceToUpdate.performanceId
     );
     if (!isRefetching && !!updatedRow) {
-      if (!!updatedRow) {
-        setPerformanceToUpdate({ ...updatedRow });
-      }
+      setPerformanceToUpdate({ ...updatedRow });
+      openModal();
     }
-    openModal();
   }, [isRefetching]);
-
-  // 오름차순 내림차순 정렬 기능인데 가끔 이상하게 동작함
-  // 원본 rows랑 별개로 화면 표시용 displayRows 상태를 새로 만들어서 뿌려줘야 할 듯함
-  const handleColumnHeaderOnClick = (e) => {
-    const sortArr = [...rows];
-    const column = e.field;
-
-    let direction = "asc";
-    if (sortOption.column === column && sortOption.direction === "asc") {
-      direction = "desc";
-    }
-
-    setSortOption((prev) => {
-      let direction = "asc";
-      if (prev.column === column && prev.direction === "asc") {
-        direction = "desc";
-      }
-      return { column, direction };
-    });
-
-    sortArr.sort((a, b) => {
-      if (a[column] < b[column]) return direction === "asc" ? -1 : 1;
-      if (a[column] > b[column]) return direction === "asc" ? 1 : -1;
-      return 0;
-    });
-    setRowsEmpty();
-    setRows([...sortArr]);
-  };
 
   const getPaginationList = (total) => {
     if (total < 1) return [];
@@ -225,14 +193,13 @@ function AdminCustomPerformanceDataGrid(props) {
           />
         </div>
       )}
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-        }}
-      >
+      <div css={s.dataGridContainer}>
         <DataGrid
-          rows={rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)} // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
+          rows={
+            searchResult.length > 1
+              ? searchResult.slice((pageParam - 1) * 20, pageParam * 20 - 1)
+              : rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)
+          } // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
           getRowId={(row) => row.performanceId}
           rowHeight={200}
           columns={columns}
@@ -243,23 +210,21 @@ function AdminCustomPerformanceDataGrid(props) {
               },
             },
           }}
-          sx={{ fontSize: "1rem" }}
           pageSizeOptions={[20]}
           checkboxSelection
           disableRowSelectionOnClick
           hideFooter
           apiRef={gridRef}
-          onColumnHeaderClick={handleColumnHeaderOnClick}
         />
-        <div css={s.paginationButtonLayout}>
-          <Pagination
-            count={paginationList.length}
-            onChange={handlePaginationOnChange}
-            hideNextButton
-            hidePrevButton
-          />
-        </div>
-      </Box>
+      </div>
+      <div css={s.paginationButtonLayout}>
+        <Pagination
+          count={paginationList.length}
+          onChange={handlePaginationOnChange}
+          hideNextButton
+          hidePrevButton
+        />
+      </div>
     </div>
   );
 }

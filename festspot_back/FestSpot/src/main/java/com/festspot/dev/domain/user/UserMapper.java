@@ -15,6 +15,8 @@ public interface UserMapper {
 
     int updateByUserId(User user);
 
+    int updateDeletedDateByUserId(Integer userId);
+
     // 프로필 사진 수정 시
     int updateProfileImgPathById(@Param("userId") Integer userId, @Param("path") String path);
 }

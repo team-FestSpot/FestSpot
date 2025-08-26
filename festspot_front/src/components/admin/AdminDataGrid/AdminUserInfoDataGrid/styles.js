@@ -3,9 +3,17 @@ import { css } from "@emotion/react";
 export const adminGridLayout = css`
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
+  flex-direction: column; // 변경
+  justify-content: flex-start; // 변경
   align-items: center;
-  flex-grow: 1;
+  width: 100%;
+  min-height: 100vh;
+`;
+
+export const dataGridContainer = css`
+  width: 100%;
+  max-width: 130rem;
+  height: 80vh;
 `;
 
 export const modifyProfileImg = css`

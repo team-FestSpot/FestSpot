@@ -49,6 +49,17 @@
             user_id = #{userId}
     </update>
 
+    <update id="updateDeletedDateByUserId">
+        update
+            user_tb
+        set
+            deleted_at = now()
+        where
+            user_id = #{userId}
+        and
+            deleted_at is null
+    </update>
+
     <select id="findByUserLoginId" resultType="com.festspot.dev.domain.user.User">
         select
             *

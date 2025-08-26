@@ -1,5 +1,7 @@
 package com.festspot.dev.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.festspot.dev.domain.performance.Performance;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.admin.AdminUserInfoModifyReqDto;
@@ -64,18 +66,22 @@ public class AdminController {
         adminService.updateCustomPerformanceInfo(dto, performanceId, deletedTicketingListDto, file);
         return ResponseEntity.ok("공연 정보 수정 성공");
     }
+
     @PutMapping("/update/user")
-    public ResponseEntity<?> updateCustomPerformanceInfo (@RequestPart("data") AdminUserInfoModifyReqDto dto,
+    public ResponseEntity<ResponseDto<?>> updateCustomPerformanceInfo (@RequestPart("data") AdminUserInfoModifyReqDto dto,
                                                           @RequestPart(required = false) MultipartFile file) {
-        adminService.updateUserInfo(dto, file);
-        return ResponseEntity.ok("사용자 정보 수정 성공");
+        return ResponseEntity.ok(ResponseDto.success(adminService.updateUserInfo(dto, file)));
     }
 
-    @DeleteMapping("/delete/{performanceId}")
+    @DeleteMapping("/delete/performance/{performanceId}")
     public ResponseEntity<?> deletePerformanceInfo (@PathVariable Integer performanceId) {
         adminService.deletePerformanceInfo(performanceId);
         return ResponseEntity.ok("공연 정보 삭제 성공");
     }
 
-
+    @PutMapping("/delete/user/{userId}")
+    public ResponseEntity<?> deleteUser (@PathVariable Integer userId) {
+        adminService.deleteUser(userId);
+        return ResponseEntity.ok("사용자 삭제 성공");
+    }
 }

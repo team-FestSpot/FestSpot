@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import Box from "@mui/material/Box";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import Pagination from "@mui/material/Pagination";
 import { useUserListQuery } from "../../../../querys/admin/useUserListQuery";
@@ -12,6 +11,7 @@ import { FaCheck, FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import TextField from "@mui/material/TextField";
 import { useUserInfoUpdateMutation } from "../../../../querys/admin/useUserInfoUpdateMutation";
+import { reqDeleteUserApi } from "../../../../api/adminApi";
 
 function AdminUserInfoDataGrid(props) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
@@ -117,10 +117,10 @@ function AdminUserInfoDataGrid(props) {
           <div css={s.modifyButton}>
             <Button
               onClick={async (e) => {
-                updateMutation.mutateAsync(
+                await updateMutation.mutateAsync(
                   handleModifyButtonOnClick(e, params)
                 );
-                await userListQuery.refetch();
+                userListQuery.refetch();
               }}
             >
               <FaCheck />
@@ -175,12 +175,10 @@ function AdminUserInfoDataGrid(props) {
       return;
     }
     let formData = new FormData();
-    formData.append(
-      "data",
-      new Blob([JSON.stringify(dataToUpdate)], {
-        type: "application/json",
-      })
-    );
+    const jsonBlob = new Blob([JSON.stringify(dataToUpdate)], {
+      type: "application/json",
+    });
+    formData.append("data", jsonBlob, "data.json");
     if (newProfileImg.size > 0) {
       formData.append("file", newProfileImg);
     }
@@ -188,6 +186,7 @@ function AdminUserInfoDataGrid(props) {
     setDataToUpdate({
       userId: -1,
       userNickName: "",
+      userProfileImgUrl: "",
     });
     return formData;
   };
@@ -200,20 +199,24 @@ function AdminUserInfoDataGrid(props) {
     });
   };
 
-  const handleDeleteButtonOnClick = (e, params) => {
-    console.log(params.row);
+  const handleDeleteButtonOnClick = async (e, params) => {
+    await reqDeleteUserApi(params.row.userId);
+    await userListQuery.refetch();
   };
 
-  // useEffect(() => {
-  //   console.log(dataToUpdate);
-  // }, [dataToUpdate]);
-
   useEffect(() => {
-    if (!userListQuery.isLoading && !!queryResponse) {
+    if (!userListQuery.isLoading && !!queryResponse && rows.length < 0) {
       // console.log(queryResponse);
       setRows(queryResponse);
     }
   }, [userListQuery.isLoading]);
+
+  useEffect(() => {
+    if (!userListQuery.isRefetching && !!queryResponse) {
+      // console.log(queryResponse);
+      setRows(queryResponse);
+    }
+  }, [userListQuery.isRefetching]);
 
   useEffect(() => {
     setSearchParams({
@@ -239,17 +242,20 @@ function AdminUserInfoDataGrid(props) {
     setPaginationList(getPaginationList(rows.length));
   }, [rows]);
 
+  useEffect(() => {
+    if (
+      !userListQuery.isLoading &&
+      Array.isArray(queryResponse) &&
+      queryResponse.length > 0 &&
+      rows.length < 1
+    ) {
+      setRows([...queryResponse]);
+    }
+  }, [userListQuery.isLoading]);
+
   return (
     <div css={s.adminGridLayout}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "column",
-          width: "100%",
-          height: "100%",
-        }}
-      >
+      <div css={s.dataGridContainer}>
         <DataGrid
           rows={rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)} // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
           getRowId={(row) => row.userId}
@@ -263,11 +269,9 @@ function AdminUserInfoDataGrid(props) {
             },
           }}
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
             fontSize: "1rem",
+            width: "100%",
+            height: "100%",
           }}
           pageSizeOptions={[20]}
           checkboxSelection={false}
@@ -276,15 +280,15 @@ function AdminUserInfoDataGrid(props) {
           apiRef={gridRef}
           // onColumnHeaderClick={handleColumnHeaderOnClick}
         />
-        <div css={s.paginationButtonLayout}>
-          <Pagination
-            count={paginationList.length}
-            onChange={handlePaginationOnChange}
-            hideNextButton
-            hidePrevButton
-          />
-        </div>
-      </Box>
+      </div>
+      <div css={s.paginationButtonLayout}>
+        <Pagination
+          count={paginationList.length}
+          onChange={handlePaginationOnChange}
+          hideNextButton
+          hidePrevButton
+        />
+      </div>
     </div>
   );
 }

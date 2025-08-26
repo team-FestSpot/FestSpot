@@ -211,7 +211,7 @@ function AdminAddPerformance(props) {
       await reqUploadCustomPerformanceApi(formData);
       // setDetailEmpty();
       // setImageFile({});
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }

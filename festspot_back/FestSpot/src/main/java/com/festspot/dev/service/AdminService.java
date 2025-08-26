@@ -141,23 +141,29 @@ public class AdminService {
             fileService.deleteFile(dto.getUserProfileImgUrl());
             dto.setUserProfileImgUrl("/upload/profile/" + fileService.uploadFile(file, "/profile"));
         }
-        User user = dto.toEntity();
-        User beforeUser = userMapper.findByUserId(user.getUserId());
-        User userBefore = User.builder()
-                .userId(beforeUser.getUserId())
-                .userNickName(beforeUser.getUserNickName())
-                .userProfileImgUrl(beforeUser.getUserProfileImgUrl())
-                .build();
-        if(userBefore.equals(user) && Objects.isNull(file)) {
-            System.out.println("수정된 값 없음");
-            return 0;
+            if(dto.getUserId() > -1) {
+            User user = dto.toEntity();
+            User beforeUser = userMapper.findByUserId(user.getUserId());
+            User userBefore = User.builder()
+                    .userId(beforeUser.getUserId())
+                    .userNickName(beforeUser.getUserNickName())
+                    .userProfileImgUrl(beforeUser.getUserProfileImgUrl())
+                    .build();
+            if(userBefore.equals(user) && Objects.isNull(file)) {
+                System.out.println("수정된 값 없음");
+                return 0;
+            }
+            return userMapper.updateByUserId(user);
         }
-
-        return userMapper.updateByUserId(user);
+        return 0;
     }
 
-
     public void deletePerformanceInfo (Integer performanceId) {
+        System.out.println(performanceId);
         performanceMapper.deleteById(performanceId);
+    }
+
+    public void deleteUser (Integer userId) {
+        userMapper.updateDeletedDateByUserId(userId);
     }
 }

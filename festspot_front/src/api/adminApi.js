@@ -21,11 +21,7 @@ export const reqModifyCustomPerformanceApi = (data) => {
 };
 
 export const reqDeletePerformanceApi = (id) => {
-  return api.delete(`/admin/delete/${id}`, {
-    params: {
-      performanceId: id,
-    },
-  });
+  return api.delete(`/admin/delete/performance/${id}`);
 };
 
 export const reqUserListApi = () => {
@@ -34,4 +30,8 @@ export const reqUserListApi = () => {
 
 export const reqUserInfoUpdateApi = (data) => {
   return api.put("/admin/update/user", data);
+};
+
+export const reqDeleteUserApi = (userId) => {
+  return api.put(`/admin/delete/user/${userId}`);
 };
