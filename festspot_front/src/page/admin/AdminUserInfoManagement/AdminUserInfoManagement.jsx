@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import AdminUserInfoDataGrid from "../../../components/admin/AdminDataGrid/AdminUserInfoDataGrid/AdminUserInfoDataGrid";
-import { useSearchParams } from "react-router-dom";
 
 function AdminUserInfoManagement(props) {
   return (
