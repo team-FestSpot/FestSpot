@@ -14,7 +14,7 @@ import { usePublicApiAllQuery } from "../../../../querys/admin/usePublicApiAllQu
 
 function AdminDataGrid(props) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
-  const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
+  const pageParam = Number(searchParams.get("page") || 1); // 페이지 param을 숫자로 형변환
   const [sortOption, setSortOption] = useState({
     column: "prfpdfrom",
     direction: "asc",
@@ -149,12 +149,6 @@ function AdminDataGrid(props) {
       page: e.target.innerText,
     });
   };
-
-  useEffect(() => {
-    setSearchParams({
-      page: 1,
-    });
-  }, []);
 
   useEffect(() => {
     // console.log(data);
