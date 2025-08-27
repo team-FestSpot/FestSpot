@@ -1,6 +1,7 @@
 package com.festspot.dev.controller;
 
 import com.festspot.dev.domain.post.PostSearchOption;
+import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class PostController {
 
   @GetMapping("/{boardKey}")
   public ResponseEntity<ResponseDto<?>> getPosts(@PathVariable String boardKey,
-      @RequestParam Integer page, Integer size) {
+      @RequestParam Integer page,@RequestParam Integer size) {
     return ResponseEntity.ok(ResponseDto.success(postService.getPostsByCategory(
             PostSearchOption.builder()
                 .startIndex((page - 1) * size)
@@ -46,5 +47,28 @@ public class PostController {
   @GetMapping("/category")
   public ResponseEntity<ResponseDto<?>> getPostCategory() {
     return ResponseEntity.ok(ResponseDto.success(postService.getPostCategory()));
+  }
+
+  @GetMapping("/{boardKey}/{postId}")
+  public ResponseEntity<ResponseDto<PostDetailRespDto>> getPost(@PathVariable String boardKey, @PathVariable Integer postId) {
+    System.out.println(postId);
+    postService.increaseViewCount(postId); // 조회수를 우선 증가
+
+    PostDetailRespDto dto = postService.getPost(postId);
+    return ResponseEntity.ok(ResponseDto.success(dto));
+  }
+
+  @GetMapping("/{boardKey}/{postId}/like")
+  public ResponseEntity<ResponseDto<?>> like(@PathVariable String boardKey, @PathVariable Integer postId) {
+    System.out.println(postId);
+    postService.like(postId);
+    return ResponseEntity.ok(ResponseDto.success("좋아요 요청 완료"));
+  }
+
+  @GetMapping("/{boardKey}/{postId}/dislike")
+  public ResponseEntity<ResponseDto<?>> disLike(@PathVariable String boardKey, @PathVariable Integer postId) {
+    System.out.println(postId);
+    postService.disLike(postId);
+    return ResponseEntity.ok(ResponseDto.success("좋아요 요청 취소 완료"));
   }
 }
