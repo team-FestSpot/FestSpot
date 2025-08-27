@@ -16,6 +16,9 @@ export const sidebar = css`
 `;
 
 export const header = css`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
   padding: 20px 16px;
   border-bottom: 1px solid #e5e7eb;
   background-color: #f8f9fa;

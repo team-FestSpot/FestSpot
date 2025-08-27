@@ -8,9 +8,11 @@ import { usePublicApiSearchResultMutation } from "../../../querys/admin/usePubli
 import Button from "@mui/material/Button";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
 import TextField from "@mui/material/TextField";
+import { useSearchParams } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
 
 function AdminMainPage(props) {
+  const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params
   const [searchInput, setSearchInput] = useState({
     name: "",
     venue: "",
@@ -33,6 +35,12 @@ function AdminMainPage(props) {
       [e.target.id]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    setSearchParams({
+      page: 1,
+    });
+  }, []);
 
   return (
     <div css={s.layout}>
