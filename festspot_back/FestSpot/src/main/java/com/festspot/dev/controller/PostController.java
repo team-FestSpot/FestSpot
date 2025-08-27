@@ -44,6 +44,11 @@ public class PostController {
     ));
   }
 
+  @GetMapping("/category")
+  public ResponseEntity<ResponseDto<?>> getPostCategory() {
+    return ResponseEntity.ok(ResponseDto.success(postService.getPostCategory()));
+  }
+
   @GetMapping("/{boardKey}/{postId}")
   public ResponseEntity<ResponseDto<PostDetailRespDto>> getPost(@PathVariable String boardKey, @PathVariable Integer postId) {
     System.out.println(postId);

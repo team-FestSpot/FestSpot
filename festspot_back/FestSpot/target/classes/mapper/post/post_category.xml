@@ -14,4 +14,10 @@
         where
             post_category_key = #{postCategoryKey}
     </select>
+    <select id="findAll" resultType="com.festspot.dev.domain.postCategory.PostCategory">
+        select
+            *
+        from
+            post_category_tb
+    </select>
 </mapper>
