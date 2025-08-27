@@ -12,4 +12,12 @@
             (default, #{img.seq}, #{img.postId}, #{img.postImgUrl})
         </foreach>
     </insert>
+  <select id="findByPostId" resultType="com.festspot.dev.domain.postImg.PostImg">
+      select
+        *
+      from
+        post_img_tb
+      where
+        post_id = #{postId}
+  </select>
 </mapper>

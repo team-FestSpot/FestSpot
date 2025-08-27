@@ -3,6 +3,7 @@ package com.festspot.dev.domain.post;
 import com.festspot.dev.domain.postCategory.PostCategory;
 import com.festspot.dev.domain.postImg.PostImg;
 import com.festspot.dev.domain.user.User;
+import com.festspot.dev.dto.post.PostDetailRespDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -29,5 +30,18 @@ public class Post {
   private User user;
   private PostCategory postCategory;
   private List<PostImg> postImgs;
-  private List<PostComment> postComments;
+
+  public PostDetailRespDto toRespDto(User user, List<PostImg> postImgs) {
+    return PostDetailRespDto.builder()
+        .postTitle(postTitle)
+        .postContent(postContent)
+        .viewCount(viewCount)
+        .likeCount(likeCount)
+        .commentCount(commentCount)
+        .createdAt(createdAt)
+        .updatedAt(updatedAt)
+        .user(user)
+        .postImgs(postImgs)
+        .build();
+  }
 }
