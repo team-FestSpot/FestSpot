@@ -49,13 +49,14 @@ public class AdminService {
         User foundUser = userMapper.findByUserLoginId(dto.getUserLoginId());
         System.out.println(foundUser);
 
-        // 권한 확인해서 관리자(roleId == 1) 아니면 예외 처리
-        List<UserRole> result = userRoleMapper.findByUserId(foundUser.getUserId());
-        result.forEach(userRole -> {
-            if (userRole.getRoleId() != 1) {
-                throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
-            }
-        });
+        // 권한 확인해서 관리자 권한(ROLE_ADMIN) 없으면 예외 처리
+        // 필터에서 로그인 처리해서 안쓸듯?
+//        List<String> userRoleIds = userRoleMapper.findByUserId(foundUser.getUserId()).stream()
+//                .map(userRole -> userRole.getRole().getRoleName()).toList();
+//        System.out.println(userRoleIds);
+//        if (!userRoleIds.contains("ROLE_ADMIN")) {
+//            throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
+//        }
 
         if(foundUser == null) {
             throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");

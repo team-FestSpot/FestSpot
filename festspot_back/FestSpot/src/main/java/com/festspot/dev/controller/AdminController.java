@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.festspot.dev.domain.performance.Performance;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.admin.AdminUserInfoModifyReqDto;
+import com.festspot.dev.dto.auth.TokenDto;
 import com.festspot.dev.dto.auth.UserLoginDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
 import com.festspot.dev.service.AdminService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.el.parser.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,7 +90,7 @@ public class AdminController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<?>> login(@RequestBody UserLoginDto dto) {
-        System.out.println(dto);
-        return ResponseEntity.ok(ResponseDto.success(adminService.adminLogin(dto)));
+        TokenDto tokenDto = adminService.adminLogin(dto);
+        return ResponseEntity.ok(ResponseDto.success(tokenDto));
     }
 }

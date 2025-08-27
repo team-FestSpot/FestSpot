@@ -1,5 +1,6 @@
 package com.festspot.dev.security.jwt.filter;
 
+import com.festspot.dev.domain.role.RoleMapper;
 import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.security.jwt.JwtUtil;
@@ -12,6 +13,8 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -59,6 +62,7 @@ public class JwtFilter implements Filter {
     if (foundUser == null) {
       return;
     }
+    
     PrincipalUser principal = PrincipalUser.builder().user(foundUser).build();
     Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "",
         principal.getAuthorities());
