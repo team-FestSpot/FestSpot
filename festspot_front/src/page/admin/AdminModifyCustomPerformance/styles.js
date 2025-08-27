@@ -2,14 +2,30 @@ import { css } from "@emotion/react";
 
 export const layout = css`
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+`;
+
+export const header = css``;
+
+export const titleContainer = css``;
+
+export const searchContainer = css`
+  display: flex;
   flex-direction: row;
 `;
 
-export const mainLayout = css`
+export const main = css``;
+
+export const searchLayout = css`
   display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+  flex-direction: row;
+  gap: 1rem;
+  height: auto;
 `;
 
 export const updateModalLayout = css`

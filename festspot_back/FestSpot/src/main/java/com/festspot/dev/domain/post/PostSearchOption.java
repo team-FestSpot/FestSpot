@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostSearchOption {
-
   private Integer startIndex;
   private Integer endIndex;
   private Integer size;
