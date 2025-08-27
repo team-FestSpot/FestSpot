@@ -6,7 +6,7 @@
 <mapper namespace="com.festspot.dev.domain.post.PostCommentMapper">
 
     <resultMap id="PostCommentMap" type="com.festspot.dev.domain.post.PostComment">
-        <id property="commentId" column="comment_id" />
+        <id property="postCommentId" column="post_comment_id" />
         <result property="postId" column="post_id" />
         <result property="parentCommentId" column="parent_comment_id" />
         <result property="userId" column="user_id" />
