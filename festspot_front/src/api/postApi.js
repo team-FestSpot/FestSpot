@@ -13,5 +13,5 @@ export const reqPosts = async (boardKey, page) =>
   });
 
 // 상세 게시글
-export const reqPostDetail = (boardKey, postId) =>
-  get(`/api/board/${boardKey}/${postId}`);
+export const reqPostDetail = async (boardKey, postId) =>
+  await api.get(`/api/board/${boardKey}/${postId}`).then((r) => r.data?.body ?? r.data?.data ?? r.data);
