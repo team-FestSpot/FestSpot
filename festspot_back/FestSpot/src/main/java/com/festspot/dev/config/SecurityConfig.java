@@ -47,15 +47,16 @@ public class SecurityConfig {
 
     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // 모든 요청 허용
-        http.authorizeHttpRequests(auth -> {
+    // 모든 요청 허용
+    http.authorizeHttpRequests(auth -> {
 //          auth.requestMatchers("/oauth2/**").permitAll();
 //            auth.requestMatchers("/login/oauth2/code/**").permitAll();
 //            auth.requestMatchers("/api/auth/**").permitAll();
 //            auth.requestMatchers("/api/board/**").permitAll();
 //            auth.requestMatchers("/image/**").permitAll();
-            auth.anyRequest().permitAll();
-        });
+      auth.requestMatchers("/admin/*").hasRole("ADMIN_USER");
+      auth.anyRequest().permitAll();
+    });
 
     http.exceptionHandling(
         handling -> handling.authenticationEntryPoint((request, response, authException) -> {

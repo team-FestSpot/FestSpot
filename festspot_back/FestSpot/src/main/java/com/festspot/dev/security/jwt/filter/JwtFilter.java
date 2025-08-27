@@ -1,5 +1,6 @@
 package com.festspot.dev.security.jwt.filter;
 
+import com.festspot.dev.domain.role.RoleMapper;
 import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.security.jwt.JwtUtil;
@@ -24,6 +25,7 @@ public class JwtFilter implements Filter {
 
   private final JwtUtil jwtUtil;
   private final UserMapper userMapper;
+  private final RoleMapper roleMapper;
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
@@ -59,6 +61,10 @@ public class JwtFilter implements Filter {
     if (foundUser == null) {
       return;
     }
+
+    foundUser.getUserRoles().stream()
+        .map(userRole -> userRole.getRoleId() == roleMapper.findByRole("USER_ROLE").getRoleId());
+
     PrincipalUser principal = PrincipalUser.builder().user(foundUser).build();
     Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "",
         principal.getAuthorities());
