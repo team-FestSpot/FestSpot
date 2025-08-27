@@ -13,6 +13,8 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -61,10 +63,7 @@ public class JwtFilter implements Filter {
     if (foundUser == null) {
       return;
     }
-
-    foundUser.getUserRoles().stream()
-        .map(userRole -> userRole.getRoleId() == roleMapper.findByRole("USER_ROLE").getRoleId());
-
+    
     PrincipalUser principal = PrincipalUser.builder().user(foundUser).build();
     Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "",
         principal.getAuthorities());
