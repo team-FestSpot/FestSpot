@@ -18,3 +18,6 @@ export const reqPostDetail = (boardKey, postId) =>
   get(`/api/board/${boardKey}/${postId}`);
 
 export const reqPostCategory = () => api.get(`/api/board/category`);
+
+export const reqPostRegister = (data) =>
+  api.post(`/api/post/${data.boardKey}`, data);

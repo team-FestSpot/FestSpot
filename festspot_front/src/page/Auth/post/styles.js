@@ -159,7 +159,7 @@ export const saveButton = css`
 export const main = css`
   box-sizing: border-box;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-grow: 1;
   width: 100%;
   margin: 0 auto;
@@ -172,12 +172,14 @@ export const main = css`
 `;
 
 export const postContainer = css`
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   width: 100%;
-  margin-bottom: 2rem;
+  height: 100%;
+  flex-grow: 1;
   background: white;
   border-radius: 0.8rem;
   box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05);
@@ -224,9 +226,17 @@ export const quillContainer = css`
   align-items: start;
   flex-grow: 1;
   width: 100%;
+  box-sizing: border-box;
+  cursor: text;
+
+  .quill {
+    display: flex;
+    flex-direction: column;
+  }
 
   .ql-container {
     position: relative;
+    height: 100%;
     border: none;
     font-size: 1.6rem;
     z-index: 1;
@@ -269,6 +279,7 @@ export const quillContainer = css`
   .ql-toolbar {
     width: 100%;
     z-index: 5;
+    cursor: default;
     ::-webkit-scrollbar {
       display: none;
     }

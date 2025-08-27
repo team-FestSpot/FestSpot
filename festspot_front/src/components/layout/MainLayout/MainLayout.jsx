@@ -50,7 +50,7 @@ function MainLayout({ children }) {
           <PostSideBar />
         </div>
       )}
-      <div css={s.container}>
+      <div css={s.container(hidePostSideBar)}>
         <div css={s.children} ref={scrollRef}>
           {children}
         </div>
