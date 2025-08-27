@@ -20,4 +20,8 @@ export const reqPostDetail = (boardKey, postId) =>
 export const reqPostCategory = () => api.get(`/api/board/category`);
 
 export const reqPostRegister = (data) =>
-  api.post(`/api/post/${data.boardKey}`, data);
+  api.post(`/api/board/${data.boardKey}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
