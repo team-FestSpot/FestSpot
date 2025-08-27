@@ -4,6 +4,7 @@ import com.festspot.dev.domain.post.Post;
 import com.festspot.dev.domain.post.PostLikeMapper;
 import com.festspot.dev.domain.post.PostMapper;
 import com.festspot.dev.domain.post.PostSearchOption;
+import com.festspot.dev.domain.postCategory.PostCategory;
 import com.festspot.dev.domain.postCategory.PostCategoryMapper;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostsRespDto;
@@ -40,6 +41,10 @@ public class PostService {
         .postList(postMapper.findByCategoryId(postSearchOption))
         .totalPage((int) Math.ceil(postMapper.countByCategoryId(postSearchOption)))
         .build();
+  }
+
+  public List<PostCategory> getPostCategory() {
+    return postCategoryMapper.findAll();
   }
 
   // 게시글 가져오기
