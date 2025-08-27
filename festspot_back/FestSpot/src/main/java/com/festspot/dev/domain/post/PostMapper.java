@@ -19,4 +19,6 @@ public interface PostMapper {
 
   double countByCategoryId(PostSearchOption postSearchOption);
 
+  int increaseViewCount(@Param("postId") Integer postId);
+
 }
