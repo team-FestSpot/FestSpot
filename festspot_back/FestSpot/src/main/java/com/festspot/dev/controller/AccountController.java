@@ -21,10 +21,10 @@ public class AccountController {
 
   private final AccountService accountService;
 
-  @GetMapping("/account/principal")
-  public ResponseEntity<?> pricipal(@AuthenticationPrincipal PrincipalUser principalUser) {
-    return ResponseEntity.ok(ResponseDto.success(principalUser));
-  }
+    @GetMapping("/account/principal")
+    public ResponseEntity<?> principal(@AuthenticationPrincipal PrincipalUser principalUser) {
+        return ResponseEntity.ok(ResponseDto.success(principalUser));
+    }
 
   @PostMapping("/account/profile/img")
   public ResponseEntity<?> updateProfileImg(@AuthenticationPrincipal PrincipalUser principalUser,

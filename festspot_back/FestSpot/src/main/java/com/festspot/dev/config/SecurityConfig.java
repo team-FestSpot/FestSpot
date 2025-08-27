@@ -54,9 +54,12 @@ public class SecurityConfig {
 //            auth.requestMatchers("/api/auth/**").permitAll();
 //            auth.requestMatchers("/api/board/**").permitAll();
 //            auth.requestMatchers("/image/**").permitAll();
-      auth.requestMatchers("/admin/*").hasRole("ADMIN_USER");
-      auth.anyRequest().permitAll();
-    });
+//            auth.requestMatchers("/admin/**").hasRole("ADMIN");
+//            auth.requestMatchers("/**").hasRole("USER");
+//            auth.requestMatchers("/login").permitAll();
+//            auth.requestMatchers("/admin/login").permitAll();
+            auth.anyRequest().permitAll();
+        });
 
     http.exceptionHandling(
         handling -> handling.authenticationEntryPoint((request, response, authException) -> {
