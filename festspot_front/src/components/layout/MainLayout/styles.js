@@ -30,13 +30,15 @@ export const postSideBar = css`
   }
 `;
 
-export const container = css`
+export const container = (hidePostSideBar) => css`
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
-  height: calc(100% - ${uppserSideBarHeight} - ${postSideBarHeight});
+  height: calc(
+    100% - ${uppserSideBarHeight} - ${hidePostSideBar && postSideBarHeight}
+  );
 `;
 
 export const children = css`

@@ -1,16 +1,16 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useRef, useMemo, useEffect } from "react";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
 import * as s from "./styles";
+import React, { useState, useRef, useEffect } from "react";
+import "react-quill-new/dist/quill.snow.css";
 import { AiOutlineSave } from "react-icons/ai";
 import { MdArrowBack } from "react-icons/md";
 import { FaCaretDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useFixQuillToolBarStore } from "../../../stores/useFixQuillToolBarStore";
 import usePostCategoryQuery from "../../../querys/post/usePostCategoryQuery";
-import { dataURLtoFile } from "../../../utils/dataUrlToFileObject";
 import QuillEditor from "../../../components/post/QuillEditor";
+import { v4 } from "uuid";
+import SparkMD5 from "spark-md5";
 
 const PostWrite = () => {
   const navigate = useNavigate();
@@ -28,30 +28,6 @@ const PostWrite = () => {
   const postCategoryQuery = usePostCategoryQuery();
   const postCategories = postCategoryQuery.data?.data?.body || [];
 
-  const modules = {
-    toolbar: {
-      container: [
-        [
-          { header: [1, 2, 3, false] },
-          "bold",
-          "italic",
-          "underline",
-          "strike",
-          "image",
-          { color: [] },
-          { background: [] },
-          { align: [] },
-          "blockquote",
-          "code-block",
-          { list: "ordered" },
-          { list: "bullet" },
-          "link",
-          "clean",
-        ],
-      ],
-    },
-  };
-
   //기본 select 등록
   useEffect(() => {
     if (postCategoryQuery.isSuccess && !!postCategories[0]) {
@@ -61,13 +37,6 @@ const PostWrite = () => {
 
   //ref 등록
   useEffect(() => {
-    //이미지 핸들러 커스텀
-    if (quillRef.current) {
-      const quill = quillRef.current.getEditor();
-      const toolbar = quill.getModule("toolbar");
-      toolbar.addHandler("image", hanldeImgUploadOnClick);
-    }
-
     //selectTitle 드롭다운
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -78,49 +47,6 @@ const PostWrite = () => {
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  //커스텀 이미지 핸들러
-  const hanldeImgUploadOnClick = function (e) {
-    const fileInput = document.createElement("input");
-    fileInput.setAttribute("type", "file");
-    fileInput.setAttribute("accept", "image/*");
-    fileInput.setAttribute("name", "file");
-    fileInput.setAttribute("multiple", "true");
-    fileInput.click();
-
-    fileInput.onchange = async (e) => {
-      const filesArray = [...e.target.files];
-
-      Promise.all(
-        filesArray.map((file, idx) => {
-          return new Promise((resolve) => {
-            const fileReader = new FileReader();
-            fileReader.onload = (e) => {
-              resolve({ file, dataUrl: e.target.result, seq: idx });
-            };
-            fileReader.readAsDataURL(file);
-          });
-        })
-      ).then((resolves) => {
-        resolves.map((resolve) => insertImageToEditor(resolve.dataUrl));
-        setImages((prev) => [...prev, ...resolves]);
-      });
-    };
-  };
-
-  //quill에 이미지 추가
-  const insertImageToEditor = (imageUrl) => {
-    const quill = quillRef.current?.getEditor();
-    if (!quill) return;
-    const range = quill.getSelection();
-    const index = range ? range.index : quill.getLength();
-    quill.insertEmbed(index, "image", imageUrl);
-    quill.setSelection(index + 1);
-  };
-
-  useEffect(() => {
-    console.log(images);
-  }, [images]);
 
   //selct 선택
   const handleSelectOnClick = (e, category) => {
@@ -136,35 +62,56 @@ const PostWrite = () => {
     setSelecteIsOpen(true);
   };
 
-  //제목 클릭
-  const handleTitleOnClick = (e) => {
-    titleInputRef.current?.focus();
-  };
-
   //저장 버튼
   const handleSubmitOnClick = async () => {
     if (!title.trim()) return alert("제목을 입력해주세요.");
     if (!content.trim() || content === "<p><br></p>")
       return alert("내용을 입력해주세요.");
 
-    const delta = quillRef.current.getEditor().root;
-    // const reqContent = delta.map((row) =>
-    //   !!row.insert.image ? dataURLtoFile(row.insert.image) : row
-    // );
-    console.log(delta);
-
     try {
-      // navigate("/board/free"); // 이전 페이지로 이동
+      const delta = quillRef.current.getEditor().getContents();
+      const imageUrls = delta
+        .filter((row) => !!row.insert.image)
+        .map((row) => SparkMD5.hash(row.insert.image));
+
+      const sortedImages = imageUrls.map((dataUrlHash, idx) => {
+        const foundImage = images.find(
+          (image) => SparkMD5.hash(image.dataUrl) === dataUrlHash
+        );
+
+        return {
+          ...foundImage,
+          seq: idx,
+        };
+      });
+
+      let reqContent;
+      let idx = 0;
+
+      if (/<img[^>]*>/.test(content)) {
+        reqContent = content.replace(/<img[^>]*>/g, (match) => {
+          const seqNum = sortedImages[idx].seq;
+          idx++;
+          return `[img-${seqNum}]`;
+        });
+      }
+
+      console.log(reqContent);
+      console.log(sortedImages);
+
+      const postReq = {
+        boardKey: selectedCategory.postCategoryKey,
+        title: title,
+        contents: reqContent,
+        img: sortedImages,
+      };
+
+      console.log(postReq);
     } catch (error) {
       console.error("Save Fail", error);
       alert("게시글 저장에 실패했습니다.");
     }
   };
-
-  useEffect(() => {
-    const content = quillRef.current.getEditor().getContents();
-    console.log(content);
-  }, [content]);
 
   return (
     <div css={s.postWriteLayout}>
@@ -193,7 +140,7 @@ const PostWrite = () => {
 
       <main css={s.main}>
         <div css={s.postContainer}>
-          <div css={s.title} onClick={handleTitleOnClick}>
+          <div css={s.title} onClick={() => titleInputRef.current?.focus()}>
             <input
               name="quillTitle"
               placeholder="제목을 입력하세요"
@@ -211,20 +158,14 @@ const PostWrite = () => {
               s.quillContainer,
               isFixed ? s.fixedQuillContainer : s.unfixedQuillContainer,
             ]}
+            onClick={() => quillRef.current?.focus()}
           >
-            <ReactQuill
-              ref={quillRef}
-              theme="snow"
-              value={content}
-              onChange={setContent}
-              modules={modules}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-              placeholder="내용을 작성해주세요..."
+            <QuillEditor
+              quillRef={quillRef}
+              content={content}
+              setContent={setContent}
+              setImages={setImages}
             />
-            <QuillEditor />
           </div>
         </div>
       </main>
