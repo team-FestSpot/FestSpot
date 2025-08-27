@@ -27,6 +27,7 @@ public class JwtFilter implements Filter {
 
   private final JwtUtil jwtUtil;
   private final UserMapper userMapper;
+  private final RoleMapper roleMapper;
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,

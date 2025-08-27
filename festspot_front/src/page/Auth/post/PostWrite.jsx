@@ -11,6 +11,7 @@ import usePostCategoryQuery from "../../../querys/post/usePostCategoryQuery";
 import QuillEditor from "../../../components/post/QuillEditor";
 import { v4 } from "uuid";
 import SparkMD5 from "spark-md5";
+import { reqPostRegister } from "../../../api/postApi";
 
 const PostWrite = () => {
   const navigate = useNavigate();
@@ -101,12 +102,14 @@ const PostWrite = () => {
 
       const postReq = {
         boardKey: selectedCategory.postCategoryKey,
-        title: title,
-        contents: reqContent,
-        img: sortedImages,
+        postTitle: title,
+        postContent: reqContent,
+        files: sortedImages.map((image) => image.file),
       };
 
       console.log(postReq);
+
+      reqPostRegister(postReq);
     } catch (error) {
       console.error("Save Fail", error);
       alert("게시글 저장에 실패했습니다.");
