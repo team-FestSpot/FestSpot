@@ -1,7 +1,6 @@
 package com.festspot.dev.dto.post;
 
 import com.festspot.dev.domain.post.Post;
-import com.festspot.dev.domain.postCategory.PostCategory;
 import com.festspot.dev.domain.user.User;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,16 +16,16 @@ public class PostRegisterReqDto {
 
   private List<MultipartFile> files;
 
-  public Post toPost(User user, PostCategory postCategory) {
+  public Post toPost(User user, Integer postCategoryId) {
     return Post.builder()
         .userId(user.getUserId())
+        .postCategoryId(postCategoryId)
         .postTitle(postTitle)
         .postContent(postContent)
         .viewCount(0)
         .likeCount(0)
         .commentCount(0)
         .createdAt(LocalDateTime.now())
-        .postCategory(postCategory)
         .build();
   }
 }

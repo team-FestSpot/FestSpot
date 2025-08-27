@@ -12,6 +12,7 @@ import QuillEditor from "../../../components/post/QuillEditor";
 import { v4 } from "uuid";
 import SparkMD5 from "spark-md5";
 import { reqPostRegister } from "../../../api/postApi";
+import Swal from "sweetalert2";
 
 const PostWrite = () => {
   const navigate = useNavigate();
@@ -97,9 +98,6 @@ const PostWrite = () => {
         });
       }
 
-      console.log(reqContent);
-      console.log(sortedImages);
-
       const postReq = {
         boardKey: selectedCategory.postCategoryKey,
         postTitle: title,
@@ -107,12 +105,15 @@ const PostWrite = () => {
         files: sortedImages.map((image) => image.file),
       };
 
-      console.log(postReq);
+      await reqPostRegister(postReq);
 
-      reqPostRegister(postReq);
+      navigate(`/board/${selectedCategory.postCategoryKey}`);
     } catch (error) {
-      console.error("Save Fail", error);
-      alert("게시글 저장에 실패했습니다.");
+      await Swal.fire({
+        title: "게시글 등록 실패",
+        text: `잠시 후 시도해 주세요`,
+        icon: "error",
+      });
     }
   };
 

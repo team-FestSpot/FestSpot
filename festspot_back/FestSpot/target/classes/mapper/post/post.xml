@@ -18,7 +18,6 @@
         <association property="user" resultMap="UserMap" />
         <association property="postCategory" resultMap="PostCategoryMap" />
         <collection property="postImgs" javaType="list" resultMap="PostImgMap" />
-        <collection property="postComments" javaType="list" resultMap="PostCommentMap" />
     </resultMap>
 
     <resultMap id="UserMap" type="com.festspot.dev.domain.user.User">
@@ -34,18 +33,6 @@
         <result property="postImgUrl" column="post_img_url" />
     </resultMap>
 
-    <resultMap id="PostCommentMap" type="com.festspot.dev.domain.post.PostComment">
-        <id property="postCommentId" column="post_comment_id" />
-        <result property="postId" column="post_id"/>
-        <result property="userId" column="user_id"/>
-        <result property="commentContent" column="comment_content"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="parentCommentId" column="parent_comment_id"/>
-        <result property="deletedAt" column="deleted_at"/>
-        <result property="updatedAt" column="updated_at"/>
-        <association property="user" resultMap="UserMap"/>
-    </resultMap>
-
     <resultMap id="PostCategoryMap" type="com.festspot.dev.domain.postCategory.PostCategory">
         <id property="postCategoryId" column="post_category_id" />
         <result property="postCategoryKey" column="post_category_key"/>
@@ -54,7 +41,7 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="postId">
         insert into post_tb
-        values (default, #{userId}, #{postTitle}, #{postContent}, #{allowComments}, now())
+        values (default, #{userId}, #{postCategoryId}, #{postTitle}, #{postContent}, #{viewCount}, #{likeCount}, #{commentCount}, now(), null)
     </insert>
 
     <update id="increaseViewCount">
@@ -84,12 +71,6 @@
             pit.post_img_url,
             pit.seq,
 
-            pct.post_comment_id,
-            pct.user_id,
-            pct.comment_content,
-            pct.created_at,
-            pct.parent_comment_id,
-
             pcat.post_category_id,
             pcat.post_category_key,
             pcat.post_category_name
@@ -97,7 +78,6 @@
             post_tb pt
             left outer join user_tb ut on(ut.user_id = pt.user_id)
             left outer join post_img_tb pit on(pit.post_id = pt.post_id)
-            left outer join post_comment_tb pct on(pct.post_id = pt.post_id)
             left outer join post_category_tb pcat on(pcat.post_category_id = pt.post_category_id)
         where
             pt.post_id = #{postId}
@@ -109,7 +89,6 @@
       from
         post_tb pt
         left outer join post_img_tb pit on (pt.post_id = pit.post_id)
-        left outer join post_comment_tb pcot on (pt.post_id = pcot.post_id)
         left outer join post_like_tb plt on (pt.post_id = plt.post_id)
         left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
       limit #{startIndex}, #{size}
@@ -128,7 +107,6 @@
         from
             post_tb pt
             left outer join post_img_tb pit on (pt.post_id = pit.post_id)
-            left outer join post_comment_tb pcot on (pt.post_id = pcot.post_id)
             left outer join post_like_tb plt on (pt.post_id = plt.post_id)
             left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
         where

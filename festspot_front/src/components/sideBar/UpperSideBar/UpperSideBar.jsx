@@ -14,6 +14,8 @@ function UpperSideBar(props) {
   const navigate = useNavigate();
   const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
 
+  const accessToken = localStorage.getItem("AccessToken");
+
   const handleMenuOnClick = () => {
     setOpenDetailMenus();
   };
@@ -54,11 +56,13 @@ function UpperSideBar(props) {
           </div>
         </div>
         <div css={s.actionSection}>
-          <div css={s.loginButtonContainer}>
-            <button css={s.loginButton} onClick={handleLoginOnClick}>
-              Login
-            </button>
-          </div>
+          {!!accessToken || (
+            <div css={s.loginButtonContainer}>
+              <button css={s.loginButton} onClick={handleLoginOnClick}>
+                Login
+              </button>
+            </div>
+          )}
           <div css={s.menuIconContainer}>
             <GiHamburgerMenu css={s.menuIcon} onClick={handleMenuOnClick} />
           </div>
