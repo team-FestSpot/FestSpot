@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { reqPosts } from "../../api/postApi";
+import { reqPostDetail, reqPosts } from "../../api/postApi";
 
-export const usePostsQuery = (boardKey, page) =>
+export const usePostsQuery = (boardKey, postId) =>
   useQuery({
-    queryKey: ["posts", boardKey, page],
-    queryFn: async () => await reqPosts(boardKey, page),
+    queryKey: ["posts", boardKey, postId],
+    queryFn: async () => await reqPostDetail(boardKey, postId),
     staleTime: 1000 * 10,
   });
