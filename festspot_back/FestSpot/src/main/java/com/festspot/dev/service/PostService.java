@@ -90,25 +90,30 @@ public class PostService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public int register(PostRegisterReqDto dto) {
+  public String register(PostRegisterReqDto dto) {
 
     Post post = dto.toPost(
         principalUtil.getPrincipal().getUser(),
-        postCategoryMapper.findeByCategoryKey(dto.getBoardKey())
+        postCategoryMapper.findeByCategoryKey(dto.getBoardKey()).getPostCategoryId()
     );
 
-    List<String> filePaths = dto.getFiles().stream()
-        .map(file -> fileService.uploadFile(file, "post")).toList();
-    postMapper.insert(post);
+    if (dto.getFiles() != null) {
 
-    AtomicInteger atomicInteger = new AtomicInteger(0);
-    List<PostImg> postImgs = filePaths.stream().map(filePath -> PostImg.builder()
-        .postId(post.getPostId())
-        .postImgUrl(filePath)
-        .seq(atomicInteger.getAndIncrement() + 1)
-        .build()).toList();
+      List<String> filePaths = dto.getFiles().stream()
+          .map(file -> fileService.uploadFile(file, "post")).toList();
+      postMapper.insert(post);
 
-    return postImgMapper.insert(postImgs);
+      AtomicInteger atomicInteger = new AtomicInteger(0);
+      List<PostImg> postImgs = filePaths.stream().map(filePath -> PostImg.builder()
+          .postId(post.getPostId())
+          .postImgUrl(filePath)
+          .seq(atomicInteger.getAndIncrement() + 1)
+          .build()).toList();
+
+      postImgMapper.insert(postImgs);
+    }
+
+    return "게시글 등록 완료";
   }
 
 }
