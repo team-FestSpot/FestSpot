@@ -6,6 +6,8 @@ import com.festspot.dev.domain.performance.performanceRegion.PerformanceRegion;
 import com.festspot.dev.domain.performance.performanceRegion.PerformanceRegionMapper;
 import com.festspot.dev.domain.performance.performanceState.PerformanceState;
 import com.festspot.dev.domain.performance.performanceState.PerformanceStateMapper;
+import com.festspot.dev.domain.role.Role;
+import com.festspot.dev.domain.role.RoleMapper;
 import com.festspot.dev.domain.ticketing.TicketingUrl;
 import com.festspot.dev.domain.ticketing.TicketingUrlMapper;
 import com.festspot.dev.domain.user.User;
@@ -18,11 +20,14 @@ import com.festspot.dev.dto.admin.AdminUserInfoModifyReqDto;
 import com.festspot.dev.dto.auth.TokenDto;
 import com.festspot.dev.dto.auth.UserLoginDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import com.festspot.dev.exception.auth.LoginException;
 import com.festspot.dev.security.jwt.JwtUtil;
+import com.festspot.dev.security.model.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,24 +43,16 @@ public class AdminService {
     private final TicketingUrlMapper ticketingUrlMapper;
     private final FileService fileService;
     private final UserMapper userMapper;
-    private final UserRoleMapper userRoleMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final PrincipalUtil principalUtil;
+    private final String ADMIN = "ROLE_ADMIN";
+  private final RoleMapper roleMapper;
 
-    // 관리자용 로그인 서비스
+  // 관리자용 로그인 서비스
     @Transactional(rollbackFor = Exception.class)
     public TokenDto adminLogin(UserLoginDto dto) {
         User foundUser = userMapper.findByUserLoginId(dto.getUserLoginId());
-        System.out.println(foundUser);
-
-        // 권한 확인해서 관리자 권한(ROLE_ADMIN) 없으면 예외 처리
-        // 필터에서 로그인 처리해서 안쓸듯?
-//        List<String> userRoleIds = userRoleMapper.findByUserId(foundUser.getUserId()).stream()
-//                .map(userRole -> userRole.getRole().getRoleName()).toList();
-//        System.out.println(userRoleIds);
-//        if (!userRoleIds.contains("ROLE_ADMIN")) {
-//            throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
-//        }
 
         if(foundUser == null) {
             throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
@@ -72,7 +69,6 @@ public class AdminService {
 
   @Transactional(rollbackFor = Exception.class)
   public int uploadPerformance(AdminUploadPerformanceReqDto dto) {
-    System.out.println(dto);
     if (performanceMapper.findByPerformanceApiId(dto.getMt20id()) != null) {
       return 0;
     }
@@ -121,9 +117,9 @@ public class AdminService {
 
   @Transactional(rollbackFor = Exception.class)
   public int uploadCustomPerformance(AdminUploadPerformanceReqDto dto, MultipartFile file) {
-    String newFileName = fileService.uploadFile(file, "/poster");
-    String url = "/upload/poster/" + newFileName;
-    dto.setPoster(url);
+    String newFileName = fileService.uploadFile(file, "poster");
+//    String url = "/upload/poster/" + newFileName;
+    dto.setPoster(newFileName);
     PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
         dto.getArea());
     PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
