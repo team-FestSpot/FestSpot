@@ -4,10 +4,12 @@ import * as s from "./styles";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Button from "@mui/material/Button";
+import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
 
 function AdminLeftSideBar(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const principalQuery = usePrincipalQuery();
   const menus = [
     {
       id: "dashboard",
@@ -40,6 +42,7 @@ function AdminLeftSideBar(props) {
       timerProgressBar: true,
     })
       .then(localStorage.clear())
+      .then(principalQuery.refetch())
       .then(navigate("/admin/login"));
   };
 

@@ -15,7 +15,7 @@ import { USER_PROFILE_IMG_PATH } from "../../../constants/userProfileImgPath";
 function UpperSideBar(props) {
   const navigate = useNavigate();
   const principalQuery = usePrincipalQuery();
-  const userInfo = principalQuery.data?.data?.body.user;
+  const userInfo = principalQuery.data?.data?.body?.user;
   const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
 
   const accessToken = localStorage.getItem("AccessToken");
@@ -36,7 +36,7 @@ function UpperSideBar(props) {
     navigate("/");
   };
 
-  console.log(`${USER_PROFILE_IMG_PATH}${userInfo.userProfileImgUrl}`);
+  // console.log(`${USER_PROFILE_IMG_PATH}${userInfo?.userProfileImgUrl}`);
 
   return (
     <div css={s.upperBarLayout}>
@@ -68,12 +68,12 @@ function UpperSideBar(props) {
                 <div css={s.profileContainer}>
                   <div css={s.profileImgContainer}>
                     <img
-                      src={`${USER_PROFILE_IMG_PATH}${userInfo.userProfileImgUrl}`}
+                      src={`${USER_PROFILE_IMG_PATH}${userInfo?.userProfileImgUrl}`}
                       alt=""
                     />
                   </div>
                   <div css={s.nicknameContainer}>
-                    <span>{userInfo.userNickName}</span>
+                    <span>{userInfo?.userNickName}</span>
                   </div>
                 </div>
               )}

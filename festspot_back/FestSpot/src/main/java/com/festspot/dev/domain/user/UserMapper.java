@@ -17,6 +17,8 @@ public interface UserMapper {
 
   int updateByUserId(User user);
 
+  int updateNicknameOrPassword(User user);
+
   int updateDeletedDateByUserId(Integer userId);
 
   // 프로필 사진 수정 시
