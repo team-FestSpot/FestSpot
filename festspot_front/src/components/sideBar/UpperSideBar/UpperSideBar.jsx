@@ -9,10 +9,16 @@ import useUpperSideBarStore from "../../../stores/upperSideBarStore";
 import festSpotLogo from "./UpperSideBarModal/img/FestSpotLogoImg.png";
 import festSpotLogoText from "./UpperSideBarModal/img/FestSpotLogoText.png";
 import { useNavigate } from "react-router-dom";
+import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
+import { USER_PROFILE_IMG_PATH } from "../../../constants/userProfileImgPath";
 
 function UpperSideBar(props) {
   const navigate = useNavigate();
+  const principalQuery = usePrincipalQuery();
+  const userInfo = principalQuery.data?.data?.body.user;
   const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
+
+  const accessToken = localStorage.getItem("AccessToken");
 
   const handleMenuOnClick = () => {
     setOpenDetailMenus();
@@ -29,6 +35,8 @@ function UpperSideBar(props) {
   const handleToHomeOnClick = (e) => {
     navigate("/");
   };
+
+  console.log(`${USER_PROFILE_IMG_PATH}${userInfo.userProfileImgUrl}`);
 
   return (
     <div css={s.upperBarLayout}>
@@ -54,11 +62,29 @@ function UpperSideBar(props) {
           </div>
         </div>
         <div css={s.actionSection}>
-          <div css={s.loginButtonContainer}>
-            <button css={s.loginButton} onClick={handleLoginOnClick}>
-              Login
-            </button>
-          </div>
+          {!!accessToken ? (
+            <>
+              {!!userInfo && (
+                <div css={s.profileContainer}>
+                  <div css={s.profileImgContainer}>
+                    <img
+                      src={`${USER_PROFILE_IMG_PATH}${userInfo.userProfileImgUrl}`}
+                      alt=""
+                    />
+                  </div>
+                  <div css={s.nicknameContainer}>
+                    <span>{userInfo.userNickName}</span>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div css={s.loginButtonContainer}>
+              <button css={s.loginButton} onClick={handleLoginOnClick}>
+                Login
+              </button>
+            </div>
+          )}
           <div css={s.menuIconContainer}>
             <GiHamburgerMenu css={s.menuIcon} onClick={handleMenuOnClick} />
           </div>

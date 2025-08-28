@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostDetailRespDto {
 
+  private Integer postCategoryId;
   private String postTitle;
   private String postContent;
   private Integer viewCount;

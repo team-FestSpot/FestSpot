@@ -19,6 +19,7 @@ public class Post {
 
   private Integer postId;
   private Integer userId;
+  private Integer postCategoryId;
   private String postTitle;
   private String postContent;
   private Integer viewCount;
@@ -33,6 +34,7 @@ public class Post {
 
   public PostDetailRespDto toRespDto(User user, List<PostImg> postImgs) {
     return PostDetailRespDto.builder()
+        .postCategoryId(postCategoryId)
         .postTitle(postTitle)
         .postContent(postContent)
         .viewCount(viewCount)

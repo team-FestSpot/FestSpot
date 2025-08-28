@@ -136,6 +136,22 @@ export const actionSection = css`
   gap: 16px;
 `;
 
+export const profileContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+`;
+
+export const profileImgContainer = css``;
+
+export const nicknameContainer = css``;
+
 export const loginButtonContainer = css`
   display: flex;
   justify-content: center;
