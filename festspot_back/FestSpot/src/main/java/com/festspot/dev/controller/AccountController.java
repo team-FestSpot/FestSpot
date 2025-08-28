@@ -3,6 +3,7 @@ package com.festspot.dev.controller;
 import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.security.model.PrincipalUser;
 import com.festspot.dev.service.AccountService;
+import com.festspot.dev.util.ImageUrlUtil;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountController {
 
   private final AccountService accountService;
+  private final ImageUrlUtil imageUrlUtil;
 
-    @GetMapping("/account/principal")
-    public ResponseEntity<?> principal(@AuthenticationPrincipal PrincipalUser principalUser) {
-        return ResponseEntity.ok(ResponseDto.success(principalUser));
-    }
+  @GetMapping("/account/principal")
+  public ResponseEntity<?> principal(@AuthenticationPrincipal PrincipalUser principalUser) {
+    return ResponseEntity.ok(
+        ResponseDto.success(principalUser));
+  }
 
   @PostMapping("/account/profile/img")
   public ResponseEntity<?> updateProfileImg(@AuthenticationPrincipal PrincipalUser principalUser,

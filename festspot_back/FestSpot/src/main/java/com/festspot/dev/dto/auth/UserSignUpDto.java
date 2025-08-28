@@ -25,7 +25,7 @@ public class UserSignUpDto {
         .userPassword(passwordEncoder.encode(userPassword))
         .userNickName(userNickName)
         .userEmail(userEmail)
-        .userProfileImgUrl("/profile/default.png")
+        .userProfileImgUrl("default.png")
         .build();
   }
 
