@@ -148,7 +148,15 @@ export const profileContainer = css`
   }
 `;
 
-export const profileImgContainer = css``;
+export const profileImgContainer = css`
+  width: 5rem;
+  height: auto;
+
+  & > img {
+    width: 100%;
+    height: auto;
+  }
+`;
 
 export const nicknameContainer = css``;
 

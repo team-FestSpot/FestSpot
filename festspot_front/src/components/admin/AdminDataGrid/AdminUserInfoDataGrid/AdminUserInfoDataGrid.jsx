@@ -42,19 +42,15 @@ function AdminUserInfoDataGrid(props) {
               src={
                 !!newProfileImgUrl
                   ? `${newProfileImgUrl}`
-                  : `${baseURL}${params.row.userProfileImgUrl}`
+                  : `${baseURL}/image/profile/${params.row.userProfileImgUrl}`
               }
-              width={"100%"}
-              height={"auto"}
             />
             <input type="file" onChange={handleProfileImgFileOnChange} />
           </div>
         ) : (
           <div css={s.modifyProfileImg}>
             <img
-              src={`${baseURL}${params.row.userProfileImgUrl}`}
-              width={"100%"}
-              height={"auto"}
+              src={`${baseURL}/image/profile/${params.row.userProfileImgUrl}`}
             />
           </div>
         ),

@@ -49,6 +49,33 @@
             user_id = #{userId}
     </update>
 
+    <update id="updateNicknameOrPassword">
+        update user_tb
+        <set>
+            <if test="userNickName != null">
+                user_nickname = #{userNickName},
+            </if>
+            <if test="userPassword != null">
+                user_password = #{userPassword},
+            </if>
+        </set>
+        where user_id = #{userId}
+        <if test="userNickName != null">
+            and (
+                user_nickname != #{userNickName}
+            or (user_nickname is null and #{userNickName} is not null)
+            or (user_nickname is not null and #{userNickName} is null)
+            )
+        </if>
+        <if test="userPassword != null">
+            and (
+                user_password != #{userPassword}
+            or (user_password is null and #{userPassword} is not null)
+            or (user_password is not null and #{userPassword} is null)
+            )
+        </if>
+    </update>
+
     <update id="updateDeletedDateByUserId">
         update
             user_tb
@@ -59,6 +86,8 @@
         and
             deleted_at is null
     </update>
+
+
 
     <select id="findByUserLoginId" resultType="com.festspot.dev.domain.user.User">
         select
