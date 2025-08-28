@@ -36,8 +36,6 @@ function UpperSideBar(props) {
     navigate("/");
   };
 
-  console.log(`${USER_PROFILE_IMG_PATH}${userInfo.userProfileImgUrl}`);
-
   return (
     <div css={s.upperBarLayout}>
       <div css={s.container}>

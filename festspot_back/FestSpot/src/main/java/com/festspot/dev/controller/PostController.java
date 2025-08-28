@@ -40,6 +40,7 @@ public class PostController {
     return ResponseEntity.ok(ResponseDto.success(postService.getPostsByCategory(
             PostSearchOption.builder()
                 .startIndex((page - 1) * size)
+                .endIndex((page - 1) * size + size)
                 .size(size)
                 .build(),
             boardKey

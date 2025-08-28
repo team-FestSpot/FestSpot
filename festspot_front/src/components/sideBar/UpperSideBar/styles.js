@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 
 export const upperBarLayout = css`
+  position: relative;
   width: 100%;
   height: 100%;
 `;
@@ -25,8 +26,8 @@ export const logoSection = css`
   margin: 0 0 0 1%;
   height: 100%;
   width: 6%;
-  flex-grow: 1;
   cursor: pointer;
+  z-index: 2;
 `;
 
 export const logo = css`
@@ -52,12 +53,12 @@ export const logoText = css`
 `;
 
 export const searchSection = css`
+  position: absolute;
   display: flex;
   justify-content: center;
   height: 100%;
-  width: 82%;
-
-  /* background-color: blue; */
+  width: 100%;
+  z-index: 1;
 `;
 
 export const searchContainer = css`
@@ -66,9 +67,10 @@ export const searchContainer = css`
   box-sizing: border-box;
   border: 1px solid #d1d5db;
   border-radius: 20px;
-  width: 40%;
-  height: 100%;
+  width: 30%;
+  height: 80%;
   padding: 0 0 0 2%;
+  transform: translateY(10%);
   background-color: #f9fafb;
 
   transition: all 0.2s ease;
@@ -78,13 +80,13 @@ export const searchContainer = css`
   }
 
   @media (max-width: 1440px) {
-    width: 50%;
+    width: 40%;
   }
   @media (max-width: 768px) {
-    width: 60%;
+    width: 50%;
   }
   @media (max-width: 480px) {
-    width: 80%;
+    width: 60%;
   }
 `;
 
@@ -97,6 +99,10 @@ export const searchInput = css`
   font-size: 1.4rem;
   outline: none;
   background-color: #f9fafb;
+
+  &:focus-within {
+    background-color: #ffffff;
+  }
 
   &::placeholder {
     color: #9ca3af;
@@ -129,11 +135,11 @@ export const actionSection = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
   height: 100%;
-  width: 6%;
+  width: 10%;
   margin: 0 1% 0 0;
   gap: 16px;
+  z-index: 2;
 `;
 
 export const profileContainer = css`
@@ -142,15 +148,33 @@ export const profileContainer = css`
   align-items: center;
   width: 100%;
   height: 100%;
+  gap: 0.4rem;
+  cursor: pointer;
 
   @media (max-width: 1024px) {
     display: none;
   }
 `;
 
-export const profileImgContainer = css``;
+export const profileImgContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  border: 1px solid #dbdbdb;
+  border-radius: 50%;
+  overflow: hidden;
 
-export const nicknameContainer = css``;
+  & > img {
+    height: 100%;
+  }
+`;
+
+export const nicknameContainer = css`
+  font-weight: 500;
+`;
 
 export const loginButtonContainer = css`
   display: flex;

@@ -9,12 +9,11 @@ export const sidebarContainer = css`
   row-gap: 0;
 `;
 
-export const boardNavButtons = css`
+export const boardBtnContainer = css`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  align-content: center;
   width: 50%;
   height: 100%;
   gap: 12px;

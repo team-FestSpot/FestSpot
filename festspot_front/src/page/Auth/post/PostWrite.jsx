@@ -96,6 +96,8 @@ const PostWrite = () => {
           idx++;
           return `[img-${seqNum}]`;
         });
+      } else {
+        reqContent = content;
       }
 
       const postReq = {
