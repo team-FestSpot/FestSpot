@@ -8,8 +8,8 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="postImgId">
         insert into post_img_tb
         values
-        <foreach collection="list" item="img" separator=",">
-            (default, #{img.seq}, #{img.postId}, #{img.postImgUrl})
+        <foreach item="img" collection="postImgs" separator=",">
+            (default, #{img.postId}, #{img.postImgUrl}, #{img.seq})
         </foreach>
     </insert>
   <select id="findByPostId" resultType="com.festspot.dev.domain.postImg.PostImg">
