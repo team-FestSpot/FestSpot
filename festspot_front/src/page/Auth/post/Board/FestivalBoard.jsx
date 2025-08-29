@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import { useAllPostsQuery } from "../../../../querys/post/useAllPostsQuery";
 import { usePostsQuery } from "../../../../querys/post/usePostsQuery";
-import { PAGE_SIZE } from "../../../../constants/boardPageSize";
 import PaginationBar from "../../../../components/PaginationBar/PaginationBar";
+import { FaHeart, FaRegHeart, FaRegEye } from "react-icons/fa";
 
 function FestivalBoard(props) {
   const location = useLocation();
@@ -42,16 +42,50 @@ function FestivalBoard(props) {
     }
   }, [response]);
 
+  console.log(postList);
+
+  const isLike = false;
+
   return (
     <>
       {!!postList && !!response && (
         <div css={s.boardLayout}>
           <div css={s.postContainer}>
             {postList.map((post, idx) => (
-              <Card key={idx}>{post.postTitle}</Card>
+              <Card key={idx}>
+                <div css={s.imageContainer}>
+                  {!!post.postImgs[0] && (
+                    <img
+                      src={post.postImgs[0].postImgUrl}
+                      alt="게시글 이미지"
+                    />
+                  )}
+                </div>
+                <div css={s.contentBox}>
+                  <div css={s.titleContainer}>{post.postTitle}</div>
+                  <div css={s.contentContainer}>
+                    <div css={s.userContainer}>
+                      <div css={s.profileImgContainer}>
+                        <img src={post.user.userProfileImgUrl} />
+                      </div>
+                      <div>{post.user.userNickName}</div>
+                    </div>
+                    <div css={s.countContainer}>
+                      <div>
+                        <FaRegEye />
+                        {post.viewCount}
+                      </div>
+                      <div>
+                        {isLike ? <FaHeart /> : <FaRegHeart />}
+                        {post.likeCount}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             ))}
           </div>
-          <div css={s.paginationContainer} style={{ height: "4rem" }}>
+          <div css={s.paginationContainer}>
             <PaginationBar
               totalPage={totalPage}
               searchParams={searchParams}

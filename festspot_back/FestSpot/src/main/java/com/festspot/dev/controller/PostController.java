@@ -1,9 +1,7 @@
 package com.festspot.dev.controller;
 
-import com.festspot.dev.domain.post.Post;
 import com.festspot.dev.domain.post.PostMapper;
 import com.festspot.dev.domain.post.PostSearchOption;
-import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostRegisterReqDto;
@@ -33,7 +31,8 @@ public class PostController {
 
     return ResponseEntity.ok(ResponseDto.success(
         postService.getAllPosts(PostSearchOption.builder()
-            .startIndex((page - 1) * size)
+            .startIndex((page - 1) * size + 1)
+            .endIndex((page - 1) * size + size)
             .size(size)
             .build()
         )
@@ -45,7 +44,7 @@ public class PostController {
       @RequestParam Integer page, @RequestParam Integer size) {
     return ResponseEntity.ok(ResponseDto.success(postService.getPostsByCategory(
             PostSearchOption.builder()
-                .startIndex((page - 1) * size)
+                .startIndex((page - 1) * size + 1)
                 .endIndex((page - 1) * size + size)
                 .size(size)
                 .build(),

@@ -67,8 +67,8 @@ function PaginationBar({ searchParams, setSearchParams, totalPage }) {
 
   const isCurrentPage = (index) =>
     page % count === 0 // page = 현재 페이지, count = 버튼 개수, 나머지 = 0 이다 -> 현재 페이지가 맨 끝에 있다
-      ? index === count - 1 // 마지막 index에서 불들어옴
-      : index === (page % count) - 1; // 나머지(현재 페이지 index)에 불 들어옴
+      ? index === count - 1 && index + startPage === page // 마지막 index에서 불들어옴
+      : index === (page % count) - 1 && index + startPage === page; // 나머지(현재 페이지 index)에 불 들어옴
 
   return (
     <div css={s.paginationBarLayout} ref={layoutRef}>
