@@ -9,7 +9,7 @@ public class ImageUrlUtil {
 
   private final AppProperties appProperties;
 
-  public String buildImageUrl(String imageName, String imageConfigName) {
+    public String buildImageUrl(String imageName, String imageConfigName) {
     if (imageConfigName == null) {
       return null;
     }
