@@ -161,3 +161,6 @@ $RECYCLE.BIN/
 
 #db secret
 application.yml
+
+# Maven build folder
+target/
