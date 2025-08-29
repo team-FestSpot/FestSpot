@@ -41,7 +41,9 @@ public class PostService {
   public PostsRespDto getAllPosts(PostSearchOption postSearchOption) {
     return PostsRespDto.builder()
         .postList(postMapper.findAll(postSearchOption))
-        .totalPage((int) Math.ceil(postMapper.countAll(postSearchOption)))
+        .totalPage(
+            (int) Math.ceil(postMapper.countAll(postSearchOption) / postSearchOption.getSize()))
+        .size(postSearchOption.getSize())
         .build();
 
   }
@@ -53,7 +55,9 @@ public class PostService {
 
     return PostsRespDto.builder()
         .postList(postMapper.findByCategoryId(postSearchOption))
-        .totalPage((int) Math.ceil(postMapper.countByCategoryId(postSearchOption)))
+        .totalPage((int) Math.ceil(
+            postMapper.countByCategoryId(postSearchOption) / postSearchOption.getSize()))
+        .size(postSearchOption.getSize())
         .build();
   }
 
@@ -89,11 +93,11 @@ public class PostService {
         postCategoryMapper.findeByCategoryKey(dto.getBoardKey()).getPostCategoryId()
     );
 
-    if (dto.getFiles() != null) {
+    postMapper.insert(post);
 
+    if (dto.getFiles() != null) {
       List<String> filePaths = dto.getFiles().stream()
           .map(file -> fileService.uploadFile(file, "post")).toList();
-      postMapper.insert(post);
 
       AtomicInteger atomicInteger = new AtomicInteger(0);
       List<PostImg> postImgs = filePaths.stream().map(filePath -> PostImg.builder()

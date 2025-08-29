@@ -2,18 +2,11 @@
 import { useLocation, useSearchParams } from "react-router-dom";
 import * as s from "./styles";
 import React, { useEffect, useState } from "react";
-import {
-  MdMessage,
-  MdOutlineRateReview,
-  MdOutlineFestival,
-} from "react-icons/md";
-import { IoTicketOutline } from "react-icons/io5";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import ReactPaginate from "react-paginate";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import { useAllPostsQuery } from "../../../../querys/post/useAllPostsQuery";
 import { usePostsQuery } from "../../../../querys/post/usePostsQuery";
+import { PAGE_SIZE } from "../../../../constants/boardPageSize";
+import PaginationBar from "../../../../components/PaginationBar/PaginationBar";
 
 function FestivalBoard(props) {
   const location = useLocation();
@@ -51,13 +44,22 @@ function FestivalBoard(props) {
 
   return (
     <>
-      {!!postList && postList.map((post) => <Card>{post.postTitle}</Card>)}
-      <ReactPaginate
-        previousLabel={"이전"}
-        nextLabel={"다음"}
-        breakLabel={"..."}
-        pageCount={!!totalPage && totalPage}
-      />
+      {!!postList && !!response && (
+        <div css={s.boardLayout}>
+          <div css={s.postContainer}>
+            {postList.map((post, idx) => (
+              <Card key={idx}>{post.postTitle}</Card>
+            ))}
+          </div>
+          <div css={s.paginationContainer} style={{ height: "4rem" }}>
+            <PaginationBar
+              totalPage={totalPage}
+              searchParams={searchParams}
+              setSearchParams={setSearchParams}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -24,5 +24,9 @@ export const global = css`
 
   #root {
     font-size: 1.4rem;
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
