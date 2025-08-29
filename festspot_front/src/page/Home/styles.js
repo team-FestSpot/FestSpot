@@ -2,21 +2,22 @@ import { css } from "@emotion/react";
 
 export const homeLayout = css`
   display: flex;
+  width: 100%;
+  height: 95%;
 
   @media (max-width: 1024px) {
     flex-direction: column;
   }
-
-  width: 100%;
-  height: 95%;
 `;
 
 export const homeLeftSide = css`
   height: 100%;
   box-sizing: border-box;
+  border-top: 1px solid #dbdbdb;
+  border-bottom: 1px solid #dbdbdb;
   width: 45%;
   margin: 0;
-  padding-right: 10px;
+  margin-right: 10px;
 
   @media (max-width: 1024px) {
     width: 100%;

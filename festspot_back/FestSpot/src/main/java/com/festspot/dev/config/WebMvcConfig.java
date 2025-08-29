@@ -13,24 +13,24 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${user.dir}")
-    private String rootPath;
+  @Value("${user.dir}")
+  private String rootPath;
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        final String uploadPath = rootPath + "/upload";
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    final String uploadPath = rootPath + "/upload";
 
-        registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:///" + uploadPath)
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver() {
-                    @Override
-                    protected Resource getResource(String resourcePath, Resource location)
-                            throws IOException {
-                        resourcePath = URLDecoder.decode(resourcePath, StandardCharsets.UTF_8);
-                        return super.getResource(resourcePath, location);
-                    }
-                });
-        WebMvcConfigurer.super.addResourceHandlers(registry);
-    }
+    registry.addResourceHandler("/image/**")
+        .addResourceLocations("file:///" + uploadPath)
+        .resourceChain(true)
+        .addResolver(new PathResourceResolver() {
+          @Override
+          protected Resource getResource(String resourcePath, Resource location)
+              throws IOException {
+            resourcePath = URLDecoder.decode(resourcePath, StandardCharsets.UTF_8);
+            return super.getResource(resourcePath, location);
+          }
+        });
+    WebMvcConfigurer.super.addResourceHandlers(registry);
+  }
 }

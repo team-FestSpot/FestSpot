@@ -45,7 +45,7 @@ function PostSideBar() {
   return (
     <div css={s.sidebarContainer}>
       {/* 게시판 네비게이션 */}
-      <div css={s.boardNavButtons}>
+      <div css={s.boardBtnContainer}>
         {boards.map((board) => {
           return (
             <button

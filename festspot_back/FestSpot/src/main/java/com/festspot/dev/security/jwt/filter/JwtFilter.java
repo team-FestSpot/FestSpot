@@ -1,8 +1,8 @@
 package com.festspot.dev.security.jwt.filter;
 
-import com.festspot.dev.domain.role.RoleMapper;
 import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
+import com.festspot.dev.exception.auth.BadUserInfoException;
 import com.festspot.dev.security.jwt.JwtUtil;
 import com.festspot.dev.security.model.PrincipalUser;
 import io.jsonwebtoken.Claims;
@@ -13,8 +13,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +25,6 @@ public class JwtFilter implements Filter {
 
   private final JwtUtil jwtUtil;
   private final UserMapper userMapper;
-  private final RoleMapper roleMapper;
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
@@ -61,9 +58,9 @@ public class JwtFilter implements Filter {
     Integer userId = (Integer) claims.get("userId");
     User foundUser = userMapper.findByUserId(userId);
     if (foundUser == null) {
-      return;
+      throw new BadUserInfoException("logout", "잘못된 인증입니다.");
     }
-    
+
     PrincipalUser principal = PrincipalUser.builder().user(foundUser).build();
     Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "",
         principal.getAuthorities());

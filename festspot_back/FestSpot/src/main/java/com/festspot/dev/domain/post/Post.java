@@ -6,6 +6,9 @@ import com.festspot.dev.domain.user.User;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.festspot.dev.dto.post.PostImgRespDto;
+import com.festspot.dev.util.ImageUrlUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,9 +33,10 @@ public class Post {
 
   private User user;
   private PostCategory postCategory;
+  private List<PostComment> postComments;
   private List<PostImg> postImgs;
 
-  public PostDetailRespDto toRespDto(User user, List<PostImg> postImgs) {
+  public PostDetailRespDto toRespDto(User user, ImageUrlUtil imageUrlUtil) {
     return PostDetailRespDto.builder()
         .postCategoryId(postCategoryId)
         .postTitle(postTitle)
@@ -43,7 +47,7 @@ public class Post {
         .createdAt(createdAt)
         .updatedAt(updatedAt)
         .user(user)
-        .postImgs(postImgs)
+        .postImgs(postImgs.stream().map(postImg -> postImg.toRespDto(imageUrlUtil)).toList())
         .build();
   }
 }
