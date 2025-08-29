@@ -117,7 +117,7 @@ function Login(props) {
       console.log(error);
 
       await Swal.fire({
-        title: "회원가입 실패",
+        title: "로그인 실패",
         html: `${errorText}`,
         icon: "error",
       });

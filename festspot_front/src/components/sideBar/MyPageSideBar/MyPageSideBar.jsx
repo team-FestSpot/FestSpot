@@ -8,7 +8,7 @@ function MyPageSideBar(props) {
     <div css={s.menusContainer}>
       <ul>
         <li>
-          <Link to={"/mypage/"}>마이페이지 메인</Link>
+          <Link to={"/mypage"}>마이페이지 메인</Link>
         </li>
         <li>
           <Link to={"/mypage/info"}>정보 수정</Link>

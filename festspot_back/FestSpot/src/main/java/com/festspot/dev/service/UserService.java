@@ -4,6 +4,7 @@ import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.dto.user.UserInfoModifyReqDto;
 import com.festspot.dev.dto.user.UserProfileImgModifyReqDto;
+import com.festspot.dev.security.model.PrincipalUser;
 import com.festspot.dev.security.model.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,26 +52,54 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public String updateUserInfo (UserInfoModifyReqDto dto) {
         System.out.println(dto);
-        User foundUser = userMapper.findByUserId(dto.getUserId());
-        boolean isCorrect = passwordEncoder.matches(dto.getUserCurrentPassword(),
-                foundUser.getUserPassword());
-        boolean isDuplicated = passwordEncoder.matches(dto.getUserNewPassword(),
-                foundUser.getUserPassword());
+        User principalUser =  principalUtil.getPrincipal().getUser();
+        User foundUser = userMapper.findByUserId(principalUser.getUserId());
+        String userPassword = userMapper.findPasswordByUserId(principalUser.getUserId());
 
+        boolean isNicknameDuplicated = dto.getUserNickName().equals(foundUser.getUserNickName());
+        boolean isCurrentPasswordCorrect = passwordEncoder.matches(dto.getUserCurrentPassword(),
+                userPassword); // 기존 비밀번호 일치 여부 확인 (비밀번호 입력 안했으면 안씀)
+        boolean isNewPasswordDuplicated = passwordEncoder.matches(dto.getUserNewPassword(),
+                userPassword); // 새 비밀번호가 기존 비밀번호와 같은지(중복인지) 확인 (비밀번호 입력 안했으면 안씀)
+
+        // 비밀번호 입력 안함 + 닉네임 빈칸으로 수정버튼 누름
         if(dto.getUserNewPassword().isEmpty() &&
-            dto.getUserNickName().equals(foundUser.getUserNickName())) {
-            return "입력한 닉네임이 기존 닉네임과 동일합니다.";
+            dto.getUserCurrentPassword().isEmpty() &&
+            dto.getUserNickName().isEmpty()) {
+            return "빈 값은 입력할 수 없습니다.";
         }
 
-        if(!isCorrect) {
+        // 비밀번호 입력 안함 + 입력한 새 닉네임이 db의 기존 닉네임과 동일함(중복됨)
+        else if(dto.getUserNewPassword().isEmpty() && isNicknameDuplicated
+            ) {
+            return "변경 사항이 없습니다.";
+        }
+
+        // 입력한 기존 비밀번호가 db에 저장된 기존 비밀번호와 일치하지 않음
+        else if(!dto.getUserCurrentPassword().isEmpty() && !isCurrentPasswordCorrect) {
             return "기존 비밀번호가 일치하지 않습니다.";
         }
 
-        if(!dto.getUserNewPassword().isEmpty() && isDuplicated) {
+        // 입력한 새 비밀번호가 db에 저장된 기존 비밀번호와 같음(중복됨)
+        else if(!dto.getUserNewPassword().isEmpty() && isNewPasswordDuplicated) {
             return "기존 비밀번호와 새 비밀번호가 동일합니다.";
         }
 
-        userMapper.updateNicknameOrPassword(dto.toEntity(passwordEncoder.encode(dto.getUserNewPassword())));
-        return "사용자 정보가 정상적으로 변경되었습니다.";
+        else {
+            // 비밀번호 입력 안 했으면(닉네임만 변경하면) null, 값 있으면(비밀번호만 또는 닉네임이랑 비밀번호 둘 다 변경하면) 암호화해서 넣음
+            String encodedPassword = !dto.getUserNewPassword().trim().isEmpty()
+                    ? passwordEncoder.encode(dto.getUserNewPassword())
+                    : null;
+            User newUserInfo = dto.toEntity(encodedPassword);
+            newUserInfo.setUserId(principalUser.getUserId());
+            newUserInfo.setUserPassword(encodedPassword);
+
+            if(newUserInfo.getUserNickName().equals(foundUser.getUserNickName())) {
+                newUserInfo.setUserNickName(null);
+            }
+            System.out.println(newUserInfo);
+            userMapper.updateNicknameOrPassword(newUserInfo);
+            return "사용자 정보가 정상적으로 변경되었습니다.";
+        }
     }
 }

@@ -17,7 +17,7 @@ import Swal from "sweetalert2";
 
 function MyPageModifyUserInfo(props) {
   const principalQuery = usePrincipalQuery();
-  const userInfo = principalQuery.data?.data?.body.user;
+  const userInfo = principalQuery.data?.data?.body?.user;
   const imageInputRef = useRef();
   const [profileImg, setProfileImg] = useState({});
   const [profileImgUrl, setProfileImgUrl] = useState("");
@@ -41,29 +41,64 @@ function MyPageModifyUserInfo(props) {
     userNewPasswordCheck: "",
   });
 
+  // 현재 비밀번호, 새 비밀번호, 비밀번호 확인이 전부 빈 값이면 true, 아니면 false
+  const allEmpty = [
+    inputValues.userCurrentPassword,
+    inputValues.userNewPassword,
+    inputValues.userNewPasswordCheck,
+  ].every((v) => v === "");
+
+  // 현재 비밀번호, 새 비밀번호, 비밀번호 확인이 전부 채워졌으면 true, 아니면 false
+  const allFilled = [
+    inputValues.userCurrentPassword,
+    inputValues.userNewPassword,
+    inputValues.userNewPasswordCheck,
+  ].every((v) => v !== "");
+
+  // 현재 비밀번호, 새 비밀번호, 비밀번호 확인이 전부 유효성 검사를 통과했으면 true, 아니면 false
+  const noErrors = [
+    errorMessage.userCurrentPassword,
+    errorMessage.userNewPassword,
+    errorMessage.userNewPasswordCheck,
+  ].every((v) => v === false);
+
   // 입력창 매개변수 목록
-  const columns = [
-    {
-      name: "userNickName",
-      type: "text",
-      placeholder: "닉네임",
-    },
-    {
-      name: "userCurrentPassword",
-      type: "password",
-      placeholder: "현재 비밀번호",
-    },
-    {
-      name: "userNewPassword",
-      type: "password",
-      placeholder: "새 비밀번호",
-    },
-    {
-      name: "userNewPasswordCheck",
-      type: "password",
-      placeholder: "새 비밀번호 확인",
-    },
-  ];
+  const columns =
+    userInfo?.provider === null // 간편 로그인 사용자면 닉네임만, 아니면 비밀번호까지
+      ? [
+          {
+            name: "userNickName",
+            type: "text",
+            title: "닉네임",
+            placeholder: "닉네임",
+          },
+          {
+            name: "userCurrentPassword",
+            type: "password",
+            title: "현재 비밀번호",
+            placeholder: "비밀번호 변경 시 입력",
+          },
+          {
+            name: "userNewPassword",
+            type: "password",
+            title: "새 비밀번호",
+            placeholder: "새 비밀번호",
+          },
+          {
+            name: "userNewPasswordCheck",
+            type: "password",
+            title: "새 비밀번호 확인",
+            placeholder: "새 비밀번호 확인",
+          },
+        ]
+      : [
+          {
+            name: "userNickName",
+            type: "text",
+            title: "닉네임",
+            placeholder: "닉네임",
+          },
+        ];
 
   // 이미지 업로드 버튼 클릭하면 input file 누르게 함
   const handleImageInputButtonOnClick = () => {
@@ -96,6 +131,7 @@ function MyPageModifyUserInfo(props) {
         timer: 1500,
       });
       setProfileImg({});
+      await principalQuery.refetch();
     } else {
       Swal.fire({
         icon: "error",
@@ -140,65 +176,62 @@ function MyPageModifyUserInfo(props) {
     }
   };
 
-  // 입력값이 정규식 조건에 안 맞으면(helpText true면) 오류메시지(errorMessage에 저장된 값) 뜨게 함.
-  // useEffect(() => {
-  // const isEmptyValue = !!Object.values(inputValues).filter(
-  //   (value) => !value.trim()
-  // ).length;
-  //   const isError = !!Object.values(errorMessage).filter((value) => !!value)
-  //     .length;
-  //   setButtonDisabled(isError);
-
-  //   const errorEntries = Object.entries(errorMessage);
-  //   errorEntries.forEach(([key, value]) => {
-  //     setHelpText((prev) => ({
-  //       ...prev,
-  //       [key]: !value ? "" : MODIFY_REGEX_ERROR_MESSAGE[key],
-  //     }));
-  //   });
-  // }, [errorMessage]);
-
   useEffect(() => {
-    const { userCurrentPassword, userNewPassword, userNewPasswordCheck } =
-      inputValues;
-    const {
-      userCurrentPassword: errCur,
-      userNewPassword: errNew,
-      userNewPasswordCheck: errCheck,
-    } = errorMessage;
+    console.log(inputValues);
+    // 현재 비밀번호, 새 비밀번호, 비밀번호 확인 중 아무것도 입력하지 않았으면 오류 메시지를 표시하지 않음
+    if (allEmpty) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        userCurrentPassword: false,
+        userNewPassword: false,
+        userNewPasswordCheck: false,
+      }));
+    }
+  }, [inputValues]);
 
-    // 현재 비밀번호, 새 비밀번호, 비밀번호 확인이 전부 빈 값인지 확인
-    const allEmpty = [
-      userCurrentPassword,
-      userNewPassword,
-      userNewPasswordCheck,
-    ].every((v) => v === "");
-
-    // 현재 비밀번호, 새 비밀번호, 비밀번호 확인이 전부 채워졌는지 확인
-    const allFilled = [
-      userCurrentPassword,
-      userNewPassword,
-      userNewPasswordCheck,
-    ].every((v) => v !== "");
-
-    // 현재 비밀번호, 새 비밀번호, 비밀번호 확인이 전부 유효성 검사를 통과했는지 확인
-    const noErrors = [errCur, errNew, errCheck].every((v) => v === false);
-
+  // 입력값이 정규식 조건에 안 맞으면(errorMessage true면) 오류메시지(helpText에 저장된 값) 뜨게 함.
+  useEffect(() => {
     // 현재 비밀번호, 새 비밀번호, 비밀번호 확인이 전부 빈 값이거나, 전부 채워졌으면서 셋 다 유효성 검사를 통과했으면 버튼 활성화
     if (allEmpty || (allFilled && noErrors)) {
       setButtonDisabled(false); // 활성화
     } else {
       setButtonDisabled(true); // 비활성화
     }
-  }, [inputValues, errorMessage]);
+
+    const errorEntries = Object.entries(errorMessage);
+    errorEntries.forEach(([key, value]) => {
+      setHelpText((prev) => ({
+        ...prev,
+        [key]: !value ? "" : MODIFY_REGEX_ERROR_MESSAGE[key],
+      }));
+    });
+  }, [errorMessage]);
 
   // 수정 버튼은 입력창이 비어있지 않고 모든 유효성 검사를 통과해야 활성화됨
   // 이미지 제외한 나머지 (닉네임 또는 비밀번호 또는 둘다) 수정 요청
   const handleModifyButtonOnClick = async () => {
-    let inputData = { ...inputValues };
-    inputData.userId = userInfo?.userId;
-    const response = await reqModifyUserInfo(inputData);
-    console.log(response);
+    const response = await reqModifyUserInfo(inputValues);
+    if (response?.data?.body === "사용자 정보가 정상적으로 변경되었습니다.") {
+      Swal.fire({
+        icon: "success",
+        title: response.data.body,
+        timer: 1500,
+      });
+      setInputValues({
+        userNickName: userInfo?.userNickName,
+        userCurrentPassword: "",
+        userNewPassword: "",
+        userNewPasswordCheck: "",
+      });
+      await principalQuery.refetch();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: response.data.body,
+        timer: 1500,
+      });
+      setInputValues({ ...inputValues });
+    }
   };
 
   // 정보 수정 화면 처음 들어오거나 새로고침했을 때 닉네임 입력창에 principal에서 기존 닉네임 꺼내서 기본값으로 들어가게 함
@@ -244,10 +277,10 @@ function MyPageModifyUserInfo(props) {
         </div>
       </div>
       <div css={s.inputsContainer}>
-        {columns.map((column) => (
-          <div css={s.inputContainer}>
+        {columns.map((column, index) => (
+          <div key={index} css={s.inputContainer}>
             <div css={s.inputPlaceholderContainer}>
-              <h4>{column.placeholder}</h4>
+              <h4>{column.title}</h4>
             </div>
             <div css={s.textFieldContainer}>
               <TextField

@@ -13,6 +13,8 @@ public interface UserMapper {
 
   User findByUserId(Integer userId);
 
+  String findPasswordByUserId(Integer userId);
+
   List<User> findAllUsers();
 
   int updateByUserId(User user);
