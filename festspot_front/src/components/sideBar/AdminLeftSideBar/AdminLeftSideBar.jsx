@@ -4,10 +4,13 @@ import * as s from "./styles";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Button from "@mui/material/Button";
+import { useQueryClient } from "@tanstack/react-query";
 
 function AdminLeftSideBar(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const menus = [
     {
       id: "dashboard",
@@ -40,6 +43,7 @@ function AdminLeftSideBar(props) {
       timerProgressBar: true,
     })
       .then(localStorage.clear())
+      .then(queryClient.invalidateQueries("pricipal"))
       .then(navigate("/admin/login"));
   };
 

@@ -104,41 +104,41 @@
 
     <select id="findByCategoryId" resultMap="PostMap">
         select
-        *
+            *
         from (
-        select
-        dense_rank() over(order by pt.created_at desc, pt.post_id desc) as post_number,
-        pt.post_id,
-        pt.user_id,
-        pt.post_category_id,
-        pt.post_title,
-        pt.post_content,
-        pt.view_count,
-        pt.comment_count,
-        pt.created_at,
-        pt.updated_at,
+            select
+                dense_rank() over(order by pt.created_at desc, pt.post_id desc) as post_number,
+                pt.post_id,
+                pt.user_id,
+                pt.post_category_id,
+                pt.post_title,
+                pt.post_content,
+                pt.view_count,
+                pt.comment_count,
+                pt.created_at,
+                pt.updated_at,
 
-        ut.user_id as ut_user_id,
-        ut.user_nickname,
-        ut.user_profile_img_url,
+                ut.user_id as ut_user_id,
+                ut.user_nickname,
+                ut.user_profile_img_url,
 
-        pcat.post_category_id as pcat_post_category_id,
-        pcat.post_category_key,
-        pcat.post_category_name,
+                pcat.post_category_id as pcat_post_category_id,
+                pcat.post_category_key,
+                pcat.post_category_name,
 
-        pit.seq,
-        pit.post_id as pit_post_it,
-        pit.post_img_url
-        from
-        post_tb pt
-        left outer join user_tb ut on (ut.user_id = pt.user_id)
-        left outer join post_img_tb pit on (pt.post_id = pit.post_id)
-        left outer join post_like_tb plt on (pt.post_id = plt.post_id)
-        left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
-        ) post
+                pit.seq,
+                pit.post_id as pit_post_it,
+                pit.post_img_url
+            from
+                post_tb pt
+                left outer join user_tb ut on (ut.user_id = pt.user_id)
+                left outer join post_img_tb pit on (pt.post_id = pit.post_id)
+                left outer join post_like_tb plt on (pt.post_id = plt.post_id)
+                left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
+            ) post
         where
-        post_category_id = #{categoryId} and
-        post_number between #{startIndex} and #{endIndex};
+            post_category_id = #{categoryId} and
+            post_number between #{startIndex} and #{endIndex};
     </select>
 
     <select id="countByCategoryId" resultType="java.lang.Double">
