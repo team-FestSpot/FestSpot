@@ -11,7 +11,7 @@ export const paginationBarLayout = css`
   gap: 0.4rem;
 `;
 
-export const paginationButton = css`
+export const paginationButton = (isVisible) => css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,7 +23,9 @@ export const paginationButton = css`
   border-radius: 10%;
   background-color: white;
   color: #e55a42;
-  cursor: pointer;
+
+  cursor: ${isVisible ? "pointer" : "default"};
+  opacity: ${isVisible ? 1 : 0};
 
   &:hover {
     background-color: #fcebe8;
@@ -39,7 +41,7 @@ export const paginationNumContainer = (gap) => css`
   gap: ${gap};
 `;
 
-export const paginationNum = (isCurrentPage) => css`
+export const paginationNum = (isCurrentPage, isVisible) => css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,7 +53,9 @@ export const paginationNum = (isCurrentPage) => css`
   border-radius: 10%;
   background-color: ${isCurrentPage ? "#e55a42" : "white"};
   color: ${isCurrentPage ? "white" : "#e55a42"};
-  cursor: pointer;
+
+  cursor: ${isVisible ? "pointer" : "default"};
+  opacity: ${isVisible ? 1 : 0};
 
   &:hover {
     background-color: #fcebe8;
