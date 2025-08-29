@@ -5,6 +5,7 @@ import UpperSideBar from "../../sideBar/UpperSideBar/UpperSideBar";
 import * as s from "./styles";
 import React, { useEffect, useRef, useState } from "react";
 import { useFixQuillToolBarStore } from "../../../stores/useFixQuillToolBarStore";
+import PerformanceSideBar from "../../sideBar/PerformanceSideBar/PerformanceSideBar";
 
 function MainLayout({ children }) {
   const location = useLocation();
@@ -45,11 +46,16 @@ function MainLayout({ children }) {
       <div css={s.upperSideBar}>
         <UpperSideBar />
       </div>
-      {hidePostSideBar || (
-        <div css={s.postSideBar}>
-          <PostSideBar />
-        </div>
-      )}
+      {hidePostSideBar ||
+        (location.pathname.startsWith("/performance") ? (
+          <div css={s.postSideBar}>
+            <PerformanceSideBar />
+          </div>
+        ) : (
+          <div css={s.postSideBar}>
+            <PostSideBar />
+          </div>
+        ))}
       <div css={s.container}>
         <div css={s.children} ref={scrollRef}>
           {children}
