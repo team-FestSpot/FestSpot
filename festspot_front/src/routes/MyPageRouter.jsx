@@ -1,10 +1,20 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import MyPageModifyUserInfo from "../page/myPage/ModifyUserInfo/myPageModifyUserInfo";
 import MyPageMain from "../page/myPage/MyPageMain/MyPageMain";
 import MyPageUserInfo from "../page/myPage/UserInfo/MyPageUserInfo";
+import usePrincipalQuery from "../querys/auth/usePrincipalQuery";
 
 function MyPageRouter(props) {
+  const principalQuery = usePrincipalQuery();
+  const principal = principalQuery?.data?.data?.body;
+
+  if (principalQuery.isFetched) {
+    if (!principal?.authorities || principal?.authorities?.length < 1) {
+      return <Navigate to={"/auth/login"} />;
+    }
+  }
+
   return (
     <MyPageMain>
       <Routes>

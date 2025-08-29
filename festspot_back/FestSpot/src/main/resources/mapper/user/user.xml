@@ -60,19 +60,8 @@
             </if>
         </set>
         where user_id = #{userId}
-        <if test="userNickName != null">
-            and (
-                user_nickname != #{userNickName}
-            or (user_nickname is null and #{userNickName} is not null)
-            or (user_nickname is not null and #{userNickName} is null)
-            )
-        </if>
-        <if test="userPassword != null">
-            and (
-                user_password != #{userPassword}
-            or (user_password is null and #{userPassword} is not null)
-            or (user_password is not null and #{userPassword} is null)
-            )
+        <if test="userNickName == null and userPassword == null">
+            and 1=0
         </if>
     </update>
 
@@ -144,4 +133,12 @@
             left outer join role_tb rt on (urt.role_id = rt.role_id)
     </select>
 
+    <select id="findPasswordByUserId" resultType="java.lang.String">
+        select
+            user_password
+        from
+            user_tb
+        where
+            user_id = #{userid}
+    </select>
 </mapper>
