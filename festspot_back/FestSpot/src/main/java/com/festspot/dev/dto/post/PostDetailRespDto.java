@@ -26,6 +26,5 @@ public class PostDetailRespDto {
   private LocalDateTime updatedAt;
 
   private User user;
-  private List<PostImg> postImgs;
-  private List<PostComment> postComments;
+  private List<PostImgRespDto> postImgs;
 }

@@ -9,7 +9,9 @@ public interface PostMapper {
 
   int insert(Post post);
 
-  Post findByPostId(@Param("postId") Integer postId, @Param("userId") Integer userId);
+  Post findByPostId(@Param("postId") Integer postId);
+
+  Post findByOption(@Param("postCategoryId") Integer postCategoryId, @Param("postId") Integer postId, @Param("userId") Integer userId);
 
   List<Post> findAll(PostSearchOption postSearchOption);
 
