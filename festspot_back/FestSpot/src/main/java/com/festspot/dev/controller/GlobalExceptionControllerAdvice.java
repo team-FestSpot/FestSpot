@@ -3,6 +3,7 @@ package com.festspot.dev.controller;
 import com.festspot.dev.dto.error.FileErrorDto;
 import com.festspot.dev.dto.error.SimpleErrorDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
+import com.festspot.dev.exception.auth.BadUserInfoException;
 import com.festspot.dev.exception.auth.FileStoreException;
 import com.festspot.dev.exception.auth.LoginException;
 import java.util.Map;
@@ -47,5 +48,11 @@ public class GlobalExceptionControllerAdvice {
   public ResponseEntity<ResponseDto<FileErrorDto>> fileError(FileStoreException e) {
     return ResponseEntity.badRequest()
         .body(ResponseDto.fail(HttpStatus.BAD_REQUEST, "잘못된 파일 형식", e.getFileErrorDto()));
+  }
+
+  @ExceptionHandler(BadUserInfoException.class)
+  public ResponseEntity<ResponseDto<?>> badUserInfoError(BadUserInfoException e) {
+    return ResponseEntity.badRequest()
+        .body(ResponseDto.fail(HttpStatus.UNAUTHORIZED, "잘못된 인증", e.getMessage()));
   }
 }

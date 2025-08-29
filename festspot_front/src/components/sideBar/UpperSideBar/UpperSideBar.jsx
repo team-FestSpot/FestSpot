@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import * as s from "./styles";
@@ -11,9 +11,12 @@ import festSpotLogoText from "./UpperSideBarModal/img/FestSpotLogoText.png";
 import { useNavigate } from "react-router-dom";
 import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
 import { USER_PROFILE_IMG_PATH } from "../../../constants/userProfileImgPath";
+import Swal from "sweetalert2";
+import { useQueryClient } from "@tanstack/react-query";
 
 function UpperSideBar(props) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
   const userInfo = principalQuery.data?.data?.body?.user;
   const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
@@ -36,7 +39,18 @@ function UpperSideBar(props) {
     navigate("/");
   };
 
-  // console.log(`${USER_PROFILE_IMG_PATH}${userInfo?.userProfileImgUrl}`);
+  const badUserInfo = () => {
+    Swal.fire({
+      title: "잘못된 유저 정보입니다.",
+      icon: "error",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+    })
+      .then(localStorage.clear())
+      .then(queryClient.invalidateQueries("pricipal"))
+      .then(navigate("/admin/login"));
+  };
 
   return (
     <div css={s.upperBarLayout}>
@@ -62,18 +76,18 @@ function UpperSideBar(props) {
           </div>
         </div>
         <div css={s.actionSection}>
-          {!!accessToken ? (
+          {!!accessToken && principalQuery.isSuccess ? (
             <>
               {!!userInfo && (
                 <div css={s.profileContainer}>
                   <div css={s.profileImgContainer}>
                     <img
-                      src={`${USER_PROFILE_IMG_PATH}${userInfo?.userProfileImgUrl}`}
+                      src={`${USER_PROFILE_IMG_PATH}${userInfo.userProfileImgUrl}`}
                       alt=""
                     />
                   </div>
                   <div css={s.nicknameContainer}>
-                    <span>{userInfo?.userNickName}</span>
+                    <span>{userInfo.userNickName}</span>
                   </div>
                 </div>
               )}

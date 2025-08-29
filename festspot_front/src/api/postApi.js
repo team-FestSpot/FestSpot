@@ -1,6 +1,5 @@
+import { PAGE_SIZE } from "../constants/boardPageSize";
 import api from "./axios";
-
-const PAGE_SIZE = 8;
 
 // 목록의 게시글
 export const reqAllPosts = async (page) =>

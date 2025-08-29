@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 
 export const uppserSideBarHeight = "4.5rem";
 const postSideBarHeight = "5.5rem";
+const postSideBarMargin = "1.5rem";
 
 export const layout = css`
   display: flex;
@@ -19,7 +20,7 @@ export const upperSideBar = css`
 
 export const postSideBar = css`
   display: flex;
-  margin: 1.5rem 0;
+  margin: ${postSideBarMargin} 0;
   width: 100%;
   height: ${postSideBarHeight};
   min-height: ${postSideBarHeight};
@@ -30,14 +31,15 @@ export const postSideBar = css`
   }
 `;
 
-export const container = (hidePostSideBar) => css`
+export const container = css`
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
   height: calc(
-    100% - ${uppserSideBarHeight} - ${hidePostSideBar && postSideBarHeight}
+    100% - ${uppserSideBarHeight} - ${postSideBarHeight} -
+      (${postSideBarMargin}*2)
   );
 `;
 
