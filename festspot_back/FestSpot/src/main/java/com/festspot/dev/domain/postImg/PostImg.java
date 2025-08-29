@@ -1,5 +1,7 @@
 package com.festspot.dev.domain.postImg;
 
+import com.festspot.dev.dto.post.PostImgRespDto;
+import com.festspot.dev.util.ImageUrlUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +18,13 @@ public class PostImg {
     private Integer postId;
     private String postImgUrl;
     private Integer seq;
+
+    public PostImgRespDto toRespDto(ImageUrlUtil imageUrlUtil) {
+        return PostImgRespDto.builder()
+                .postImgId(postImgId)
+                .postId(postId)
+                .postImgUrl(imageUrlUtil.buildImageUrl(postImgUrl, "post"))
+                .seq(seq)
+                .build();
+    }
 }

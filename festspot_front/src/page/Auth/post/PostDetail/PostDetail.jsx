@@ -1,10 +1,13 @@
-/** @jsxImportSource @emotion/react */
-import { usePostsQuery } from "../../../../querys/post/usePostsQuery";
-import * as s from "./styles";
+import { usePostDetailQuery } from "../../../../querys/post/usePostDetailQuery";
 import React from "react";
 
-function PostView(props) {
-  const { data: post, isLoading, isError, error } = usePostsQuery("free", 10);
+function PostDetail(props) {
+  const {
+    data: post,
+    isLoading,
+    isError,
+    error,
+  } = usePostDetailQuery("free", 16);
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러: {String(error)}</div>;
@@ -77,4 +80,4 @@ function PostView(props) {
   );
 }
 
-export default PostView;
+export default PostDetail;

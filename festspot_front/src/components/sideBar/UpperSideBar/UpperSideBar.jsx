@@ -15,7 +15,7 @@ import { USER_PROFILE_IMG_PATH } from "../../../constants/userProfileImgPath";
 function UpperSideBar(props) {
   const navigate = useNavigate();
   const principalQuery = usePrincipalQuery();
-  const userInfo = principalQuery.data?.data?.body.user;
+  const userInfo = principalQuery.data?.data?.body?.user;
   const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
 
   const accessToken = localStorage.getItem("AccessToken");
