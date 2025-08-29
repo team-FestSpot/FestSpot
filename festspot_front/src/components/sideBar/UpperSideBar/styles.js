@@ -25,7 +25,7 @@ export const logoSection = css`
   align-items: center;
   margin: 0 0 0 1%;
   height: 100%;
-  width: 6%;
+  width: 10%;
   cursor: pointer;
   z-index: 2;
 `;
