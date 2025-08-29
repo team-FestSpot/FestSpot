@@ -1,6 +1,10 @@
 package com.festspot.dev.controller;
 
+import com.festspot.dev.domain.post.Post;
+import com.festspot.dev.domain.post.PostMapper;
 import com.festspot.dev.domain.post.PostSearchOption;
+import com.festspot.dev.domain.user.User;
+import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostRegisterReqDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
   private final PostService postService;
+  private final PostMapper postMapper;
+  private final UserMapper userMapper;
 
   @GetMapping()
   public ResponseEntity<ResponseDto<?>> getAllPosts(@RequestParam Integer page, Integer size) {
@@ -56,11 +62,8 @@ public class PostController {
   @GetMapping("/{boardKey}/{postId}")
   public ResponseEntity<ResponseDto<PostDetailRespDto>> getPost(@PathVariable String boardKey,
       @PathVariable Integer postId) {
-    System.out.println(postId);
     postService.increaseViewCount(postId); // 조회수를 우선 증가
-
-    PostDetailRespDto dto = postService.getPost(postId);
-    return ResponseEntity.ok(ResponseDto.success(dto));
+    return ResponseEntity.ok(ResponseDto.success(postService.getPost(postId)));
   }
 
   @GetMapping("/{boardKey}/{postId}/like")
