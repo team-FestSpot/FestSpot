@@ -6,7 +6,7 @@ import java.util.List;
 
 @Mapper
 public interface PostCommentMapper {
-    List<PostComment> findByPostId(Integer postId);
+    List<PostComment> findByPostId(Integer categoryId, Integer postId);
     int insert(PostComment postComment);
     int getCountByPostId(Integer postId);
 }

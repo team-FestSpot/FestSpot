@@ -28,10 +28,6 @@
         values (default, #{postId}, #{parentCommentId}, #{userId}, #{commentContent}, now(), null, null);
     </insert>
 
-    <select id="findByPostId" resultType="com.festspot.dev.domain.post.PostComment">
-
-    </select>
-
     <select id="getCountByPostId" resultType="java.lang.Integer">
         select
             *
@@ -39,6 +35,37 @@
             post_comment_tb
         where
             post_id = #{postId}
+    </select>
+
+    <select id="findByPostId" resultType="com.festspot.dev.domain.post.PostComment">
+        select
+            pmt.post_comment_id,
+            pmt.post_id,
+            pmt.user_id,
+            pmt.comment_content,
+            pmt.like_count,
+            pmt.comment_level,
+            pmt.created_at,
+            pmt.parent_comment_id,
+            pmt.deleted_at,
+            pmt.updated_at,
+
+            ut.user_id,
+            ut.user_login_id,
+            ut.user_email,
+            ut.user_nickname,
+            ut.user_profile_img_url,
+            ut.created_at,
+            ut.provider,
+            ut.provider_id,
+            ut.deleted_at
+        from
+            post_comment_tb pmt
+            left outer join user_tb ut on(ut.user_id = pmt.user_id)
+        where
+            ut.user_id = #{userId} and
+            pt.post_id = #{postId}
+
     </select>
 
 
