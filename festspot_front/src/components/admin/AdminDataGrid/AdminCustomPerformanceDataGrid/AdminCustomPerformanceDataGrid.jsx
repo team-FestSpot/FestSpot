@@ -34,7 +34,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       renderCell: (params) => (
         <div>
           <img
-            src={`${baseURL}${params.row.poster}`}
+            src={`${baseURL}/image/poster/${params.row.poster}`}
             width={"100%"}
             height={"100%"}
           />
