@@ -12,7 +12,6 @@ function UserRouter(props) {
       <Routes>
         <Route path="/auth/*" element={<AuthRouter />} />
         <Route path="/board/*" element={<CommunityBoardRouter />} />
-        <Route path="/board/free/16" element={<PostDetail />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </MainLayout>
