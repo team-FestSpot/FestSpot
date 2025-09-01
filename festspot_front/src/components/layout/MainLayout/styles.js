@@ -41,6 +41,7 @@ export const container = css`
     100% - ${uppserSideBarHeight} - ${postSideBarHeight} -
       (${postSideBarMargin}*2)
   );
+  overflow: hidden;
 `;
 
 export const children = css`

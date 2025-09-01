@@ -25,6 +25,7 @@ public class Post {
   private String postContent;
   private Integer viewCount;
   private Integer likeCount;
+  private Integer isLike;
   private Integer commentCount;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
@@ -42,6 +43,7 @@ public class Post {
         .postContent(postContent)
         .viewCount(viewCount)
         .likeCount(likeCount)
+        .isLike(isLike)
         .commentCount(commentCount)
         .createdAt(createdAt)
         .updatedAt(updatedAt)

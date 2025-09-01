@@ -7,12 +7,16 @@ import { useAllPostsQuery } from "../../../../querys/post/useAllPostsQuery";
 import { usePostsQuery } from "../../../../querys/post/usePostsQuery";
 import PaginationBar from "../../../../components/PaginationBar/PaginationBar";
 import { FaHeart, FaRegHeart, FaRegEye } from "react-icons/fa";
+import { reqPostDislike, reqPostLike } from "../../../../api/postApi";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { style } from "@mui/system";
 
 function FestivalBoard(props) {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [postList, setPostList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
+  const queryClient = useQueryClient();
 
   // 페이지 기본 설정 : 1
   useEffect(() => {
@@ -40,11 +44,81 @@ function FestivalBoard(props) {
       setPostList(response.postList);
       setTotalPage(response.totalPage);
     }
+
+    console.log(response);
   }, [response]);
 
-  console.log(postList);
+  const handleCardOnClick = (e) => {};
 
-  const isLike = false;
+  const handleLikeOnClick = (postId) => {
+    try {
+      reqPostLike(postId);
+
+      if (!!boardKey) {
+      } else {
+        queryClient.setQueryData(["posts", page], (prev) => {
+          console.log(prev);
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                postList: prev.data.body.postList.map((post) => {
+                  if (post.postId === postId) {
+                    return {
+                      ...post,
+                      likeCount: post.likeCount + 1,
+                      isLike: true,
+                    };
+                  }
+                  return post;
+                }),
+              },
+            },
+          };
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log(response);
+
+  const handleDislikeOnClick = (postId) => {
+    try {
+      reqPostDislike(postId);
+
+      if (!!boardKey) {
+      } else {
+        queryClient.setQueryData(["posts", page], (prev) => {
+          console.log(prev);
+          return {
+            ...prev,
+            data: {
+              ...prev.data,
+              body: {
+                ...prev.data.body,
+                postList: prev.data.body.postList.map((post) => {
+                  if (post.postId === postId) {
+                    return {
+                      ...post,
+                      likeCount: post.likeCount - 1,
+                      isLike: false,
+                    };
+                  }
+                  return post;
+                }),
+              },
+            },
+          };
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -52,7 +126,7 @@ function FestivalBoard(props) {
         <div css={s.boardLayout}>
           <div css={s.postContainer}>
             {postList.map((post, idx) => (
-              <Card key={idx}>
+              <Card key={idx} onClick={handleCardOnClick}>
                 <div css={s.imageContainer}>
                   {!!post.postImgs[0] && (
                     <img
@@ -76,7 +150,16 @@ function FestivalBoard(props) {
                         {post.viewCount}
                       </div>
                       <div>
-                        {isLike ? <FaHeart /> : <FaRegHeart />}
+                        {!!post.isLike ? (
+                          <FaHeart
+                            onClick={() => handleDislikeOnClick(post.postId)}
+                            style={{ color: "red" }}
+                          />
+                        ) : (
+                          <FaRegHeart
+                            onClick={() => handleLikeOnClick(post.postId)}
+                          />
+                        )}
                         {post.likeCount}
                       </div>
                     </div>

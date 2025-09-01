@@ -6,10 +6,12 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface PostLikeMapper {
 
-    int insert(@Param("postId") Integer postId, @Param("userId") Integer userId);
-    int delete(@Param("postId") Integer postId, @Param("userId") Integer userId);
-    int getLikeCount(@Param("postId") Integer postId);
+  int insert(@Param("postId") Integer postId, @Param("userId") Integer userId);
 
-    Boolean exist(@Param("postId") Integer postId, @Param("userId") Integer userId);
+  int delete(@Param("postId") Integer postId, @Param("userId") Integer userId);
+
+  int getLikeCount(@Param("postId") Integer postId);
+
+  Boolean isLike(@Param("postId") Integer postId, @Param("userId") Integer userId);
 
 }
