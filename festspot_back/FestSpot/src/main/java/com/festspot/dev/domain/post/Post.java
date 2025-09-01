@@ -27,6 +27,7 @@ public class Post {
   private String postContent;
   private Integer viewCount;
   private Integer likeCount;
+  private Boolean isLike;
   private Integer commentCount;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;

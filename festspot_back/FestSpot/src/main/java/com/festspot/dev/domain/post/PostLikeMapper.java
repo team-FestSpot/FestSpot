@@ -10,6 +10,6 @@ public interface PostLikeMapper {
     int delete(@Param("postId") Integer postId, @Param("userId") Integer userId);
     int getLikeCount(@Param("postId") Integer postId);
 
-    Boolean exist(@Param("postId") Integer postId, @Param("userId") Integer userId);
+    Integer exist(@Param("postId") Integer postId, @Param("userId") Integer userId);
 
 }
