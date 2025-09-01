@@ -7,10 +7,7 @@ import com.festspot.dev.domain.postImg.PostImg;
 import com.festspot.dev.domain.postImg.PostImgMapper;
 import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
-import com.festspot.dev.dto.post.PostDetailRespDto;
-import com.festspot.dev.dto.post.PostImgRespDto;
-import com.festspot.dev.dto.post.PostRegisterReqDto;
-import com.festspot.dev.dto.post.PostsRespDto;
+import com.festspot.dev.dto.post.*;
 import com.festspot.dev.security.model.PrincipalUtil;
 
 import java.util.Comparator;
@@ -129,6 +126,40 @@ public class PostService {
     PostDetailRespDto dto = post.toRespDto(user, imageUrlUtil);
 
     return dto;
+  }
+
+  // 좋아요 삭제 또는 삽입
+  @Transactional
+  public boolean toggleLike(Integer postId, Integer userId) {
+    if (postLikeMapper.exist(postId, userId) > 0) {
+      postLikeMapper.delete(postId, userId);
+      return false;
+    } else {
+      postLikeMapper.insert(postId, userId);
+      return true;
+    }
+  }
+
+  // 좋아요 수
+  public int getLikeCount(Integer postId) {
+    return postLikeMapper.getLikeCount(postId);
+  }
+
+  // 댓글 추가
+  @Transactional
+  public void addComment(Integer postId, Integer userId, String commentContent) {
+    postCommentMapper.insertComment(postId, userId, commentContent);
+  }
+
+  // 댓글 삭제
+  @Transactional
+  public void deleteComment(Integer postId, Integer userId) {
+    postCommentMapper.deleteComment(postId, userId);
+  }
+
+  // 댓글 가져오기
+  public List<PostCommentRespDto> getComment(Integer postId) {
+    return postCommentMapper.selectComments(postId);
   }
 
 }
