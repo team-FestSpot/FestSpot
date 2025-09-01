@@ -1,6 +1,8 @@
 package com.festspot.dev.domain.performance;
 
 import java.util.List;
+
+import com.festspot.dev.domain.performance.performanceComment.PerformanceComment;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -21,4 +23,8 @@ public interface PerformanceMapper {
   int update(Performance performance);
 
   int deleteById(Integer performanceId);
+
+  int insertComment(PerformanceComment comment);
+
+  List<PerformanceComment> findCommentsByPerformanceId(Integer performanceId);
 }
