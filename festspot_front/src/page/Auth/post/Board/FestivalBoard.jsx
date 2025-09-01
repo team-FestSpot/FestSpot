@@ -9,6 +9,8 @@ import { PAGE_SIZE } from "../../../../constants/boardPageSize";
 import PaginationBar from "../../../../components/PaginationBar/PaginationBar";
 
 function FestivalBoard(props) {
+  console.log("board");
+
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [postList, setPostList] = useState([]);
