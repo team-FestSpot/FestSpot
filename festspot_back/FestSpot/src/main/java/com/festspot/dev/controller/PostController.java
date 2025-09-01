@@ -1,14 +1,17 @@
 package com.festspot.dev.controller;
 
 import com.festspot.dev.domain.post.PostMapper;
-import com.festspot.dev.domain.post.PostSearchOption;
 import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostRegisterReqDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
+import com.festspot.dev.exception.auth.BadLikeException;
+import com.festspot.dev.security.model.PrincipalUser;
 import com.festspot.dev.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,29 +31,17 @@ public class PostController {
 
   @GetMapping()
   public ResponseEntity<ResponseDto<?>> getAllPosts(@RequestParam Integer page, Integer size) {
-
     return ResponseEntity.ok(ResponseDto.success(
-        postService.getAllPosts(PostSearchOption.builder()
-            .startIndex((page - 1) * size + 1)
-            .endIndex((page - 1) * size + size)
-            .size(size)
-            .build()
-        )
+        postService.getAllPosts(page, size)
     ));
   }
 
   @GetMapping("/{boardKey}")
-  public ResponseEntity<ResponseDto<?>> getPosts(@PathVariable String boardKey,
-      @RequestParam Integer page, @RequestParam Integer size) {
-    return ResponseEntity.ok(ResponseDto.success(postService.getPostsByCategory(
-            PostSearchOption.builder()
-                .startIndex((page - 1) * size + 1)
-                .endIndex((page - 1) * size + size)
-                .size(size)
-                .build(),
-            boardKey
-        )
-    ));
+  public ResponseEntity<ResponseDto<?>> getPosts(
+      @RequestParam Integer page, Integer size, @PathVariable String boardKey) {
+    return ResponseEntity.ok(
+        ResponseDto.success(postService.getPostsByCategory(page, size, boardKey)
+        ));
   }
 
   @GetMapping("/category")
@@ -84,5 +75,27 @@ public class PostController {
   @PostMapping("/{boardKey}")
   public ResponseEntity<ResponseDto<?>> postRegister(@ModelAttribute PostRegisterReqDto dto) {
     return ResponseEntity.ok(ResponseDto.success(postService.register(dto)));
+  }
+
+  @PostMapping("/{postId}/like")
+  public ResponseEntity<ResponseDto<?>> postLike(
+      @PathVariable Integer postId, @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (principalUser == null) {
+      throw new BadLikeException("BadLikeException", "로그인 후 이용해주세요");
+    }
+
+    return ResponseEntity.ok(
+        ResponseDto.success(postService.postLike(postId, principalUser.getUser().getUserId())));
+  }
+
+  @DeleteMapping("/{postId}/dislike")
+  public ResponseEntity<ResponseDto<?>> postDislike(@PathVariable Integer postId,
+      @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (principalUser == null) {
+      throw new BadLikeException("BadLikeException", "로그인 후 이용해주세요");
+    }
+
+    return ResponseEntity.ok(
+        ResponseDto.success(postService.postDislike(postId, principalUser.getUser().getUserId())));
   }
 }

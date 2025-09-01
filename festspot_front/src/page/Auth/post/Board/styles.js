@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { remToPx } from "../../../../utils/remToPx";
 
 export const boardLayout = css`
   display: flex;
@@ -6,23 +7,22 @@ export const boardLayout = css`
   justify-content: start;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: auto;
   box-sizing: border-box;
   padding: 2rem;
 `;
 
 export const postContainer = css`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: start;
+  align-items: start;
   flex-wrap: wrap;
   width: 100%;
-  height: calc(100% - 4rem - 2 * 2rem);
-  gap: 0 1vw;
+  height: auto;
+  gap: 1vh 1vw;
 
   @media (max-width: 1024px) {
-    height: calc(200% - 4rem - 2 * 2rem);
-    gap: 1vh 1vw;
+    height: auto;
   }
 
   .MuiCard-root {
@@ -31,12 +31,16 @@ export const postContainer = css`
     margin: 0;
     padding: 0;
 
-    height: calc(33% - 1vh);
-    width: calc(25% - 2vw);
+    height: calc((71.5vh) / 3);
+    width: calc((100% - 3vw) / 4);
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1023px) {
       height: 20rem;
-      width: calc(50% - 2vw);
+      width: calc((100% - 2vw) / 3);
+    }
+    @media (max-width: 767px) {
+      height: 20rem;
+      width: calc((100% - 1vw) / 2);
     }
   }
 `;
@@ -97,6 +101,7 @@ export const profileImgContainer = css`
   justify-content: center;
   align-items: center;
   width: 3rem;
+  aspect-ratio: 1/1;
   box-sizing: border-box;
   border: 1px solid #dbdbdb;
   border-radius: 50%;
@@ -125,7 +130,7 @@ export const countContainer = css`
 export const paginationContainer = css`
   width: 60%;
   box-sizing: border-box;
-  margin: 2rem 0;
+  margin-top: 2rem;
   height: 4rem;
   font-size: 2rem;
 `;

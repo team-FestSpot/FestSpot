@@ -3,6 +3,7 @@ package com.festspot.dev.controller;
 import com.festspot.dev.dto.error.FileErrorDto;
 import com.festspot.dev.dto.error.SimpleErrorDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
+import com.festspot.dev.exception.auth.BadLikeException;
 import com.festspot.dev.exception.auth.BadUserInfoException;
 import com.festspot.dev.exception.auth.FileStoreException;
 import com.festspot.dev.exception.auth.LoginException;
@@ -54,5 +55,11 @@ public class GlobalExceptionControllerAdvice {
   public ResponseEntity<ResponseDto<?>> badUserInfoError(BadUserInfoException e) {
     return ResponseEntity.badRequest()
         .body(ResponseDto.fail(HttpStatus.UNAUTHORIZED, "잘못된 인증", e.getMessage()));
+  }
+
+  @ExceptionHandler(BadLikeException.class)
+  public ResponseEntity<ResponseDto<?>> badLikeError(BadLikeException e) {
+    return ResponseEntity.badRequest()
+        .body(ResponseDto.fail(HttpStatus.BAD_REQUEST, "로그인 정보 없음", e.getMessage()));
   }
 }

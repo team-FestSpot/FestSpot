@@ -24,3 +24,9 @@ export const reqPostRegister = (data) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+export const reqPostLike = async (postId) =>
+  await api.post(`/api/board/${postId}/like`);
+
+export const reqPostDislike = async (postId) =>
+  await api.delete(`/api/board/${postId}/dislike`);

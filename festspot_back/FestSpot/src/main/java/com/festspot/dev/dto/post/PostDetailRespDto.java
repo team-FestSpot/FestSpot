@@ -21,6 +21,7 @@ public class PostDetailRespDto {
   private String postContent;
   private Integer viewCount;
   private Integer likeCount;
+  private Integer isLike;
   private Integer commentCount;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;

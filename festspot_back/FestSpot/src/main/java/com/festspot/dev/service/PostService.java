@@ -37,7 +37,14 @@ public class PostService {
   private final ImageUrlUtil imageUrlUtil;
 
   // 모든 게시글 가져오기
-  public PostsRespDto getAllPosts(PostSearchOption postSearchOption) {
+  public PostsRespDto getAllPosts(Integer page, Integer size) {
+    PostSearchOption postSearchOption = PostSearchOption.builder()
+        .startIndex((page - 1) * size + 1)
+        .endIndex((page - 1) * size + size)
+        .size(size)
+        .userId(principalUtil.getUserIdOrNull())
+        .build();
+
     return PostsRespDto.builder()
         .postList(
             postMapper.findAll(postSearchOption).stream().map(post -> post.toRespDto(imageUrlUtil))
@@ -50,9 +57,14 @@ public class PostService {
   }
 
   // 카테고리별 게시글 가져오기
-  public PostsRespDto getPostsByCategory(PostSearchOption postSearchOption, String boardKey) {
-    postSearchOption.setCategoryId(
-        postCategoryMapper.findeByCategoryKey(boardKey).getPostCategoryId());
+  public PostsRespDto getPostsByCategory(Integer page, Integer size, String boardKey) {
+    PostSearchOption postSearchOption = PostSearchOption.builder()
+        .startIndex((page - 1) * size + 1)
+        .endIndex((page - 1) * size + size)
+        .size(size)
+        .categoryId(postCategoryMapper.findeByCategoryKey(boardKey).getPostCategoryId())
+        .userId(principalUtil.getPrincipal().getUser().getUserId())
+        .build();
 
     return PostsRespDto.builder()
         .postList(postMapper.findByCategoryId(postSearchOption).stream()
@@ -131,6 +143,14 @@ public class PostService {
     PostDetailRespDto dto = post.toRespDto(imageUrlUtil);
 
     return dto;
+  }
+
+  public int postLike(Integer postId, Integer userId) {
+    return postLikeMapper.insert(postId, userId);
+  }
+
+  public int postDislike(Integer postId, Integer userId) {
+    return postLikeMapper.delete(postId, userId);
   }
 
 }
