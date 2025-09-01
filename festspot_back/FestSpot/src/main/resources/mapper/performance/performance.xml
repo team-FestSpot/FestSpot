@@ -36,6 +36,18 @@
     <result column="ticketing_url" property="ticketingUrl" />
     <result column="ticketing_agency_name" property="ticketingAgencyName" />
   </resultMap>
+
+<resultMap id="PerformanceCommentMap" type="com.festspot.dev.domain.performance.performanceComment.PerformanceComment">
+    <id column="performance_comment_id" property="performanceCommentId" />
+    <result column="user_id" property="userId" />
+    <result column="performance_id" property="performanceId" />
+    <result column="content" property="content" />
+    <result column="created_at" property="createdAt" />
+    <result column="deleted_at" property="deletedAt" />
+
+    <association property="user" resultMap="com.festspot.dev.domain.user.UserMapper.UserMap" />
+ </resultMap>
+
     <update id="update">
         update performance_tb
         set
@@ -84,12 +96,12 @@
     select
     *
     from
-      performance_tb
+      performance_tb pt
       left outer join performance_region_tb prt on(prt.performance_region_id = pt.performance_region_id)
       left outer join performance_state_tb pst on(pst.performance_state_id = pt.performance_state_id)
       left outer join ticketing_url_tb tut on(tut.performance_id = pt.performance_id)
     where
-      performance_id = #{performanceId}
+      pt.performance_id = #{performanceId}
   </select>
 
     <select id="findByPerformanceApiIdIsNull" resultMap="PerformanceMap">
@@ -176,4 +188,20 @@
         )
       </foreach>
   </insert>
+
+    <insert id="insertComment">
+        insert into performance_comment_tb
+        values
+            (default, #{userId}, #{performanceId}, #{content}, now(), null)
+    </insert>
+
+    <select id="findCommentsByPerformanceId" resultMap="PerformanceCommentMap">
+        select
+            *
+        from
+            performance_comment_tb pct
+            left outer join user_tb ut on (pct.user_id = ut.user_id)
+        where
+            pct.performance_id = #{performanceId}
+    </select>
 </mapper>
