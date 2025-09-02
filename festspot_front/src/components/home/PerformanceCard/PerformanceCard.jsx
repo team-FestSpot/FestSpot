@@ -24,9 +24,9 @@ function PerformanceCard({ performanceList }) {
           justifyContent: "center",
           alignContent: "center",
           width: "100%",
+          borderTop: "1px solid #dbdbdb",
+          borderBottom: "1px solid #dbdbdb",
         }}
-        className="my-masonry-grid"
-        columnClassName="my-masonry-grid_column"
         columnsCountBreakPoints={{
           1: 3,
           768: 4,

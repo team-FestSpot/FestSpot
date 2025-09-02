@@ -14,6 +14,7 @@ import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostRegisterReqDto;
 import com.festspot.dev.dto.post.PostsRespDto;
+import com.festspot.dev.exception.auth.NotLoginException;
 import com.festspot.dev.security.model.PrincipalUtil;
 import com.festspot.dev.util.ImageUrlUtil;
 import java.util.List;
@@ -63,7 +64,7 @@ public class PostService {
         .endIndex((page - 1) * size + size)
         .size(size)
         .categoryId(postCategoryMapper.findeByCategoryKey(boardKey).getPostCategoryId())
-        .userId(principalUtil.getPrincipal().getUser().getUserId())
+        .userId(principalUtil.getUserIdOrNull())
         .build();
 
     return PostsRespDto.builder()
@@ -101,6 +102,9 @@ public class PostService {
 
   @Transactional(rollbackFor = Exception.class)
   public String register(PostRegisterReqDto dto) {
+    if (principalUtil.getUserIdOrNull() == null) {
+      throw new NotLoginException("NotLoginException", "로그인 정보 없음");
+    }
 
     Post post = dto.toPost(
         principalUtil.getPrincipal().getUser(),
@@ -145,11 +149,19 @@ public class PostService {
     return dto;
   }
 
-  public int postLike(Integer postId, Integer userId) {
+  public int postLike(Integer postId) {
+    Integer userId = principalUtil.getUserIdOrNull();
+    if (userId == null) {
+      throw new NotLoginException("NotLoginException", "로그인 정보 없음");
+    }
     return postLikeMapper.insert(postId, userId);
   }
 
-  public int postDislike(Integer postId, Integer userId) {
+  public int postDislike(Integer postId) {
+    Integer userId = principalUtil.getUserIdOrNull();
+    if (userId == null) {
+      throw new NotLoginException("NotLoginException", "로그인 정보 없음");
+    }
     return postLikeMapper.delete(postId, userId);
   }
 

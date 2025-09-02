@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { FaPlus } from "react-icons/fa";
 import * as s from "./styles";
 import React from "react";
 import { IoTicketOutline } from "react-icons/io5";
@@ -7,10 +8,12 @@ import {
   MdOutlineFestival,
   MdOutlineRateReview,
 } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function PostSideBar() {
   const navigate = useNavigate();
+  const pathname = useLocation().pathname;
+
   const boards = [
     {
       id: "free",
@@ -50,7 +53,7 @@ function PostSideBar() {
           return (
             <button
               key={board.id}
-              css={s.boardBtn}
+              css={s.boardBtn(pathname.split("/")[2] === board.id)}
               onClick={(e) => handlePostCategoryOnClick(e, board.id)}
             >
               {board.icon}

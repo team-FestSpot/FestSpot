@@ -93,11 +93,11 @@ export const selected = (selectIsOpen) => css`
   padding: 0.4rem 1.6rem;
   padding-right: 0.6rem;
   box-sizing: border-box;
-  border: 1px solid ${selectIsOpen ? "#ef5a39" : "#c0c0c0ff"};
+  border: 1px solid ${selectIsOpen ? "var(--main-color)" : "#c0c0c0ff"};
   border-radius: 0.6rem;
 
   &:hover {
-    border-color: #ef5a39;
+    border-color: var(--main-color);
   }
 
   @media (max-width: 1024px) {
@@ -123,7 +123,7 @@ export const options = css`
     overflow: hidden;
   }
   & > div:hover {
-    background-color: #ef5a39;
+    background-color: var(--main-color);
     color: white;
   }
 `;
@@ -134,11 +134,11 @@ export const saveButton = css`
   align-items: center;
   gap: 0.6rem;
   padding: 0.8rem 1.6rem;
-  border: 0.1rem solid #ef5a39;
+  border: 0.1rem solid var(--main-color);
   border-radius: 0.6rem;
   font-weight: 500;
   color: white;
-  background: #ef5a39;
+  background: var(--main-color);
   transition: all 0.2s;
   cursor: pointer;
 
@@ -266,7 +266,7 @@ export const quillContainer = css`
     }
 
     blockquote {
-      border-left: 0.4rem solid #ef5a39;
+      border-left: 0.4rem solid var(--main-color);
       padding-left: 2rem;
       margin: 1.6rem 0;
       color: #6c757d;
@@ -316,7 +316,7 @@ export const quillContainer = css`
         }
 
         &:hover {
-          background: #ef5a39;
+          background: var(--main-color);
         }
 
         &:hover .ql-stroke {
@@ -328,7 +328,7 @@ export const quillContainer = css`
         }
 
         &.ql-active {
-          background: #ef5a39;
+          background: var(--main-color);
         }
 
         &.ql-active .ql-stroke {
@@ -373,7 +373,7 @@ export const unfixedQuillContainer = css`
         transition: all 0.2s;
 
         &:hover {
-          background: #ef5a39;
+          background: var(--main-color);
         }
 
         &:hover .ql-stroke {
@@ -385,7 +385,7 @@ export const unfixedQuillContainer = css`
         }
 
         &.ql-active {
-          background: #ef5a39;
+          background: var(--main-color);
         }
 
         &.ql-active .ql-stroke {
@@ -402,7 +402,7 @@ export const unfixedQuillContainer = css`
       color: #495057;
 
       &.ql-expanded .ql-picker-label {
-        border-color: #ef5a39;
+        border-color: var(--main-color);
       }
     }
   }

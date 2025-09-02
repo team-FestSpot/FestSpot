@@ -21,10 +21,15 @@ export const calendarContainer = css`
   //헤더 버튼
   .fc-button {
     border: none;
-    background-color: #ef5a39;
+    background-color: var(--main-color);
 
     &:hover {
-      background-color: #fbd8d0;
+      background-color: var(--main-color);
+      box-shadow: 0 4px 8px rgba(255, 107, 74, 0.3);
+    }
+
+    &:active {
+      background-color: var(--main-color) !important;
     }
   }
 
