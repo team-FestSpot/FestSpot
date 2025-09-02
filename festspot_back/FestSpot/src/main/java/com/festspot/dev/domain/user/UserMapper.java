@@ -13,9 +13,13 @@ public interface UserMapper {
 
   User findByUserId(Integer userId);
 
+  String findPasswordByUserId(Integer userId);
+
   List<User> findAllUsers();
 
   int updateByUserId(User user);
+
+  int updateNicknameOrPassword(User user);
 
   int updateDeletedDateByUserId(Integer userId);
 

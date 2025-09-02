@@ -4,7 +4,7 @@ import AuthRouter from "./AuthRouter";
 import Home from "../page/Home/Home";
 import MainLayout from "../components/layout/MainLayout/MainLayout";
 import CommunityBoardRouter from "./CommunityBoardRouter";
-import PostDetail from "../page/Auth/post/PostDetail/PostDetail";
+import MyPageRouter from "./MyPageRouter";
 
 function UserRouter(props) {
   return (
@@ -12,7 +12,7 @@ function UserRouter(props) {
       <Routes>
         <Route path="/auth/*" element={<AuthRouter />} />
         <Route path="/board/*" element={<CommunityBoardRouter />} />
-        <Route path="/board/free/16" element={<PostDetail />} />
+        <Route path="/mypage/*" element={<MyPageRouter />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </MainLayout>

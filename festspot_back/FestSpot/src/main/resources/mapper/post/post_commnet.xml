@@ -23,10 +23,18 @@
         <result property="userProfileImgUrl" column="user_profile_img_url" />
     </resultMap>
 
-    <insert id="insert">
+    <insert id="insertComment">
         insert into post_comment_tb
-        values (default, #{postId}, #{parentCommentId}, #{userId}, #{commentContent}, now(), null, null);
+        values (default, #{postId}, #{userId}, #{commentContent}, now())
     </insert>
+
+    <delete id="deleteComment">
+        delete
+        from post_comment_tb
+        where
+            post_comment_id = #{postCommentId}
+            and user_id = #{userId}
+    </delete>
 
     <select id="getCountByPostId" resultType="java.lang.Integer">
         select
@@ -68,5 +76,20 @@
 
     </select>
 
-
+    <select id="selectComments" resultType="com.festspot.dev.dto.post.PostCommentRespDto">
+        select
+            pmt.post_comment_id,
+            pmt.post_id,
+            pmt.user_id,
+            ut.user_nickname,
+            pmt.comment_content,
+            pmt.created_at,
+            pmt.updated_at
+        from
+            post_comment_tb pmt
+            left outer join user_tb ut on (ut.user_id and pmt.user_id)
+        where
+            pmt.post_id = #{postId}
+        order by pmt.post_comment_id DESC
+    </select>
 </mapper>

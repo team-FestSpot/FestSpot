@@ -15,6 +15,7 @@
         <result property="likeCount" column="like_count" />
         <result property="isLike" column="is_like" />
         <result property="commentCount" column="comment_count" />
+        <result property="isLike" column="isLike" />
         <result property="createdAt" column="created_at" />
         <result property="updatedAt" column="updated_at" />
 

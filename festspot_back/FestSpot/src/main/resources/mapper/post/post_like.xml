@@ -26,10 +26,10 @@
             post_id = #{postId}
     </select>
 
-    <select id="isLike" resultType="java.lang.Boolean">
+    <select id="isLike" resultType="int">
         select case where count(*) > 0 then true else false end
         from post_like_tb
-        where post_id = #{postId} and user_id = #{userId}
+        where post_id = #{postId} and user_id = {userId}
     </select>
 
 </mapper>
