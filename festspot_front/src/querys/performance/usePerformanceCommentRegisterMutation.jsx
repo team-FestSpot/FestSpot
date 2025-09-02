@@ -7,9 +7,7 @@ export const usePerformanceCommentRegisterMutation = () => {
 
   return useMutation({
     mutationKey: ["performanceCommentSubmit"],
-    mutationFn: async (data) => {
-      await reqPerformanceCommentRegister(data);
-    },
+    mutationFn: async (data) => await reqPerformanceCommentRegister(data),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["performanceCommentList"] }),
   });
