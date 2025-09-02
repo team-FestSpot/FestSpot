@@ -162,7 +162,7 @@ export const majorLink = css`
   border-bottom: 1px solid #e5e7eb;
 
   &:hover {
-    color: #ff6b4a;
+    color: var(--main-color);
   }
 
   &:visited {
@@ -170,7 +170,7 @@ export const majorLink = css`
   }
 
   &:active {
-    color: #ff6b4a;
+    color: var(--main-color);
     text-decoration: none;
   }
 
@@ -183,7 +183,7 @@ export const majorLink = css`
     transform: translateY(-50%);
     width: 4px;
     height: 24px;
-    background-color: #ff6b4a;
+    background-color: var(--main-color);
     border-radius: 2px;
   }
 `;
@@ -209,7 +209,7 @@ export const minorLink = css`
   position: relative;
 
   &:hover {
-    color: #ff6b4a;
+    color: var(--main-color);
     background-color: #fef7f6;
     transform: translateX(4px);
   }
@@ -219,7 +219,7 @@ export const minorLink = css`
   }
 
   &:active {
-    color: #ff6b4a;
+    color: var(--main-color);
     text-decoration: none;
   }
 
@@ -239,6 +239,6 @@ export const minorLink = css`
 
   /* 호버 시 왼쪽 점 색상 변화 */
   &:hover::before {
-    background-color: #ff6b4a;
+    background-color: var(--main-color);
   }
 `;

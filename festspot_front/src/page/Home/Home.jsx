@@ -20,7 +20,7 @@ function Home(props) {
             <PerformanceCard performanceList={performanceList} />
           </div>
         </div>
-        {/* <div css={s.divider}></div> */}
+        <div css={s.divider}></div>
         <div css={s.homeRightSide}>
           <div css={s.CalendarSection}>
             <PerformanceCalendar performanceList={performanceList} />

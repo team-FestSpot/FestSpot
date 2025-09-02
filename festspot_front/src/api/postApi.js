@@ -25,14 +25,19 @@ export const reqPostRegister = (data) =>
     },
   });
 
+export const reqPostLike = async (postId) =>
+  await api.post(`/api/board/${postId}/like`);
+
+export const reqPostDislike = async (postId) =>
+  await api.delete(`/api/board/${postId}/dislike`);
+
 // 좋아요
-export const reqToggleLike = async ({ boardKey, postId }) => 
+export const reqToggleLike = async ({ boardKey, postId }) =>
   await api.post(`/api/board/${boardKey}/${postId}/like`);
 
 //댓글
-export const reqCommentsList = async ({ boardKey, postId }) => 
+export const reqCommentsList = async ({ boardKey, postId }) =>
   await api.get(`/api/board/${boardKey}/${postId}/comments`);
-
 
 export const reqAddComment = async ({ boardKey, postId, commentContent }) => {
   await api.post(`/api/board/${boardKey}/${postId}/comments`, {
@@ -40,6 +45,7 @@ export const reqAddComment = async ({ boardKey, postId, commentContent }) => {
   });
 };
 
-export const reqDeleteComment = async ({ boardKey, postId, postCommentId }) => 
-    await api.delete(
-    `/api/board/${boardKey}/${postId}/comments/${postCommentId}`);
+export const reqDeleteComment = async ({ boardKey, postId, postCommentId }) =>
+  await api.delete(
+    `/api/board/${boardKey}/${postId}/comments/${postCommentId}`
+  );

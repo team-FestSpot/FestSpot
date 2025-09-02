@@ -11,7 +11,7 @@ export const paginationBarLayout = css`
   gap: 0.4rem;
 `;
 
-export const paginationButton = css`
+export const paginationButton = (isAble) => css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,14 +19,16 @@ export const paginationButton = css`
   aspect-ratio: 1/1;
   padding: 0.4rem;
   box-sizing: border-box;
-  border: 1px solid #e55a42;
+  border: 1px solid var(--main-color);
   border-radius: 10%;
   background-color: white;
-  color: #e55a42;
-  cursor: pointer;
+  color: var(--main-color);
+
+  cursor: ${isAble ? "pointer" : "default"};
+  opacity: ${isAble ? 1 : 0.3};
 
   &:hover {
-    background-color: #fcebe8;
+    background-color: ${isAble ? "#fcebe8" : "white"};
   }
 `;
 
@@ -39,7 +41,7 @@ export const paginationNumContainer = (gap) => css`
   gap: ${gap};
 `;
 
-export const paginationNum = (isCurrentPage) => css`
+export const paginationNum = (isCurrentPage, isAble) => css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,13 +49,19 @@ export const paginationNum = (isCurrentPage) => css`
   aspect-ratio: 1/1;
   padding: 0.4rem;
   box-sizing: border-box;
-  border: 1px solid #e55a42;
+  border: 1px solid var(--main-color);
   border-radius: 10%;
-  background-color: ${isCurrentPage ? "#e55a42" : "white"};
-  color: ${isCurrentPage ? "white" : "#e55a42"};
-  cursor: pointer;
+  background-color: ${isCurrentPage ? "var(--main-color)" : "white"};
+  color: ${isCurrentPage ? "white" : "var(--main-color)"};
+
+  cursor: ${isAble ? "pointer" : "default"};
+  opacity: ${isAble ? 1 : 0.3};
 
   &:hover {
-    background-color: #fcebe8;
+    background-color: ${isCurrentPage
+      ? "var(--main-color) " // 현재페이지면 hover해도 유지
+      : isAble
+      ? "#fcebe8" //활성화된 버튼이면 색 약간 변함
+      : "white"}; //비활성화 된 버튼이면 hover해도 유지
   }
 `;

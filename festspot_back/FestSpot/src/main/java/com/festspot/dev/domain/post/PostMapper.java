@@ -11,8 +11,6 @@ public interface PostMapper {
 
   Post findByPostId(@Param("postId") Integer postId);
 
-  Post findByOption(@Param("postCategoryId") Integer postCategoryId, @Param("postId") Integer postId, @Param("userId") Integer userId);
-
   List<Post> findAll(PostSearchOption postSearchOption);
 
   double countAll(PostSearchOption postSearchOption);

@@ -13,8 +13,6 @@ export const homeLayout = css`
 export const homeLeftSide = css`
   height: 100%;
   box-sizing: border-box;
-  border-top: 1px solid #dbdbdb;
-  border-bottom: 1px solid #dbdbdb;
   width: 45%;
   margin: 0;
   margin-right: 10px;

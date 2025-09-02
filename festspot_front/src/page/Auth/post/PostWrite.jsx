@@ -5,7 +5,7 @@ import "react-quill-new/dist/quill.snow.css";
 import { AiOutlineSave } from "react-icons/ai";
 import { MdArrowBack } from "react-icons/md";
 import { FaCaretDown } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useFixQuillToolBarStore } from "../../../stores/useFixQuillToolBarStore";
 import usePostCategoryQuery from "../../../querys/post/usePostCategoryQuery";
 import QuillEditor from "../../../components/post/QuillEditor";
@@ -13,6 +13,8 @@ import { v4 } from "uuid";
 import SparkMD5 from "spark-md5";
 import { reqPostRegister } from "../../../api/postApi";
 import Swal from "sweetalert2";
+import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
+import { css, Global } from "@emotion/react";
 
 const PostWrite = () => {
   const navigate = useNavigate();
@@ -20,8 +22,9 @@ const PostWrite = () => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const { isFixed } = useFixQuillToolBarStore();
-  const [selectedCategory, setSelectedCategory] = useState({});
   const [selectIsOpen, setSelecteIsOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const principal = usePrincipalQuery().data?.data?.body;
 
   const dropdownRef = useRef();
   const quillRef = useRef(null);
@@ -30,12 +33,18 @@ const PostWrite = () => {
   const postCategoryQuery = usePostCategoryQuery();
   const postCategories = postCategoryQuery.data?.data?.body || [];
 
-  //기본 select 등록
   useEffect(() => {
-    if (postCategoryQuery.isSuccess && !!postCategories[0]) {
-      setSelectedCategory(postCategories[0]);
+    if (!searchParams.get("boardKey")) {
+      setSearchParams({ boardKey: "free" });
     }
-  }, [postCategoryQuery.isSuccess]);
+    if (!principal) {
+      Swal.fire({
+        title: "로그인 정보 없음",
+        text: "로그인 후 이용해 주세요",
+        icon: "error",
+      });
+    }
+  }, []);
 
   //ref 등록
   useEffect(() => {
@@ -51,8 +60,8 @@ const PostWrite = () => {
   }, []);
 
   //selct 선택
-  const handleSelectOnClick = (e, category) => {
-    setSelectedCategory(category);
+  const handleSelectOnClick = (e, boardKey) => {
+    setSearchParams({ boardKey: boardKey });
     setSelecteIsOpen(false);
   };
 
@@ -66,9 +75,10 @@ const PostWrite = () => {
 
   //저장 버튼
   const handleSubmitOnClick = async () => {
-    if (!title.trim()) return alert("제목을 입력해주세요.");
+    if (!title.trim())
+      return Swal.fire({ icon: "error", title: "제목을 입력해주세요." });
     if (!content.trim() || content === "<p><br></p>")
-      return alert("내용을 입력해주세요.");
+      return Swal.fire({ icon: "error", title: "내용을 입력해주세요." });
 
     try {
       const delta = quillRef.current.getEditor().getContents();
@@ -101,7 +111,7 @@ const PostWrite = () => {
       }
 
       const postReq = {
-        boardKey: selectedCategory.postCategoryKey,
+        boardKey: searchParams.get("boardKey"),
         postTitle: title,
         postContent: reqContent,
         files: sortedImages.map((image) => image.file),
@@ -109,73 +119,97 @@ const PostWrite = () => {
 
       await reqPostRegister(postReq);
 
-      navigate(`/board/${selectedCategory.postCategoryKey}`);
+      navigate(`/board/${searchParams.get("boardKey")}`);
     } catch (error) {
       await Swal.fire({
-        title: "게시글 등록 실패",
-        text: `잠시 후 시도해 주세요`,
+        title: error?.response?.data?.body,
+        text: error?.response?.data?.message,
         icon: "error",
       });
     }
   };
 
   return (
-    <div css={s.postWriteLayout}>
-      <header css={s.header}>
-        <button css={s.backButton} onClick={() => navigate(-1)}>
-          <MdArrowBack /> 뒤로가기
-        </button>
-        <div css={s.selectCategory} ref={dropdownRef}>
-          <div css={s.selected(selectIsOpen)} onClick={handleOpenSelectOnClick}>
-            {selectedCategory.postCategoryName} <FaCaretDown />
-          </div>
-          {selectIsOpen && (
-            <div css={s.options}>
-              {postCategories.map((postCategory) => (
-                <div onClick={(e) => handleSelectOnClick(e, postCategory)}>
-                  {postCategory.postCategoryName}
-                </div>
-              ))}
+    <>
+      <Global
+        styles={css`
+          .swal2-modal {
+            font-size: 12px;
+          }
+        `}
+      />
+      <div css={s.postWriteLayout}>
+        <header css={s.header}>
+          <button css={s.backButton} onClick={() => navigate(-1)}>
+            <MdArrowBack /> 뒤로가기
+          </button>
+          <div css={s.selectCategory} ref={dropdownRef}>
+            <div
+              css={s.selected(selectIsOpen)}
+              onClick={handleOpenSelectOnClick}
+            >
+              {
+                postCategories.find(
+                  (postCategory) =>
+                    postCategory.postCategoryKey ===
+                    searchParams.get("boardKey")
+                )?.postCategoryName
+              }
+              <FaCaretDown />
             </div>
-          )}
-        </div>
-        <button css={s.saveButton} onClick={handleSubmitOnClick}>
-          <AiOutlineSave /> 저장
-        </button>
-      </header>
-
-      <main css={s.main}>
-        <div css={s.postContainer}>
-          <div css={s.title} onClick={() => titleInputRef.current?.focus()}>
-            <input
-              name="quillTitle"
-              placeholder="제목을 입력하세요"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              css={s.titleInput}
-              maxLength={100}
-              ref={titleInputRef}
-            />
-            <div css={s.titleCount}>{title.length}/100</div>
+            {selectIsOpen && (
+              <div css={s.options}>
+                {postCategories.map((postCategory, idx) => (
+                  <div
+                    key={idx}
+                    onClick={(e) =>
+                      handleSelectOnClick(e, postCategory.postCategoryKey)
+                    }
+                  >
+                    {postCategory.postCategoryName}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+          <button css={s.saveButton} onClick={handleSubmitOnClick}>
+            <AiOutlineSave /> 저장
+          </button>
+        </header>
 
-          <div
-            css={[
-              s.quillContainer,
-              isFixed ? s.fixedQuillContainer : s.unfixedQuillContainer,
-            ]}
-            onClick={() => quillRef.current?.focus()}
-          >
-            <QuillEditor
-              quillRef={quillRef}
-              content={content}
-              setContent={setContent}
-              setImages={setImages}
-            />
+        <main css={s.main}>
+          <div css={s.postContainer}>
+            <div css={s.title} onClick={() => titleInputRef.current?.focus()}>
+              <input
+                name="quillTitle"
+                placeholder="제목을 입력하세요"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                css={s.titleInput}
+                maxLength={100}
+                ref={titleInputRef}
+              />
+              <div css={s.titleCount}>{title.length}/100</div>
+            </div>
+
+            <div
+              css={[
+                s.quillContainer,
+                isFixed ? s.fixedQuillContainer : s.unfixedQuillContainer,
+              ]}
+              onClick={() => quillRef.current?.focus()}
+            >
+              <QuillEditor
+                quillRef={quillRef}
+                content={content}
+                setContent={setContent}
+                setImages={setImages}
+              />
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   );
 };
 

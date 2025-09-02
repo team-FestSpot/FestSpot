@@ -66,7 +66,7 @@ export const TippyInTippy = (target, event) => {
               <div
                 key={index}
                 style={{
-                  backgroundColor: "#EF5A39",
+                  backgroundColor: "var(--main-color)",
                   borderRadius: "8px",
                   padding: "2px 4px",
                   margin: "2px",

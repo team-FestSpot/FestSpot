@@ -2,6 +2,8 @@ package com.festspot.dev.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.festspot.dev.domain.userRole.UserRole;
+import com.festspot.dev.dto.user.UserRespDto;
+import com.festspot.dev.util.ImageUrlUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -28,4 +30,18 @@ public class User {
   private LocalDateTime deletedAt;
 
   private List<UserRole> userRoles;
+
+  public UserRespDto toRespDto(ImageUrlUtil imageUrlUtil) {
+    return UserRespDto.builder()
+        .userId(userId)
+        .userLoginId(userLoginId)
+        .userEmail(userEmail)
+        .userNickName(userNickName)
+        .userProfileImgUrl(imageUrlUtil.buildImageUrl(userProfileImgUrl, "profile"))
+        .createdAt(createdAt)
+        .provider(provider)
+        .providerId(providerId)
+        .deletedAt(deletedAt)
+        .build();
+  }
 }

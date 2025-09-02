@@ -1,9 +1,6 @@
 package com.festspot.dev.controller;
 
-import com.festspot.dev.domain.post.Post;
 import com.festspot.dev.domain.post.PostMapper;
-import com.festspot.dev.domain.post.PostSearchOption;
-import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.dto.post.PostCommentReqDto;
 import com.festspot.dev.dto.post.PostDetailRespDto;
@@ -13,6 +10,7 @@ import com.festspot.dev.security.model.PrincipalUser;
 import com.festspot.dev.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -31,28 +29,17 @@ public class PostController {
 
   @GetMapping()
   public ResponseEntity<ResponseDto<?>> getAllPosts(@RequestParam Integer page, Integer size) {
-
     return ResponseEntity.ok(ResponseDto.success(
-        postService.getAllPosts(PostSearchOption.builder()
-            .startIndex((page - 1) * size)
-            .size(size)
-            .build()
-        )
+        postService.getAllPosts(page, size)
     ));
   }
 
   @GetMapping("/{boardKey}")
-  public ResponseEntity<ResponseDto<?>> getPosts(@PathVariable String boardKey,
-      @RequestParam Integer page, @RequestParam Integer size) {
-    return ResponseEntity.ok(ResponseDto.success(postService.getPostsByCategory(
-            PostSearchOption.builder()
-                .startIndex((page - 1) * size)
-                .endIndex((page - 1) * size + size)
-                .size(size)
-                .build(),
-            boardKey
-        )
-    ));
+  public ResponseEntity<ResponseDto<?>> getPosts(
+      @RequestParam Integer page, Integer size, @PathVariable String boardKey) {
+    return ResponseEntity.ok(
+        ResponseDto.success(postService.getPostsByCategory(page, size, boardKey)
+        ));
   }
 
   @GetMapping("/category")
@@ -78,7 +65,6 @@ public class PostController {
   @GetMapping("/{boardKey}/{postId}/dislike")
   public ResponseEntity<ResponseDto<?>> disLike(@PathVariable String boardKey,
       @PathVariable Integer postId) {
-    System.out.println(postId);
     postService.disLike(postId);
     return ResponseEntity.ok(ResponseDto.success("좋아요 요청 취소 완료"));
   }
@@ -86,6 +72,18 @@ public class PostController {
   @PostMapping("/{boardKey}")
   public ResponseEntity<ResponseDto<?>> postRegister(@ModelAttribute PostRegisterReqDto dto) {
     return ResponseEntity.ok(ResponseDto.success(postService.register(dto)));
+  }
+
+  @PostMapping("/{postId}/like")
+  public ResponseEntity<ResponseDto<?>> postLike(@PathVariable Integer postId) {
+    return ResponseEntity.ok(
+        ResponseDto.success(postService.postLike(postId)));
+  }
+
+  @DeleteMapping("/{postId}/dislike")
+  public ResponseEntity<ResponseDto<?>> postDislike(@PathVariable Integer postId) {
+    return ResponseEntity.ok(
+        ResponseDto.success(postService.postDislike(postId)));
   }
 
   // 좋아요
