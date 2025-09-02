@@ -93,7 +93,7 @@ const PostWrite = () => {
 
         return {
           ...foundImage,
-          seq: idx,
+          seq: idx + 1,
         };
       });
 

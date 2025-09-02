@@ -260,7 +260,6 @@ export const quillContainer = css`
       align-items: start;
       max-width: 100%;
       height: auto;
-      border-radius: 8px;
       margin: 1rem 0;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
@@ -282,6 +281,21 @@ export const quillContainer = css`
     cursor: default;
     ::-webkit-scrollbar {
       display: none;
+    }
+
+    .ql-align {
+      &:hover {
+        .ql-picker-item:not(.ql-selected) .ql-stroke {
+          stroke: #444 !important;
+        }
+        .ql-picker-item.ql-selected .ql-stroke {
+          stroke: #1c77d2 !important;
+        }
+      }
+
+      .ql-picker-item:hover {
+        border: 1px solid #444;
+      }
     }
 
     .ql-formats {
