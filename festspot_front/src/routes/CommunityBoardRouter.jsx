@@ -1,32 +1,30 @@
 import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import PostWrite from "../page/Auth/post/PostWrite";
 import FestivalBoard from "../page/Auth/Post/Board/FestivalBoard";
-import PostDetail from "../page/Auth/post/PostDetail/PostDetail";
 import usePostCategoryQuery from "../querys/post/usePostCategoryQuery";
+import PostDetail2 from "../page/Auth/Post/PostDetail/PostDetail2";
+import PostDetail from "../page/Auth/Post/PostDetail/PostDetail";
 
 function CommunityBoardRouter(props) {
-  const pathname = useLocation().pathname;
   const postCategoryQuery = usePostCategoryQuery();
   const boardKeys =
     postCategoryQuery?.data?.data?.body.map(
       (postCategory) => postCategory.postCategoryKey
     ) || [];
 
-  const currentBoardKey = pathname.slice(7).split("/")[0];
-
   return (
     <>
       {postCategoryQuery.isFetched && (
         <Routes>
           <Route path="/write" element={<PostWrite />} />
-          {boardKeys.includes(currentBoardKey) && (
-            <Route
-              path={`/${currentBoardKey}/:postId`}
-              element={<PostDetail />}
-            />
-          )}
-          <Route path="/*" element={<FestivalBoard />} />
+          {boardKeys.map((boardKey) => (
+            <>
+              <Route path={`/${boardKey}`} element={<FestivalBoard />} />
+              <Route path={`/${boardKey}/:id`} element={<PostDetail2 />} />
+            </>
+          ))}
+          <Route path={"all"} element={<FestivalBoard />} />
         </Routes>
       )}
     </>

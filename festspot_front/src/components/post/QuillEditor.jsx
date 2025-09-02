@@ -21,7 +21,6 @@ function QuillEditor({ quillRef, content, setContent, setImages }) {
           "code-block",
           { list: "ordered" },
           { list: "bullet" },
-          "link",
           "clean",
         ],
       ],
