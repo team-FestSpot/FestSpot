@@ -5,12 +5,9 @@ import com.festspot.dev.domain.user.UserMapper;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostRegisterReqDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
-import com.festspot.dev.exception.auth.BadLikeException;
-import com.festspot.dev.security.model.PrincipalUser;
 import com.festspot.dev.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -67,7 +64,6 @@ public class PostController {
   @GetMapping("/{boardKey}/{postId}/dislike")
   public ResponseEntity<ResponseDto<?>> disLike(@PathVariable String boardKey,
       @PathVariable Integer postId) {
-    System.out.println(postId);
     postService.disLike(postId);
     return ResponseEntity.ok(ResponseDto.success("좋아요 요청 취소 완료"));
   }
@@ -78,24 +74,14 @@ public class PostController {
   }
 
   @PostMapping("/{postId}/like")
-  public ResponseEntity<ResponseDto<?>> postLike(
-      @PathVariable Integer postId, @AuthenticationPrincipal PrincipalUser principalUser) {
-    if (principalUser == null) {
-      throw new BadLikeException("BadLikeException", "로그인 후 이용해주세요");
-    }
-
+  public ResponseEntity<ResponseDto<?>> postLike(@PathVariable Integer postId) {
     return ResponseEntity.ok(
-        ResponseDto.success(postService.postLike(postId, principalUser.getUser().getUserId())));
+        ResponseDto.success(postService.postLike(postId)));
   }
 
   @DeleteMapping("/{postId}/dislike")
-  public ResponseEntity<ResponseDto<?>> postDislike(@PathVariable Integer postId,
-      @AuthenticationPrincipal PrincipalUser principalUser) {
-    if (principalUser == null) {
-      throw new BadLikeException("BadLikeException", "로그인 후 이용해주세요");
-    }
-
+  public ResponseEntity<ResponseDto<?>> postDislike(@PathVariable Integer postId) {
     return ResponseEntity.ok(
-        ResponseDto.success(postService.postDislike(postId, principalUser.getUser().getUserId())));
+        ResponseDto.success(postService.postDislike(postId)));
   }
 }

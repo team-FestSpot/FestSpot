@@ -78,7 +78,7 @@ export const responsiveDateBox = css`
   left: 2%;
   box-sizing: border-box;
   border-radius: 2rem;
-  background-color: #ef5a39;
+  background-color: var(--main-color);
   width: fit-content;
   padding: 1% 1.5%;
   color: white;
@@ -140,7 +140,7 @@ export const dateContainer = css`
   & > div {
     box-sizing: border-box;
     border-radius: 2rem;
-    background-color: #ef5a39;
+    background-color: var(--main-color);
     width: fit-content;
     padding: 1% 1.5%;
     color: white;
@@ -209,7 +209,7 @@ export const urlContainer = css`
     & > div {
       box-sizing: border-box;
       border-radius: 2rem;
-      background-color: #ef5a39;
+      background-color: var(--main-color);
       width: fit-content;
       padding: 2% 2%;
       cursor: pointer;

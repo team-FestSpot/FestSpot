@@ -25,6 +25,8 @@ export const global = css`
   #root {
     font-size: 1.4rem;
 
+    --main-color: #ff6b4a;
+
     ::-webkit-scrollbar {
       display: none;
     }

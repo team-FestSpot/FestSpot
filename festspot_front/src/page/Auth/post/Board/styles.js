@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 import { remToPx } from "../../../../utils/remToPx";
 
 export const boardLayout = css`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -10,6 +11,7 @@ export const boardLayout = css`
   height: auto;
   box-sizing: border-box;
   padding: 2rem;
+  padding-top: 0;
 `;
 
 export const postContainer = css`
@@ -133,4 +135,25 @@ export const paginationContainer = css`
   margin-top: 2rem;
   height: 4rem;
   font-size: 2rem;
+`;
+
+export const writeButton = css`
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  padding: 1.5rem;
+  font-size: 2rem;
+  color: white;
+  background-color: var(--main-color);
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    bottom: 3%;
+  }
 `;

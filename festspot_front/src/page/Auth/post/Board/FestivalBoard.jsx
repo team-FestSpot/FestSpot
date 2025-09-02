@@ -1,22 +1,27 @@
 /** @jsxImportSource @emotion/react */
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import * as s from "./styles";
 import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import { useAllPostsQuery } from "../../../../querys/post/useAllPostsQuery";
 import { usePostsQuery } from "../../../../querys/post/usePostsQuery";
 import PaginationBar from "../../../../components/PaginationBar/PaginationBar";
-import { FaHeart, FaRegHeart, FaRegEye } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaRegEye, FaPlus } from "react-icons/fa";
 import { reqPostDislike, reqPostLike } from "../../../../api/postApi";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import { style } from "@mui/system";
+import { useQueryClient } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import { css, Global } from "@emotion/react";
+import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 
 function FestivalBoard(props) {
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [postList, setPostList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
   const queryClient = useQueryClient();
+  const principalQuery = usePrincipalQuery();
+  const userInfo = principalQuery.data?.data?.body?.user;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // 페이지 기본 설정 : 1
   useEffect(() => {
@@ -44,84 +49,137 @@ function FestivalBoard(props) {
       setPostList(response.postList);
       setTotalPage(response.totalPage);
     }
-
-    console.log(response);
   }, [response]);
 
   const handleCardOnClick = (e) => {};
 
-  const handleLikeOnClick = (postId) => {
+  const handleLikeOnClick = async (postId) => {
     try {
-      reqPostLike(postId);
+      await reqPostLike(postId);
 
       if (!!boardKey) {
-      } else {
-        queryClient.setQueryData(["posts", page], (prev) => {
-          console.log(prev);
-          return {
-            ...prev,
-            data: {
-              ...prev.data,
-              body: {
-                ...prev.data.body,
-                postList: prev.data.body.postList.map((post) => {
-                  if (post.postId === postId) {
-                    return {
-                      ...post,
-                      likeCount: post.likeCount + 1,
-                      isLike: true,
-                    };
-                  }
-                  return post;
-                }),
-              },
+        queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              postList: prev.data.body.postList.map((post) => {
+                if (post.postId === postId) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount + 1,
+                    isLike: true,
+                  };
+                }
+                return post;
+              }),
             },
-          };
-        });
+          },
+        }));
+      } else {
+        queryClient.setQueryData(["posts", page], (prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              postList: prev.data.body.postList.map((post) => {
+                if (post.postId === postId) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount + 1,
+                    isLike: true,
+                  };
+                }
+                return post;
+              }),
+            },
+          },
+        }));
       }
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        icon: "error",
+        title: error.response.data.body,
+        text: error.response.data.message,
+        timer: 2000,
+        timerProgressBar: true,
+      });
     }
   };
 
-  console.log(response);
-
-  const handleDislikeOnClick = (postId) => {
+  const handleDislikeOnClick = async (postId) => {
     try {
-      reqPostDislike(postId);
+      await reqPostDislike(postId);
 
       if (!!boardKey) {
-      } else {
-        queryClient.setQueryData(["posts", page], (prev) => {
-          console.log(prev);
-          return {
-            ...prev,
-            data: {
-              ...prev.data,
-              body: {
-                ...prev.data.body,
-                postList: prev.data.body.postList.map((post) => {
-                  if (post.postId === postId) {
-                    return {
-                      ...post,
-                      likeCount: post.likeCount - 1,
-                      isLike: false,
-                    };
-                  }
-                  return post;
-                }),
-              },
+        queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              postList: prev.data.body.postList.map((post) => {
+                if (post.postId === postId) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount - 1,
+                    isLike: false,
+                  };
+                }
+                return post;
+              }),
             },
-          };
-        });
+          },
+        }));
+      } else {
+        queryClient.setQueryData(["posts", page], (prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              postList: prev.data.body.postList.map((post) => {
+                if (post.postId === postId) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount - 1,
+                    isLike: false,
+                  };
+                }
+                return post;
+              }),
+            },
+          },
+        }));
       }
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        icon: "error",
+        title: error.response.data.body,
+        text: error.response.data.message,
+        timer: 2000,
+        timerProgressBar: true,
+      });
     }
+  };
+
+  const handleWriteOnClick = (e) => {
+    !!boardKey
+      ? navigate(`/board/write?boardKey=${boardKey}`)
+      : navigate(`/board/write`);
   };
 
   return (
     <>
+      <Global
+        styles={css`
+          .swal2-modal {
+            font-size: 12px;
+          }
+        `}
+      />
       {!!postList && !!response && (
         <div css={s.boardLayout}>
           <div css={s.postContainer}>
@@ -175,6 +233,11 @@ function FestivalBoard(props) {
               setSearchParams={setSearchParams}
             />
           </div>
+          {!!userInfo && (
+            <div css={s.writeButton} onClick={handleWriteOnClick}>
+              <FaPlus />
+            </div>
+          )}
         </div>
       )}
     </>

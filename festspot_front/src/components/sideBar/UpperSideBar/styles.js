@@ -75,7 +75,7 @@ export const searchContainer = css`
 
   transition: all 0.2s ease;
   &:focus-within {
-    border: 1px solid #ff6b4a;
+    border: 1px solid var(--main-color);
     background-color: #ffffff;
   }
 
@@ -127,7 +127,7 @@ export const searchIcon = css`
   transition: color 0.2s ease;
 
   &:hover {
-    color: #ff6b4a;
+    color: var(--main-color);
   }
 `;
 
@@ -195,7 +195,7 @@ export const loginButton = css`
   width: 100%;
   height: 100%;
   color: white;
-  background-color: #ff6b4a;
+  background-color: var(--main-color);
   border: none;
   border-radius: 20px;
   font-size: 14px;
@@ -205,7 +205,7 @@ export const loginButton = css`
 
   &:hover {
     background-color: #e55a42;
-    transform: translateY(-1px);
+    transform: scale(0.98);
     box-shadow: 0 4px 8px rgba(255, 107, 74, 0.3);
   }
 `;
@@ -224,6 +224,6 @@ export const menuIcon = css`
   transition: color 0.2s ease;
 
   &:hover {
-    color: #ff6b4a;
+    color: var(--main-color);
   }
 `;

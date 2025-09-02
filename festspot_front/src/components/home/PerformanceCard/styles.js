@@ -4,7 +4,7 @@ export const dateBox = css`
   position: absolute;
   top: 1vh;
   right: 1vw;
-  background: linear-gradient(135deg, #ef5a39 0%, #d14626 100%);
+  background-color: var(--main-color);
   padding: 0;
   border-radius: 20px;
   box-shadow: 0 4px 15px rgba(239, 90, 57, 0.4);
@@ -44,8 +44,7 @@ export const performanceCard = css`
   flex-direction: column;
 
   &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(239, 90, 57, 0.3);
+    box-shadow: 0 10px 20px rgba(239, 90, 57, 0.3);
     border-color: rgba(239, 90, 57, 0.5);
   }
 
@@ -108,7 +107,7 @@ export const content = (isFestival, isForeign) => {
       }
 
       height: fit-content;
-      color: #ef5a39;
+      color: var(--main-color);
       font-weight: 500;
       margin: 0;
       padding: 0;
