@@ -14,6 +14,8 @@ import { css, Global } from "@emotion/react";
 import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 
 function FestivalBoard(props) {
+  console.log("board");
+
   const location = useLocation();
   const navigate = useNavigate();
   const [postList, setPostList] = useState([]);

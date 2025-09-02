@@ -2,20 +2,21 @@ package com.festspot.dev.controller;
 
 import com.festspot.dev.domain.post.PostMapper;
 import com.festspot.dev.domain.user.UserMapper;
+import com.festspot.dev.dto.post.PostCommentReqDto;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostRegisterReqDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
+import com.festspot.dev.security.model.PrincipalUser;
 import com.festspot.dev.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/board")
@@ -83,5 +84,43 @@ public class PostController {
   public ResponseEntity<ResponseDto<?>> postDislike(@PathVariable Integer postId) {
     return ResponseEntity.ok(
         ResponseDto.success(postService.postDislike(postId)));
+  }
+
+  // 좋아요
+  @PostMapping("/{boardKey}/{postId}/like")
+  public ResponseEntity<ResponseDto<?>> toggleLike(@PathVariable String boardKey, @PathVariable Integer postId, @AuthenticationPrincipal PrincipalUser principalUser) {
+    Integer userId = principalUser.getUser().getUserId();
+    boolean liked = postService.toggleLike(postId, userId);
+    int likeCount = postService.getLikeCount(postId);
+
+    Map<String, Object> body = new HashMap<>();
+    body.put("liked", liked);
+    body.put("likeCount", likeCount);
+
+    return ResponseEntity.ok(ResponseDto.success(body));
+  }
+
+  // 댓글 목록
+  @GetMapping("/{boardKey}/{postId}/comments")
+  public ResponseEntity<ResponseDto<?>> commentsList(@PathVariable String boardKey, @PathVariable Integer postId) {
+    System.out.println(postId);
+    return ResponseEntity.ok(ResponseDto.success(postService.getComment(postId)));
+  }
+
+  // 댓글 작성
+  @PostMapping("/{boardKey}/{postId}/comments")
+  public ResponseEntity<ResponseDto<?>> insertComment(@PathVariable String boardKey, @PathVariable Integer postId, @RequestBody PostCommentReqDto dto, @AuthenticationPrincipal PrincipalUser principalUser) {
+    Integer userId = principalUser.getUser().getUserId();
+    System.out.println(postId);
+    postService.addComment(postId, userId, dto.getCommentContent());
+    return ResponseEntity.ok(ResponseDto.success("댓글 작성 성공"));
+  }
+
+  // 댓글 삭제(본인)
+  @DeleteMapping("/{boardKey}/{postId}/{postCommentId}")
+  public ResponseEntity<ResponseDto<?>> deleteComment(@PathVariable String boardKey, @PathVariable Integer postId, @PathVariable Integer postCommentId, @AuthenticationPrincipal PrincipalUser principalUser) {
+    Integer userId = principalUser.getUser().getUserId();
+    postService.deleteComment(postId, userId);
+    return ResponseEntity.ok(ResponseDto.success("댓글 삭제 성공"));
   }
 }

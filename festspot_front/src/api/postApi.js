@@ -13,8 +13,8 @@ export const reqPosts = async (boardKey, page) =>
   });
 
 // 상세 게시글
-export const reqPostDetail = (boardKey, postId) =>
-  get(`/api/board/${boardKey}/${postId}`);
+export const reqPostDetail = async (boardKey, postId) =>
+  await api.get(`/api/board/${boardKey}/${postId}`);
 
 export const reqPostCategory = () => api.get(`/api/board/category`);
 
@@ -30,3 +30,22 @@ export const reqPostLike = async (postId) =>
 
 export const reqPostDislike = async (postId) =>
   await api.delete(`/api/board/${postId}/dislike`);
+
+// 좋아요
+export const reqToggleLike = async ({ boardKey, postId }) =>
+  await api.post(`/api/board/${boardKey}/${postId}/like`);
+
+//댓글
+export const reqCommentsList = async ({ boardKey, postId }) =>
+  await api.get(`/api/board/${boardKey}/${postId}/comments`);
+
+export const reqAddComment = async ({ boardKey, postId, commentContent }) => {
+  await api.post(`/api/board/${boardKey}/${postId}/comments`, {
+    commentContent,
+  });
+};
+
+export const reqDeleteComment = async ({ boardKey, postId, postCommentId }) =>
+  await api.delete(
+    `/api/board/${boardKey}/${postId}/comments/${postCommentId}`
+  );

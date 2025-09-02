@@ -2,6 +2,7 @@
 import PerformanceCalendar from "../../components/home/PerformanceCalendar/PerformanceCalendar";
 import PerformanceCard from "../../components/home/PerformanceCard/PerformanceCard";
 import { usePerformanceListQuery } from "../../querys/performance/usePerformanceListQuery";
+import { usePostDetailQuery } from "../../querys/post/usePostDetailQuery";
 import * as s from "./styles";
 import React from "react";
 

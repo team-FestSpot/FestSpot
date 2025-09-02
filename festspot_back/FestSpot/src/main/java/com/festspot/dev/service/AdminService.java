@@ -38,7 +38,6 @@ public class AdminService {
     private final TicketingUrlMapper ticketingUrlMapper;
     private final FileService fileService;
     private final UserMapper userMapper;
-    private final UserRoleMapper userRoleMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -121,9 +120,8 @@ public class AdminService {
 
   @Transactional(rollbackFor = Exception.class)
   public int uploadCustomPerformance(AdminUploadPerformanceReqDto dto, MultipartFile file) {
-    String newFileName = fileService.uploadFile(file, "/poster");
-    String url = "/upload/poster/" + newFileName;
-    dto.setPoster(url);
+    String newFileName = fileService.uploadFile(file, "poster");
+    dto.setPoster(newFileName);
     PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
         dto.getArea());
     PerformanceState performanceState = performanceStateMapper.findByState(dto.getPrfstate());
@@ -152,8 +150,8 @@ public class AdminService {
   public void updateCustomPerformanceInfo(AdminUploadPerformanceReqDto dto, Integer performanceId,
       List<TicketingReqDto> deletedTicketingDto, MultipartFile file) {
     if (!Objects.isNull(file) && file.getSize() > 0) {
-      fileService.deleteFile(dto.getPoster(), "profile");
-      dto.setPoster("/upload/poster/" + fileService.uploadFile(file, "/poster"));
+      fileService.deleteFile(dto.getPoster(), "poster");
+      dto.setPoster(fileService.uploadFile(file, "poster"));
     }
 
     PerformanceRegion performanceRegion = performanceRegionMapper.findByRegionName(
@@ -178,7 +176,7 @@ public class AdminService {
   public int updateUserInfo(AdminUserInfoModifyReqDto dto, MultipartFile file) {
     if (!Objects.isNull(file) && file.getSize() > 0) {
       fileService.deleteFile(dto.getUserProfileImgUrl(), "profile");
-      dto.setUserProfileImgUrl("/upload/profile/" + fileService.uploadFile(file, "/profile"));
+      dto.setUserProfileImgUrl(fileService.uploadFile(file, "profile"));
     }
     if (dto.getUserId() > -1) {
       User user = dto.toEntity();

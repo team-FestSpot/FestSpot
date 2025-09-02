@@ -12,6 +12,6 @@ public interface PostLikeMapper {
 
   int getLikeCount(@Param("postId") Integer postId);
 
-  Boolean isLike(@Param("postId") Integer postId, @Param("userId") Integer userId);
+  int isLike(@Param("postId") Integer postId, @Param("userId") Integer userId);
 
 }
