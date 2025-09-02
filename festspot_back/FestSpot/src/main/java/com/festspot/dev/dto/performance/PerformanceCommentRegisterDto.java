@@ -16,6 +16,7 @@ public class PerformanceCommentRegisterDto {
 
     public PerformanceComment toEntity() {
         return PerformanceComment.builder()
+                .performanceCommentId(performanceCommentId)
                 .performanceId(performanceId)
                 .content(content)
                 .build();

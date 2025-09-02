@@ -39,11 +39,11 @@
 
 <resultMap id="PerformanceCommentMap" type="com.festspot.dev.domain.performance.performanceComment.PerformanceComment">
     <id column="performance_comment_id" property="performanceCommentId" />
-    <result column="user_id" property="userId" />
-    <result column="performance_id" property="performanceId" />
+    <result column="pct_user_id" property="userId" />
+    <result column="pct_performance_id" property="performanceId" />
     <result column="content" property="content" />
-    <result column="created_at" property="createdAt" />
-    <result column="deleted_at" property="deletedAt" />
+    <result column="pct_created_at" property="createdAt" />
+    <result column="pct_deleted_at" property="deletedAt" />
 
     <association property="user" resultMap="com.festspot.dev.domain.user.UserMapper.UserMap" />
  </resultMap>
@@ -71,6 +71,8 @@
         delete from performance_tb
         where performance_id = #{performanceId}
     </delete>
+
+
 
     <select id="findAll" resultMap="PerformanceMap">
     select
@@ -189,19 +191,48 @@
       </foreach>
   </insert>
 
-    <insert id="insertComment">
-        insert into performance_comment_tb
+    <insert id="insertOrUpdateComment">
+        insert into performance_comment_tb (
+            <if test="performanceCommentId != null">
+                performance_comment_id,
+            </if>
+            user_id, performance_id, content, created_at, deleted_at )
         values
-            (default, #{userId}, #{performanceId}, #{content}, now(), null)
+        (
+            <if test="performanceCommentId != null">
+                #{performanceCommentId},
+            </if>
+            #{userId}, #{performanceId}, #{content}, now(), null)
+        <if test="performanceCommentId != null">
+            on duplicate key update
+                content = #{content}
+        </if>
     </insert>
 
     <select id="findCommentsByPerformanceId" resultMap="PerformanceCommentMap">
         select
-            *
+            pct.performance_comment_id,
+            pct.user_id as pct_user_id,
+            pct.performance_id as pct_performance_id,
+            pct.content,
+            pct.created_at as pct_created_at,
+            pct.deleted_at as pct_deleted_at,
+
+            ut.user_id,
+            ut.user_nickname,
+            ut.user_profile_img_url
         from
             performance_comment_tb pct
             left outer join user_tb ut on (pct.user_id = ut.user_id)
         where
             pct.performance_id = #{performanceId}
     </select>
+
+    <update id="updateCommentDeletedAtById">
+        update performance_comment_tb
+        set
+            deleted_at = now()
+        where
+            performance_comment_id = #{performanceCommentId}
+    </update>
 </mapper>

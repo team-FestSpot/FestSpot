@@ -5,6 +5,7 @@ import com.festspot.dev.dto.performance.PerformanceCommentRegisterDto;
 import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.service.PerformanceService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +36,14 @@ public class PerformanceController {
   }
 
   @PostMapping("/comment")
-  public ResponseEntity<ResponseDto<?>> registerPerformanceComment(@RequestBody PerformanceCommentRegisterDto dto) {
-    int result = performanceService.registerPerformanceComment(dto);
+  public ResponseEntity<ResponseDto<?>> registerOrUpdatePerformanceComment(@RequestBody PerformanceCommentRegisterDto dto) throws BadRequestException {
+    if(dto.getContent().isEmpty()) {
+      return ResponseEntity.ok(ResponseDto.fail(HttpStatus.BAD_REQUEST, "댓글을 입력하세요.", 0));
+    }
+    
+    int result = performanceService.registerOrUpdatePerformanceComment(dto);
     if(result < 1) {
-      return ResponseEntity.ok(ResponseDto.fail(HttpStatus.BAD_REQUEST, "댓글 등록 중 오류가 발생했습니다.", result));
+      throw new BadRequestException();
     }
     return ResponseEntity.ok(ResponseDto.success("댓글이 등록되었습니다."));
   }
@@ -47,5 +52,14 @@ public class PerformanceController {
   public ResponseEntity<ResponseDto<?>> getPerformanceCommentsByPerformanceId(@PathVariable Integer performanceId) {
     List<PerformanceComment> result = performanceService.getPerformanceCommentsByPerformanceId(performanceId);
     return ResponseEntity.ok(ResponseDto.success(result));
+  }
+
+  @PutMapping("/comment/delete/{performanceCommentId}")
+  public ResponseEntity<ResponseDto<?>> deletePerformanceComment(@PathVariable Integer performanceCommentId) throws BadRequestException {
+    int result = performanceService.deletePerformanceCommentById(performanceCommentId);
+    if(result < 1) {
+      throw new BadRequestException();
+    }
+    return ResponseEntity.ok(ResponseDto.success("댓글이 삭제되었습니다."));
   }
 }

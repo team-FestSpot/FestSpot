@@ -24,7 +24,9 @@ public interface PerformanceMapper {
 
   int deleteById(Integer performanceId);
 
-  int insertComment(PerformanceComment comment);
+  int insertOrUpdateComment(PerformanceComment comment);
 
   List<PerformanceComment> findCommentsByPerformanceId(Integer performanceId);
+
+  int updateCommentDeletedAtById(Integer performanceCommentId);
 }

@@ -5,4 +5,6 @@ export const usePerformanceCommentListQuery = (performanceId) =>
   useQuery({
     queryKey: ["performanceCommentList"],
     queryFn: async () => await reqPerformanceCommentList(performanceId),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
   });
