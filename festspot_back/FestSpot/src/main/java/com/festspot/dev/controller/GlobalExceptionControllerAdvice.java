@@ -6,6 +6,7 @@ import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.exception.auth.BadUserInfoException;
 import com.festspot.dev.exception.auth.FileStoreException;
 import com.festspot.dev.exception.auth.LoginException;
+import com.festspot.dev.exception.auth.NotLoginException;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.dao.DuplicateKeyException;
@@ -54,5 +55,11 @@ public class GlobalExceptionControllerAdvice {
   public ResponseEntity<ResponseDto<?>> badUserInfoError(BadUserInfoException e) {
     return ResponseEntity.badRequest()
         .body(ResponseDto.fail(HttpStatus.UNAUTHORIZED, "잘못된 인증", e.getMessage()));
+  }
+
+  @ExceptionHandler(NotLoginException.class)
+  public ResponseEntity<ResponseDto<?>> badLikeError(NotLoginException e) {
+    return ResponseEntity.badRequest()
+        .body(ResponseDto.fail(HttpStatus.UNAUTHORIZED, "로그인 후 이용해 주세요", e.getMessage()));
   }
 }

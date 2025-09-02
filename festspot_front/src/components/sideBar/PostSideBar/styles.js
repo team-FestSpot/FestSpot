@@ -10,6 +10,7 @@ export const sidebarContainer = css`
 `;
 
 export const boardBtnContainer = css`
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -29,7 +30,7 @@ export const boardBtnContainer = css`
   }
 `;
 
-export const boardBtn = css`
+export const boardBtn = (isCurrentPath) => css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,14 +42,13 @@ export const boardBtn = css`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-size: 1.4rem;
   font-weight: 600;
-  background: white;
-  color: #eb684b;
+  background-color: ${isCurrentPath ? "var(--main-color)" : "white"};
+  color: ${isCurrentPath ? "white" : "var(--main-color)"};
   transition: all 0.2s;
   cursor: pointer;
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transform: scale(1.02);
   }
 
   @media (max-width: 768px) {

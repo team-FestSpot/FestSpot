@@ -14,7 +14,7 @@
         delete from post_like_tb
         where
             post_id = #{postId}
-            and user_id = #{user_id}
+            and user_id = #{userId}
     </delete>
 
     <select id="getLikeCount" resultType="java.lang.Integer">
@@ -26,8 +26,8 @@
             post_id = #{postId}
     </select>
 
-    <select id="exist" resultType="int">
-        select count(*)
+    <select id="isLike" resultType="int">
+        select case where count(*) > 0 then true else false end
         from post_like_tb
         where post_id = #{postId} and user_id = {userId}
     </select>

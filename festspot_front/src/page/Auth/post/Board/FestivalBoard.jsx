@@ -1,20 +1,29 @@
 /** @jsxImportSource @emotion/react */
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import * as s from "./styles";
 import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import { useAllPostsQuery } from "../../../../querys/post/useAllPostsQuery";
 import { usePostsQuery } from "../../../../querys/post/usePostsQuery";
-import { PAGE_SIZE } from "../../../../constants/boardPageSize";
 import PaginationBar from "../../../../components/PaginationBar/PaginationBar";
+import { FaHeart, FaRegHeart, FaRegEye, FaPlus } from "react-icons/fa";
+import { reqPostDislike, reqPostLike } from "../../../../api/postApi";
+import { useQueryClient } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import { css, Global } from "@emotion/react";
+import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 
 function FestivalBoard(props) {
   console.log("board");
 
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [postList, setPostList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
+  const queryClient = useQueryClient();
+  const principalQuery = usePrincipalQuery();
+  const userInfo = principalQuery.data?.data?.body?.user;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // 페이지 기본 설정 : 1
   useEffect(() => {
@@ -44,22 +53,193 @@ function FestivalBoard(props) {
     }
   }, [response]);
 
+  const handleCardOnClick = (e) => {};
+
+  const handleLikeOnClick = async (postId) => {
+    try {
+      await reqPostLike(postId);
+
+      if (!!boardKey) {
+        queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              postList: prev.data.body.postList.map((post) => {
+                if (post.postId === postId) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount + 1,
+                    isLike: true,
+                  };
+                }
+                return post;
+              }),
+            },
+          },
+        }));
+      } else {
+        queryClient.setQueryData(["posts", page], (prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              postList: prev.data.body.postList.map((post) => {
+                if (post.postId === postId) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount + 1,
+                    isLike: true,
+                  };
+                }
+                return post;
+              }),
+            },
+          },
+        }));
+      }
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: error.response.data.body,
+        text: error.response.data.message,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+    }
+  };
+
+  const handleDislikeOnClick = async (postId) => {
+    try {
+      await reqPostDislike(postId);
+
+      if (!!boardKey) {
+        queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              postList: prev.data.body.postList.map((post) => {
+                if (post.postId === postId) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount - 1,
+                    isLike: false,
+                  };
+                }
+                return post;
+              }),
+            },
+          },
+        }));
+      } else {
+        queryClient.setQueryData(["posts", page], (prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            body: {
+              ...prev.data.body,
+              postList: prev.data.body.postList.map((post) => {
+                if (post.postId === postId) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount - 1,
+                    isLike: false,
+                  };
+                }
+                return post;
+              }),
+            },
+          },
+        }));
+      }
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: error.response.data.body,
+        text: error.response.data.message,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+    }
+  };
+
+  const handleWriteOnClick = (e) => {
+    !!boardKey
+      ? navigate(`/board/write?boardKey=${boardKey}`)
+      : navigate(`/board/write`);
+  };
+
   return (
     <>
+      <Global
+        styles={css`
+          .swal2-modal {
+            font-size: 12px;
+          }
+        `}
+      />
       {!!postList && !!response && (
         <div css={s.boardLayout}>
           <div css={s.postContainer}>
             {postList.map((post, idx) => (
-              <Card key={idx}>{post.postTitle}</Card>
+              <Card key={idx} onClick={handleCardOnClick}>
+                <div css={s.imageContainer}>
+                  {!!post.postImgs[0] && (
+                    <img
+                      src={post.postImgs[0].postImgUrl}
+                      alt="게시글 이미지"
+                    />
+                  )}
+                </div>
+                <div css={s.contentBox}>
+                  <div css={s.titleContainer}>{post.postTitle}</div>
+                  <div css={s.contentContainer}>
+                    <div css={s.userContainer}>
+                      <div css={s.profileImgContainer}>
+                        <img src={post.user.userProfileImgUrl} />
+                      </div>
+                      <div>{post.user.userNickName}</div>
+                    </div>
+                    <div css={s.countContainer}>
+                      <div>
+                        <FaRegEye />
+                        {post.viewCount}
+                      </div>
+                      <div>
+                        {!!post.isLike ? (
+                          <FaHeart
+                            onClick={() => handleDislikeOnClick(post.postId)}
+                            style={{ color: "red" }}
+                          />
+                        ) : (
+                          <FaRegHeart
+                            onClick={() => handleLikeOnClick(post.postId)}
+                          />
+                        )}
+                        {post.likeCount}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             ))}
           </div>
-          <div css={s.paginationContainer} style={{ height: "4rem" }}>
+          <div css={s.paginationContainer}>
             <PaginationBar
               totalPage={totalPage}
               searchParams={searchParams}
               setSearchParams={setSearchParams}
             />
           </div>
+          {!!userInfo && (
+            <div css={s.writeButton} onClick={handleWriteOnClick}>
+              <FaPlus />
+            </div>
+          )}
         </div>
       )}
     </>
