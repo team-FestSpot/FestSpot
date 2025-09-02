@@ -277,7 +277,10 @@ function AdminPerformanceUpdateModal({
         <div css={s.mainContainer}>
           {newPosterUrl.length < 1 ? (
             <div css={s.imgContainer}>
-              <img src={`${baseURL}${performance.poster}`} alt="" />
+              <img
+                src={`${baseURL}/image/poster/${performance.poster}`}
+                alt=""
+              />
             </div>
           ) : (
             <div css={s.imgContainer}>
