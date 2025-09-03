@@ -13,11 +13,11 @@ import TextField from "@mui/material/TextField";
 import { useUserInfoUpdateMutation } from "../../../../querys/admin/useUserInfoUpdateMutation";
 import { reqDeleteUserApi } from "../../../../api/adminApi";
 
-function AdminUserInfoDataGrid(props) {
+function AdminUserInfoDataGrid({ searchResult }) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const userListQuery = useUserListQuery();
-  const queryResponse = userListQuery?.data?.data?.body;
+  const userList = userListQuery?.data?.data?.body;
   const [rows, setRows] = useState([]);
   const [dataToUpdate, setDataToUpdate] = useState({
     userId: -1,
@@ -201,16 +201,16 @@ function AdminUserInfoDataGrid(props) {
   };
 
   useEffect(() => {
-    if (!userListQuery.isLoading && !!queryResponse && rows.length < 0) {
-      // console.log(queryResponse);
-      setRows(queryResponse);
+    if (!userListQuery.isLoading && !!userList && rows.length < 0) {
+      // console.log(userList);
+      setRows(userList);
     }
   }, [userListQuery.isLoading]);
 
   useEffect(() => {
-    if (!userListQuery.isRefetching && !!queryResponse) {
-      // console.log(queryResponse);
-      setRows(queryResponse);
+    if (!userListQuery.isRefetching && !!userList) {
+      // console.log(userList);
+      setRows(userList);
     }
   }, [userListQuery.isRefetching]);
 
@@ -241,11 +241,11 @@ function AdminUserInfoDataGrid(props) {
   useEffect(() => {
     if (
       !userListQuery.isLoading &&
-      Array.isArray(queryResponse) &&
-      queryResponse.length > 0 &&
+      Array.isArray(userList) &&
+      userList.length > 0 &&
       rows.length < 1
     ) {
-      setRows([...queryResponse]);
+      setRows([...userList]);
     }
   }, [userListQuery.isLoading]);
 
@@ -253,7 +253,11 @@ function AdminUserInfoDataGrid(props) {
     <div css={s.adminGridLayout}>
       <div css={s.dataGridContainer}>
         <DataGrid
-          rows={rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)} // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
+          rows={
+            searchResult.length > 1
+              ? searchResult.slice((pageParam - 1) * 20, pageParam * 20 - 1)
+              : rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)
+          } // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
           getRowId={(row) => row.userId}
           rowHeight={200}
           columns={columns}

@@ -32,12 +32,8 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       width: 150,
       editable: false,
       renderCell: (params) => (
-        <div>
-          <img
-            src={`${baseURL}/image/poster/${params.row.poster}`}
-            width={"100%"}
-            height={"100%"}
-          />
+        <div css={s.imgContainer}>
+          <img src={`${baseURL}/image/poster/${params.row.poster}`} />
         </div>
       ),
     },

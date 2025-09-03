@@ -80,17 +80,6 @@ function AdminDataGrid(props) {
       editable: false,
     },
     {
-      field: "edit",
-      headerName: "수정",
-      width: 100,
-      editable: false,
-      renderCell: (params) => (
-        <Button>
-          <FaRegEdit />
-        </Button> // 수정
-      ),
-    },
-    {
       field: "action",
       headerName: "등록",
       width: 100,

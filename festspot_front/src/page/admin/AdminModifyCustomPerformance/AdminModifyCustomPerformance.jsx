@@ -89,9 +89,14 @@ function AdminModifyCustomPerformance(props) {
               onChange={handleSearchInputOnChange}
             />
             <div>
-              <Button onClick={handleSearchButtonOnClick}>검색</Button>
+              <Button variant="contained" onClick={handleSearchButtonOnClick}>
+                검색
+              </Button>
               {isSearch && (
-                <Button onClick={handleSearchResetButtonOnClick}>
+                <Button
+                  variant="contained"
+                  onClick={handleSearchResetButtonOnClick}
+                >
                   검색 초기화
                 </Button>
               )}

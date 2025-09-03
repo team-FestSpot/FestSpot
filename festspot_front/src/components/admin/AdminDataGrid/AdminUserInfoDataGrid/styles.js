@@ -7,13 +7,14 @@ export const adminGridLayout = css`
   justify-content: flex-start; // 변경
   align-items: center;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
+  padding: 2rem; // 추가
 `;
 
 export const dataGridContainer = css`
   width: 100%;
   max-width: 130rem;
-  height: 80vh;
+  height: 70rem;
 `;
 
 export const modifyProfileImg = css`

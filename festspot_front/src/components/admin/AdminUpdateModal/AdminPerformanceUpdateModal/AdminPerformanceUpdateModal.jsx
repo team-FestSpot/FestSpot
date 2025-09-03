@@ -38,6 +38,8 @@ function AdminPerformanceUpdateModal({
   // 기존에 있던 예매처/url 중 체크 해제한(삭제할) url 목록
   const [deletedTicketingList, setDeletedTicketingList] = useState([]);
 
+  const inputParameters = [{}];
+
   // 이미지 파일 바꾸면 바꾼 이미지 표시 + 전송할 때 보내도록 상태에 저장
   const handleFileInputOnChange = (e) => {
     const file = e.target.files[0];
@@ -59,7 +61,7 @@ function AdminPerformanceUpdateModal({
         <div>
           <p>{placeholder}</p>
         </div>
-        <div>
+        <div css={s.inputBox}>
           <input
             id={id}
             type={type}
@@ -76,18 +78,22 @@ function AdminPerformanceUpdateModal({
   const selectComponent = (id, defaultValue, placeholder, options) => {
     return (
       <div css={s.inputComponent}>
-        <div>{placeholder}</div>
-        <select
-          id={id}
-          defaultValue={defaultValue}
-          onChange={(e) => handleInputOnChange(e, id)}
-        >
-          {options.map((option, index) => (
-            <option key={index} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+        <div>
+          <p>{placeholder}</p>
+        </div>
+        <div css={s.selectBox}>
+          <select
+            id={id}
+            defaultValue={defaultValue}
+            onChange={(e) => handleInputOnChange(e, id)}
+          >
+            {options.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     );
   };
@@ -275,22 +281,23 @@ function AdminPerformanceUpdateModal({
         }}
       >
         <div css={s.mainContainer}>
-          {newPosterUrl.length < 1 ? (
-            <div css={s.imgContainer}>
-              <img
-                src={`${baseURL}/image/poster/${performance.poster}`}
-                alt=""
-              />
+          <div>
+            {newPosterUrl.length < 1 ? (
+              <div css={s.imgBox}>
+                <img
+                  src={`${baseURL}/image/poster/${performance.poster}`}
+                  alt=""
+                />
+              </div>
+            ) : (
+              <div css={s.imgBox}>
+                <img src={newPosterUrl} alt="" />
+              </div>
+            )}
+            <div css={s.inputFileComponent}>
+              <input type="file" onChange={handleFileInputOnChange} />
             </div>
-          ) : (
-            <div css={s.imgContainer}>
-              <img src={newPosterUrl} alt="" />
-            </div>
-          )}
-          <div css={s.inputComponent}>
-            <input type="file" onChange={handleFileInputOnChange} />
           </div>
-
           <div>
             {inputComponent(
               "prfnm",
@@ -353,46 +360,57 @@ function AdminPerformanceUpdateModal({
               ["Y", "N"]
             )}
 
-            {performanceToUpdate.relates.map((relate, index) => (
-              <div key={index} css={s.ticketingInputContainer}>
-                {inputComponent(
-                  "prevrelatenm",
-                  "text",
-                  relate.relatenm,
-                  "예매처명",
-                  index
-                )}
-                {inputComponent(
-                  "prevrelateurl",
-                  "text",
-                  relate.relateurl,
-                  "예매처 URL",
-                  index
-                )}
-                <Checkbox
-                  id={relate.ticketingUrlId}
-                  defaultChecked
-                  onChange={(e) => handleUrlCheckboxOnChange(e, relate)}
-                />
-              </div>
-            ))}
+            <div css={s.ticketingInputContainer}>
+              {performanceToUpdate.relates.map((relate, index) => (
+                <>
+                  <div>
+                    {inputComponent(
+                      "prevrelatenm",
+                      "text",
+                      relate.relatenm,
+                      "예매처명",
+                      index
+                    )}
+                  </div>
+                  <div>
+                    {inputComponent(
+                      "prevrelateurl",
+                      "text",
+                      relate.relateurl,
+                      "예매처 URL",
+                      index
+                    )}
+                  </div>
 
+                  <Checkbox
+                    id={relate.ticketingUrlId}
+                    defaultChecked
+                    onChange={(e) => handleUrlCheckboxOnChange(e, relate)}
+                  />
+                </>
+              ))}
+            </div>
             {ticketingInputValue.map((inputValue, index) => (
               <div key={index} css={s.ticketingInputContainer}>
-                {inputComponent(
-                  "newrelatenm",
-                  "text",
-                  inputValue.relatenm,
-                  "예매처명",
-                  index
-                )}
-                {inputComponent(
-                  "newrelateurl",
-                  "text",
-                  inputValue.relateurl,
-                  "예매처 URL",
-                  index
-                )}
+                <div>
+                  {inputComponent(
+                    "newrelatenm",
+                    "text",
+                    inputValue.relatenm,
+                    "예매처명",
+                    index
+                  )}
+                </div>
+                <div>
+                  {inputComponent(
+                    "newrelateurl",
+                    "text",
+                    inputValue.relateurl,
+                    "예매처 URL",
+                    index
+                  )}
+                </div>
+
                 <div css={s.urlAddRemoveButtonsContainer}>
                   {index === ticketingInputValue.length - 1 && (
                     <CiSquarePlus onClick={handleTicketingPlusOnClick} />
