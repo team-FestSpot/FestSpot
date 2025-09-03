@@ -14,7 +14,7 @@ export const adminGridLayout = css`
 export const dataGridContainer = css`
   width: 100%;
   max-width: 130rem;
-  height: 80rem;
+  height: 70rem;
 `;
 
 export const paginationButtonLayout = css`

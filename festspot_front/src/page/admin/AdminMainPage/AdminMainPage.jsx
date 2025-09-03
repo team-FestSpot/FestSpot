@@ -49,7 +49,7 @@ function AdminMainPage(props) {
           <h2>공연 목록 관리</h2>
         </div>
       </header>
-      <main>
+      <main css={s.main}>
         <div>
           <div css={s.searchLayout}>
             <TextField
@@ -70,6 +70,7 @@ function AdminMainPage(props) {
             />
             <div>
               <Button
+                variant="contained"
                 onClick={async (e) => {
                   e.preventDefault();
                   setRowsEmpty();
@@ -88,6 +89,7 @@ function AdminMainPage(props) {
             </div>
             <div>
               <Button
+                variant="contained"
                 onClick={(e) => {
                   e.preventDefault();
                   uploadManyMutation.mutateAsync(checkedRows);
@@ -98,7 +100,7 @@ function AdminMainPage(props) {
             </div>
           </div>
         </div>
-        <div>
+        <div css={s.dataGridContainer}>
           <AdminDataGrid props={searchInput} />
         </div>
       </main>
