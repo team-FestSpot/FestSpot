@@ -13,7 +13,6 @@
         <result property="postContent" column="post_content" />
         <result property="viewCount" column="view_count" />
         <result property="likeCount" column="like_count" />
-        <result property="isLike" column="is_like" />
         <result property="commentCount" column="comment_count" />
         <result property="isLike" column="isLike" />
         <result property="createdAt" column="created_at" />
@@ -62,7 +61,6 @@
             pt.post_title,
             pt.post_content,
             pt.view_count,
-            pt.like_count,
             pt.comment_count,
             pt.created_at,
             pt.updated_at,
@@ -72,6 +70,7 @@
             ut.user_profile_img_url,
 
             pit.post_img_id,
+            pit.post_id as pit_post_id,
             pit.post_img_url,
             pit.seq,
 
@@ -125,7 +124,7 @@
             left outer join user_tb ut on (ut.user_id = pt.user_id)
             left outer join post_img_tb pit on (pt.post_id = pit.post_id)
             <if test="userId != null">
-              left outer join post_like_tb plt on (pt.post_id = plt.post_id and pt.user_id = #{userId})
+                left outer join post_like_tb plt on (pt.post_id = plt.post_id and plt.user_id = #{userId})
             </if>
             left outer join (select post_id, count(*) as like_count from post_like_tb group by post_id) plct on (plct.post_id = pt.post_id)
             left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
@@ -174,7 +173,7 @@
           left outer join user_tb ut on (ut.user_id = pt.user_id)
           left outer join post_img_tb pit on (pt.post_id = pit.post_id)
           <if test="userId != null">
-            left outer join post_like_tb plt on (pt.post_id = plt.post_id and pt.user_id = #{userId})
+              left outer join post_like_tb plt on (pt.post_id = plt.post_id and plt.user_id = #{userId})
           </if>
           left outer join (select post_id, count(*) as like_count from post_like_tb group by post_id) plct on (plct.post_id = pt.post_id)
           left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)

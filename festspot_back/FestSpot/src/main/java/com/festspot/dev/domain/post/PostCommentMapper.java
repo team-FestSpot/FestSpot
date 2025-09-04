@@ -11,9 +11,16 @@ public interface PostCommentMapper {
     List<PostComment> findByPostId(Integer categoryId, Integer postId);
     int getCountByPostId(Integer postId);
 
-    //
-    int insertComment(@Param("postId") Integer postId, @Param("userId") Integer userId, @Param("commentContent") String commentContent);
-    int deleteComment(@Param("postCommentId") Integer postCommentId, @Param("userId") Integer userId);
+    // 댓글 삽입 및 삭제
+//    int insertComment(@Param("postId") Integer postId,
+//                      @Param("userId") Integer userId,
+//                      @Param("commentContent") String commentContent);
+    int insertComment(PostComment postComment);
+    int updateComment(@Param("postId") Integer postId,
+                      @Param("postCommentId") Integer postCommentId,
+                      @Param("userId") Integer userId,
+                      @Param("commentContent") String commentContent);
+    int deleteComment(@Param("postId") Integer postId, @Param("postCommentId") Integer postCommentId, @Param("userId") Integer userId);
 
-    List<PostCommentRespDto> selectComments(@Param("postId") Integer postId);
+    List<PostComment> selectComments(@Param("postId") Integer postId);
 }
