@@ -16,6 +16,8 @@ public interface PerformanceMapper {
 
   Performance findById(Integer performanceId);
 
+  List<String> findAllPerformanceApiId();
+
   int insert(Performance performance);
 
   int insertMany(List<Performance> performanceList);

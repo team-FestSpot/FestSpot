@@ -3,10 +3,13 @@ import { css } from "@emotion/react";
 export const layout = css`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   overflow: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const imgContainerLayout = css`
@@ -54,6 +57,10 @@ export const inputListContainer = css`
   align-items: center;
   width: 70%;
   flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
 `;
 
 export const inputTicketingContainer = css`
@@ -61,10 +68,21 @@ export const inputTicketingContainer = css`
   flex-direction: row;
   width: 70%;
   gap: 10px;
+
+  @media (max-width: 1400px) {
+    flex-direction: column;
+  }
 `;
 
 export const menuText = css`
   width: 100px;
+
+  @media (max-width: 1400px) {
+    flex-direction: column;
+    & > p {
+      margin: 0;
+    }
+  }
 `;
 
 export const urlAddRemoveButtonsContainer = css`

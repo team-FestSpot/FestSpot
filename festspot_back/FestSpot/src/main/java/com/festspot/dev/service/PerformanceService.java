@@ -30,6 +30,10 @@ public class PerformanceService {
     return performanceMapper.findById(performanceId);
   }
 
+  public List<String> getPerformanceApiIdList () {
+    return performanceMapper.findAllPerformanceApiId();
+  }
+
   @Transactional
   public int registerOrUpdatePerformanceComment(PerformanceCommentRegisterDto dto) {
     Integer userId = principalUtil.getPrincipal().getUser().getUserId();

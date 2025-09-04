@@ -5,10 +5,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Button from "@mui/material/Button";
 import { useQueryClient } from "@tanstack/react-query";
+import { FiX } from "react-icons/fi";
+import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
 
-function AdminLeftSideBar(props) {
+function AdminLeftSideBar({ setIsSideBar }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const principalQuery = usePrincipalQuery();
+  const principal = principalQuery?.data?.data?.body || {};
   const queryClient = useQueryClient();
 
   const menus = [
@@ -51,16 +55,37 @@ function AdminLeftSideBar(props) {
     <div css={s.container}>
       <div css={s.sidebar}>
         <header css={s.header}>
-          <div>
-            <h4>FestSpot 관리자 페이지</h4>
+          <div css={s.closeButton}>
+            <Button
+              variant="outline"
+              sx={{ fontSize: "1.5rem" }}
+              onClick={() => setIsSideBar(false)}
+            >
+              <FiX />
+            </Button>
           </div>
-          <div>
-            <Button onClick={handleLogoutButtonClick}>로그아웃</Button>
+          <div css={s.headerContentsContainer}>
+            <div>
+              <h4>FestSpot 관리자 페이지</h4>
+            </div>
+            <div>
+              <p>{principal?.user?.userNickName}</p>
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleLogoutButtonClick}
+              >
+                로그아웃
+              </Button>
+            </div>
           </div>
         </header>
         <main>
           {menus.map((menu) => (
             <Link
+              key={menu.id}
               id={menu.id}
               to={menu.to}
               css={[

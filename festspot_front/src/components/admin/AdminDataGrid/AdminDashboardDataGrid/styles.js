@@ -12,8 +12,9 @@ export const adminGridLayout = css`
 `;
 
 export const dataGridContainer = css`
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 130rem;
   height: 70rem;
 `;
 

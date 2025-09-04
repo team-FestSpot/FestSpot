@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import AdminAddPerformance from "../page/admin/AdminAddPerformance/AdminAddPerformance";
 import AdminLayout from "../components/layout/AdminLayout/AdminLayout";
@@ -12,9 +18,11 @@ import usePrincipalQuery from "../querys/auth/usePrincipalQuery";
 function AdminRouter({ adminAuthority }) {
   const principalQuery = usePrincipalQuery();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (
+      principalQuery.isFetched &&
       location.pathname.startsWith("/admin") &&
       (!adminAuthority || adminAuthority.length < 1)
     ) {
@@ -22,7 +30,8 @@ function AdminRouter({ adminAuthority }) {
     }
   }, [principalQuery.isFetched]);
 
-  return !adminAuthority || adminAuthority.length < 1 ? (
+  return principalQuery.isFetched &&
+    (!adminAuthority || adminAuthority?.length < 1) ? (
     <div>
       <Routes>
         <Route path="/login" element={<AdminLoginPage />} />
@@ -40,7 +49,7 @@ function AdminRouter({ adminAuthority }) {
             element={<AdminModifyCustomPerformance />}
           />
           <Route path="/user" element={<AdminUserInfoManagement />} />
-          <Route path="*" element={<Navigate to={"/admin/dashboard"} />} />
+          {/* <Route path="*" element={<Navigate to={`/admin/performance`} />} /> */}
         </Routes>
       </AdminLayout>
     </>
