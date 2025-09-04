@@ -31,12 +31,8 @@ export const reqPostLike = async (postId) =>
 export const reqPostDislike = async (postId) =>
   await api.delete(`/api/board/${postId}/dislike`);
 
-// 좋아요
-export const reqToggleLike = async ({ boardKey, postId }) =>
-  await api.post(`/api/board/${boardKey}/${postId}/like`);
-
 //댓글
-export const reqCommentsList = async ({ boardKey, postId }) =>
+export const reqPostComments = async (boardKey, postId) =>
   await api.get(`/api/board/${boardKey}/${postId}/comments`);
 
 export const reqAddComment = async ({ boardKey, postId, commentContent }) => {

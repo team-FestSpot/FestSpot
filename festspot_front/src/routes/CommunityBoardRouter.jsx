@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import PostWrite from "../page/Auth/post/PostWrite";
 import FestivalBoard from "../page/Auth/Post/Board/FestivalBoard";
 import usePostCategoryQuery from "../querys/post/usePostCategoryQuery";
-import PostDetail2 from "../page/Auth/Post/PostDetail/PostDetail2";
 import PostDetail from "../page/Auth/Post/PostDetail/PostDetail";
 
 function CommunityBoardRouter(props) {
@@ -21,7 +20,7 @@ function CommunityBoardRouter(props) {
           {boardKeys.map((boardKey) => (
             <>
               <Route path={`/${boardKey}`} element={<FestivalBoard />} />
-              <Route path={`/${boardKey}/:id`} element={<PostDetail2 />} />
+              <Route path={`/${boardKey}/:id`} element={<PostDetail />} />
             </>
           ))}
           <Route path={"all"} element={<FestivalBoard />} />
