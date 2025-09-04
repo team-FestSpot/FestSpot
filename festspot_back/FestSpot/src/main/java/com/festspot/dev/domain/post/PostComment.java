@@ -17,6 +17,8 @@ public class PostComment {
   private Integer postId;
   private Integer userId;
   private String commentContent;
+  private Integer likeCount;
+  private Integer commentLevel;
   private LocalDateTime createdAt;
   private Integer parentCommentId;
   private LocalDateTime deletedAt;

@@ -11,10 +11,7 @@ import com.festspot.dev.domain.postCategory.PostCategoryMapper;
 import com.festspot.dev.domain.postImg.PostImg;
 import com.festspot.dev.domain.postImg.PostImgMapper;
 import com.festspot.dev.domain.user.UserMapper;
-import com.festspot.dev.dto.post.PostCommentRespDto;
-import com.festspot.dev.dto.post.PostDetailRespDto;
-import com.festspot.dev.dto.post.PostRegisterReqDto;
-import com.festspot.dev.dto.post.PostsRespDto;
+import com.festspot.dev.dto.post.*;
 import com.festspot.dev.exception.auth.NotLoginException;
 import com.festspot.dev.security.model.PrincipalUtil;
 import com.festspot.dev.util.ImageUrlUtil;
@@ -185,20 +182,28 @@ public class PostService {
 
   // 댓글 추가
   @Transactional
-  public void addComment(Integer postId, Integer userId, String commentContent) {
-    postCommentMapper.insertComment(postId, userId, commentContent);
+  public void addComment(Integer postId, Integer userId, PostCommentReqDto dto) {
+    PostComment postComment = dto.toEntity();
+    postComment.setPostId(postId);
+    postComment.setUserId(userId);
+    System.out.println(postComment);
+    postCommentMapper.insertComment(postComment);
+  }
+
+  @Transactional
+  public int updateComment(Integer postId, Integer postCommentId, Integer userId, String content) {
+    System.out.println(content);
+    return postCommentMapper.updateComment(postId, postCommentId, userId, content);
   }
 
   // 댓글 삭제
   @Transactional
-  public void deleteComment(Integer postId, Integer userId) {
-    postCommentMapper.deleteComment(postId, userId);
+  public void deleteComment(Integer postId, Integer postCommentId, Integer userId) {
+    postCommentMapper.deleteComment(postId, postCommentId, userId);
   }
 
   // 댓글 가져오기
-  public List<PostCommentRespDto> getComment(Integer postId) {
+  public List<PostComment> getComment(Integer postId) {
     return postCommentMapper.selectComments(postId);
   }
-
-
 }
