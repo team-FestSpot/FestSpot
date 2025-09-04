@@ -254,7 +254,7 @@ function AdminUserInfoDataGrid({ searchResult }) {
       <div css={s.dataGridContainer}>
         <DataGrid
           rows={
-            searchResult.length > 1
+            searchResult.length > 0
               ? searchResult.slice((pageParam - 1) * 20, pageParam * 20 - 1)
               : rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)
           } // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
@@ -270,8 +270,10 @@ function AdminUserInfoDataGrid({ searchResult }) {
           }}
           sx={{
             fontSize: "1rem",
-            width: "100%",
-            height: "100%",
+            // width: "100%",
+            // height: "100%",
+            display: "grid",
+            gridTemplateRows: "auto 1f auto",
           }}
           pageSizeOptions={[20]}
           checkboxSelection={false}

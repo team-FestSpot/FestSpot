@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import useAdminPerformanceRowsStore from "../../../stores/AdminPerformanceRowsStore";
 import TextField from "@mui/material/TextField";
 import { useSearchParams } from "react-router-dom";
+import { usePerformanceApiIdListQuery } from "../../../querys/admin/usePublicApiIdListQuery";
 /** @jsxImportSource @emotion/react */
 
 function AdminMainPage(props) {
@@ -17,11 +18,12 @@ function AdminMainPage(props) {
     name: "",
     venue: "",
   });
-
   const { checkedRows } = useAdminPerformanceCheckBoxStore(); // 다중추가하려고 체크한 row들 공연 api id 저장하는 전역상태
-  const uploadManyMutation = usePublicDetailUploadManyMutation();
-  const searchMutation = usePublicApiSearchResultMutation();
-  const { setRows, setRowsEmpty } = useAdminPerformanceRowsStore(); // data grid에 표시할 데이터들 전부 저장해두는 배열 전역상태
+  const uploadManyMutation = usePublicDetailUploadManyMutation(); // 선택한 공연 추가 or 전부 추가
+  const searchMutation = usePublicApiSearchResultMutation(); // api에 검색어 포함된 공연 정보만 요청
+  const performanceApiIdListQuery = usePerformanceApiIdListQuery();
+  const performanceApiIdList = performanceApiIdListQuery?.data?.data?.body;
+  const { rows, setRows, setRowsEmpty } = useAdminPerformanceRowsStore(); // data grid에 표시할(api에 요청해서 받아온) 데이터들 전부 저장해두는 배열 전역상태
   let searchMutationParams = {
     page: 1,
     size: 100,
@@ -34,6 +36,22 @@ function AdminMainPage(props) {
       ...searchInput,
       [e.target.id]: e.target.value,
     });
+  };
+
+  const handleSearchButtonOnClick = async () => {
+    while (!!(await searchMutation.mutateAsync(searchMutationParams))) {
+      await searchMutation
+        .mutateAsync(searchMutationParams)
+        .then((result) =>
+          setRows(
+            result.filter(
+              (performance) =>
+                !performanceApiIdList?.includes(performance?.mt20id)
+            )
+          )
+        );
+      searchMutationParams.page++;
+    }
   };
 
   useEffect(() => {
@@ -74,14 +92,7 @@ function AdminMainPage(props) {
                 onClick={async (e) => {
                   e.preventDefault();
                   setRowsEmpty();
-                  while (
-                    !!(await searchMutation.mutateAsync(searchMutationParams))
-                  ) {
-                    await searchMutation
-                      .mutateAsync(searchMutationParams)
-                      .then((result) => setRows(result));
-                    searchMutationParams.page++;
-                  }
+                  handleSearchButtonOnClick();
                 }}
               >
                 검색
@@ -93,9 +104,22 @@ function AdminMainPage(props) {
                 onClick={(e) => {
                   e.preventDefault();
                   uploadManyMutation.mutateAsync(checkedRows);
+                  setRowsEmpty();
                 }}
               >
-                추가
+                선택한 공연 추가
+              </Button>
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                onClick={(e) => {
+                  e.preventDefault();
+                  uploadManyMutation.mutateAsync(rows);
+                  setRowsEmpty();
+                }}
+              >
+                전부 추가
               </Button>
             </div>
           </div>

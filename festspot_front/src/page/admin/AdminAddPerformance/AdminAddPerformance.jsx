@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import * as ss from "../../../components/admin/AdminInput/styles";
 import AdminInput from "../../../components/admin/AdminInput/AdminInput";
 import Button from "@mui/material/Button";
 import useAdminAddPerformanceStore from "../../../stores/AdminAddPerformanceStore";

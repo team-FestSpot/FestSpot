@@ -9,9 +9,9 @@ import { useCustomPerformanceListQuery } from "../../../../querys/admin/useCusto
 import Button from "@mui/material/Button";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import useAdminCustomPerformanceRowsStore from "../../../../stores/AdminPerformanceCustomRowsStore";
-import { baseURL } from "../../../../api/axios";
 import { useDeletePerformanceMutation } from "../../../../querys/performance/useDeletePerformanceMutation";
 import AdminPerformanceUpdateModal from "../../AdminUpdateModal/AdminPerformanceUpdateModal/AdminPerformanceUpdateModal";
+import { PERFORMANCE_POSTER_IMG_PATH } from "../../../../constants/performancePosterImgPath";
 
 function AdminCustomPerformanceDataGrid({ searchResult }) {
   const { data, isLoading, isRefetching } = useCustomPerformanceListQuery();
@@ -33,7 +33,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       editable: false,
       renderCell: (params) => (
         <div css={s.imgContainer}>
-          <img src={`${baseURL}/image/poster/${params.row.poster}`} />
+          <img src={`${PERFORMANCE_POSTER_IMG_PATH}${params.row.poster}`} />
         </div>
       ),
     },
@@ -117,6 +117,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
   // 모달창 닫기
   const closeModal = () => {
     setIsOpen(false);
+    // setPerformanceToUpdate({});
   };
 
   // 수정 버튼 눌렀을 때 모달창 열림
@@ -192,7 +193,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       <div css={s.dataGridContainer}>
         <DataGrid
           rows={
-            searchResult.length > 1
+            searchResult.length > 0
               ? searchResult.slice((pageParam - 1) * 20, pageParam * 20 - 1)
               : rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)
           } // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
@@ -207,10 +208,13 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
             },
           }}
           pageSizeOptions={[20]}
-          checkboxSelection
           disableRowSelectionOnClick
           hideFooter
           apiRef={gridRef}
+          sx={{
+            display: "grid",
+            gridTemplateRows: "auto 1f auto",
+          }}
         />
       </div>
       <div css={s.paginationButtonLayout}>

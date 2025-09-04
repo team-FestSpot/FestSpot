@@ -31,6 +31,7 @@ export const main = css`
 export const searchLayout = css`
   display: flex;
   flex-direction: row;
+  padding: 0 2rem;
   gap: 1rem;
   height: auto;
 `;
