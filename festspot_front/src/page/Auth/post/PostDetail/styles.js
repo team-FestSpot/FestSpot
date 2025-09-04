@@ -372,73 +372,102 @@ export const likeCount = css`
 `;
 
 /* 댓글 영역 */
-export const commentSection = css`
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
+export const commentsSection = css`
+  margin-top: 24px;
 `;
-
-export const commentTitle = css`
-  font-size: 18px;
+export const commentsTitle = css`
   font-weight: 700;
+  font-size: 18px;
   margin-bottom: 12px;
-  color: var(--fg);
 `;
-
-export const commentInput = css`
-  width: 100%;
-  min-height: 80px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  resize: vertical;
-  font-size: 14px;
-  margin-bottom: 10px;
-
-  &:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(229, 90, 66, 0.2);
-  }
-`;
-
-export const commentSubmit = css`
-  padding: 8px 14px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 18px;
-
-  &:hover {
-    background: #d94d36;
-  }
-`;
-
 export const commentList = css`
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-
-  li {
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: #fafafa;
-    border: 1px solid var(--line);
-
-    p {
-      margin: 4px 0 0;
-      font-size: 14px;
-      color: #374151;
-    }
-  }
+  display: grid;
+  gap: 12px;
 `;
-
+export const commentItem = css`
+  border: 1px solid var(--line, rgba(0,0,0,0.08));
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--bg, #fff);
+`;
+export const commentHeader = css`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted, #6b7280);
+  font-size: 12px;
+  margin-bottom: 8px;
+`;
 export const commentAuthor = css`
   font-weight: 600;
-  font-size: 13.5px;
-  color: var(--accent);
+  color: var(--fg, #1f2937);
+`;
+export const commentDot = css`
+  width: 3px; 
+  height: 3px; 
+  border-radius: 50%; 
+  background: currentColor; 
+  display: inline-block;
+`;
+export const commentDate = css``;
+export const commentContent = css`
+  white-space: pre-wrap;
+  line-height: 1.6;
+`;
+export const commentActions = css`
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+`;
+
+export const commentTextarea = css`
+  width: 100%;
+  border: 1px solid var(--line, rgba(0,0,0,0.08));
+  border-radius: 8px;
+  padding: 8px;
+  resize: vertical;
+  background: transparent;
+  color: inherit;
+`;
+export const btnPrimary = css`
+  padding: 6px 12px; 
+  border-radius: 8px; 
+  border: none; 
+  cursor: pointer;
+  background: var(--accent, #e55a42); 
+  color: #fff; 
+  font-weight: 600;
+`;
+export const btnGhost = css`
+  padding: 6px 12px; 
+  border-radius: 8px; 
+  border: 1px solid var(--line, rgba(0,0,0,0.1));
+  background: transparent; 
+  cursor: pointer;
+`;
+export const btnDanger = css`
+  padding: 6px 12px; 
+  border-radius: 8px; 
+  border: none; 
+  cursor: pointer;
+  background: #ef4444; 
+  color: #fff; 
+  font-weight: 600;
+`;
+export const commentEmpty = css`
+  color: var(--muted, #6b7280);
+`;
+
+export const commentWriteBox = css`
+  margin-top: 16px;
+  border: 1px solid var(--line, rgba(0,0,0,0.08));
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--bg, #fff);
+`;
+
+export const counter = css`
+  margin-right: auto;
+  color: var(--muted, #6b7280);
+  font-size: 12px;
 `;

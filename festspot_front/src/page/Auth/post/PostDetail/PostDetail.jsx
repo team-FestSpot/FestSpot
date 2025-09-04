@@ -4,6 +4,10 @@ import React, { useMemo, useState } from "react";
 import { usePostDetailQuery } from "../../../../querys/post/usePostDetailQuery";
 import { useParams } from "react-router-dom";
 import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
+import { useAllPostCommentQuery } from "../../../../querys/post/useAllPostCommentQuery";
+import { usePostCommentUpdateQuery } from "../../../../querys/post/usePostCommentUpdateQuery";
+import { usePostCommentDeleteQuery } from "../../../../querys/post/usePostCommentDelete";
+import { usePostCommentAddQuery } from "../../../../querys/post/usePostCommentAddQuery";
 
 // 이미지 url을 한글이든 영어든 띄어쓰기든 요청 가능한 형태로 바꿔줌.
 function normalizeUrl(originUrl) {
@@ -174,9 +178,67 @@ function PostDetail(props) {
   const principalQuery = usePrincipalQuery();
   const currentUserId = principalQuery.data?.data?.body.user.userId ?? null;
 
+  const [commentInput, setCommentInput] = useState(""); // 댓글 입력값 저장
+  const commentQuery = useAllPostCommentQuery(boardKey, postId);
+  const comments = commentQuery?.data?.data?.body || [];
+  console.log(comments);
+  const [isModify, setIsModify] = useState(-1);
+  const [modifyInput, setModifyInput] = useState("");
+  const { mutateAsync: addCommentQuery, isPaused: isAdding } =
+    usePostCommentAddQuery(boardKey, postId);
+  const updateCommentQuery = usePostCommentUpdateQuery(boardKey, postId);
+  const deleteCommentQuery = usePostCommentDeleteQuery(boardKey, postId);
+
   // 날짜
   const fmt = (date) => (date ? new Date(date).toLocaleString() : "-");
   if (!post || !postId) return null;
+
+  const handleAddCommentOnClick = async (commentLevel) => {
+    const text = commentInput.trim();
+    if (!currentUserId) return alert("로그인 후 댓글 작성이 가능합니다.");
+    if (!text) return;
+
+    await addCommentQuery({ commentContent: text, commentLevel: commentLevel });
+    setCommentInput("");
+  };
+
+  const handleAddCommentOnKeyDown = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      e.preventDefault();
+      handleAddCommentOnClick();
+    }
+  };
+
+  const canEditOrDelete = (e) => {
+    const ownerId = e?.user?.userId ?? e?.userId;
+    return !!currentUserId && currentUserId === ownerId;
+  };
+
+  const handleModifyOnClick = (comment) => {
+    setIsModify(comment.postCommentId);
+    setModifyInput(comment.commentContent);
+  };
+
+  const handleModifySaveOnClick = async (postCommentId) => {
+    const text = modifyInput;
+    if (!text) return;
+    await updateCommentQuery.mutateAsync({ postCommentId, commentContent: text });
+    setIsModify(-1);
+    setModifyInput("");
+  };
+
+  const handleModifyCancelOnClick = () => { 
+    setIsModify(-1); 
+    setModifyInput(""); 
+  };
+
+  // 삭제
+  const handleDeleteCommentOnClick = async (postCommentId) => {
+    if (!confirm("정말 이 댓글을 삭제할까요?")) return;
+    console.log("delete parameter", { boardKey, postId, postCommentId });
+
+    await deleteCommentQuery.mutateAsync({ postCommentId });
+  };
 
   return (
     <div css={[s.container, s.darkMode]}>
@@ -203,7 +265,105 @@ function PostDetail(props) {
           <section css={[s.content, s.darkMode]}>
             <PostBody content={post.postContent} imgs={post.postImgs || []} />
           </section>
-    
+
+          <hr css={s.divider} />
+
+          {/* 댓글 입력 */}
+          <div css={s.commentWriteBox}>
+            <textarea
+              css={s.commentTextarea}
+              value={commentInput}
+              onChange={(e) => setCommentInput(e.target.value)}
+              onKeyDown={handleAddCommentOnKeyDown}
+              placeholder={
+                currentUserId
+                  ? "댓글을 입력하세요..."
+                  : "로그인 후 댓글 작성 가능"
+              }
+              disabled={!currentUserId || isAdding}
+              rows={3}
+              maxLength={1000}
+            />
+            <div css={s.commentActions}>
+              <span css={s.counter}>{commentInput.length}/1000</span>
+              <button
+                css={s.btnPrimary}
+                onClick={() => handleAddCommentOnClick(0)}
+                disabled={!currentUserId || !commentInput.trim() || isAdding}
+              >
+                {isAdding ? "등록중..." : "등록"}
+              </button>
+            </div>
+          </div>
+
+          <ul css={s.commentList}>
+            {comments.map((c) => (
+              <li key={c.postCommentId} css={s.commentItem}>
+                <div css={s.commentHeader}>
+                  <span css={s.commentAuthor}>
+                    {c.user?.userNickName ?? "익명"}
+                  </span>
+                  <span css={s.commentDot} />
+                  <span css={s.commentDate}>{fmt(c.createdAt)}</span>
+                </div>
+
+                {/* 내용 or 수정폼 */}
+                {isModify === c.postCommentId ? (
+                  <div>
+                    <textarea
+                      css={s.commentTextarea}
+                      value={modifyInput}
+                      onChange={(e) => setModifyInput(e.target.value)}
+                      rows={3}
+                      maxLength={1000}
+                    />
+                    <div css={s.commentActions}>
+                      <button
+                        css={s.btnPrimary}
+                        onClick={() => handleModifySaveOnClick(c.postCommentId)}
+                        disabled={updateCommentQuery.isPending}
+                      >
+                        {updateCommentQuery.isPending ? "저장중..." : "저장"}
+                      </button>
+                      <button
+                        css={s.btnGhost}
+                        onClick={handleModifyCancelOnClick}
+                        disabled={updateCommentQuery.isPending}
+                      >
+                        취소
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p css={s.commentContent}>{c.commentContent}</p>
+                )}
+
+                {/* 본인 댓글일 때만 버튼 */}
+                {canEditOrDelete(c) && isModify !== c.postCommentId && (
+                  <div css={s.commentActions}>
+                    <button
+                      css={s.btnGhost}
+                      onClick={() => handleModifyOnClick(c)}
+                    >
+                      수정
+                    </button>
+                    <button
+                      css={s.btnDanger}
+                      onClick={() =>
+                        handleDeleteCommentOnClick(c.postCommentId)
+                      }
+                      disabled={deleteCommentQuery.isPending}
+                    >
+                      {deleteCommentQuery.isPending ? "삭제중..." : "삭제"}
+                    </button>
+                  </div>
+                )}
+              </li>
+            ))}
+            {!comments.length && (
+              <li css={s.commentEmpty}>아직 댓글이 없어요.</li>
+            )}
+          </ul>
         </>
       )}
     </div>

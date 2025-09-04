@@ -23,17 +23,24 @@
         <result property="userProfileImgUrl" column="user_profile_img_url" />
     </resultMap>
 
-    <insert id="insertComment">
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="postCommentId">
         insert into post_comment_tb
-        values (default, #{postId}, #{userId}, #{commentContent}, now())
+        values (default, #{postId}, #{userId}, #{commentContent}, #{parentCommentId}, now(), null, null)
     </insert>
 
+    <update id="updateComment">
+        update post_comment_tb
+        set comment_content = #{commentContent}
+        where post_comment_id = #{postCommentId}
+        and post_id = #{postId}
+        and user_id = #{userId}
+    </update>
+
     <delete id="deleteComment">
-        delete
-        from post_comment_tb
-        where
-            post_comment_id = #{postCommentId}
-            and user_id = #{userId}
+        delete from post_comment_tb
+        where post_comment_id = #{postCommentId}
+        and post_id = #{postId}
+        and user_id = #{userId}
     </delete>
 
     <select id="getCountByPostId" resultType="java.lang.Integer">
@@ -76,15 +83,16 @@
 
     </select>
 
-    <select id="selectComments" resultType="com.festspot.dev.dto.post.PostCommentRespDto">
+    <select id="selectComments" resultMap="PostCommentMap">
         select
-            pmt.post_comment_id,
-            pmt.post_id,
-            pmt.user_id,
-            ut.user_nickname,
-            pmt.comment_content,
-            pmt.created_at,
-            pmt.updated_at
+            *
+<!--            pmt.post_comment_id,-->
+<!--            pmt.post_id,-->
+<!--            pmt.user_id,-->
+<!--            ut.user_nickname,-->
+<!--            pmt.comment_content,-->
+<!--            pmt.created_at,-->
+<!--            pmt.updated_at-->
         from
             post_comment_tb pmt
             left outer join user_tb ut on (ut.user_id and pmt.user_id)

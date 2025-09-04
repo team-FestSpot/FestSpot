@@ -9,11 +9,13 @@ import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.security.model.PrincipalUser;
 import com.festspot.dev.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,6 +91,8 @@ public class PostController {
   // 좋아요
   @PostMapping("/{boardKey}/{postId}/like")
   public ResponseEntity<ResponseDto<?>> toggleLike(@PathVariable String boardKey, @PathVariable Integer postId, @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (principalUser == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+
     Integer userId = principalUser.getUser().getUserId();
     boolean liked = postService.toggleLike(postId, userId);
     int likeCount = postService.getLikeCount(postId);
@@ -110,17 +114,53 @@ public class PostController {
   // 댓글 작성
   @PostMapping("/{boardKey}/{postId}/comments")
   public ResponseEntity<ResponseDto<?>> insertComment(@PathVariable String boardKey, @PathVariable Integer postId, @RequestBody PostCommentReqDto dto, @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (principalUser == null) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+    }
+    if (dto == null || dto.getCommentContent() == null || dto.getCommentContent().isBlank()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글 내용이 비었습니다.");
+    }
+
     Integer userId = principalUser.getUser().getUserId();
     System.out.println(postId);
-    postService.addComment(postId, userId, dto.getCommentContent());
+    System.out.println(dto);
+    postService.addComment(postId, userId, dto);
     return ResponseEntity.ok(ResponseDto.success("댓글 작성 성공"));
   }
 
-  // 댓글 삭제(본인)
-  @DeleteMapping("/{boardKey}/{postId}/{postCommentId}")
-  public ResponseEntity<ResponseDto<?>> deleteComment(@PathVariable String boardKey, @PathVariable Integer postId, @PathVariable Integer postCommentId, @AuthenticationPrincipal PrincipalUser principalUser) {
+  // 댓글 수정(본인)
+  @PutMapping("/{boardKey}/{postId}/comments/{postCommentId}")
+  public ResponseEntity<ResponseDto<?>> updateComment(@PathVariable String boardKey,
+                                                      @PathVariable Integer postId,
+                                                      @PathVariable Integer postCommentId,   // ★ 경로에서 받기
+                                                      @RequestBody PostCommentReqDto dto,    // body에는 commentContent만 있으면 됨
+                                                      @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (principalUser == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+    if (dto == null || dto.getCommentContent() == null || dto.getCommentContent().isBlank())
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글 내용이 비었습니다.");
+
     Integer userId = principalUser.getUser().getUserId();
-    postService.deleteComment(postId, userId);
+    System.out.println(postId);
+    System.out.println(dto);
+    int updated = postService.updateComment(postId, postCommentId, userId, dto.getCommentContent());
+
+    if (updated == 0) {
+      // 존재X/권한X/파라미터 불일치 중 하나
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정할 수 없습니다.");
+    }
+
+    return ResponseEntity.ok(ResponseDto.success("댓글 수정 성공"));
+  }
+
+  // 댓글 삭제(본인)
+  @DeleteMapping("/{boardKey}/{postId}/comments/{postCommentId}")
+  public ResponseEntity<ResponseDto<?>> deleteComment(@PathVariable String boardKey, @PathVariable Integer postId, @PathVariable Integer postCommentId, @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (principalUser == null) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "삭제할 수 없습니다.");
+    }
+
+    Integer userId = principalUser.getUser().getUserId();
+    postService.deleteComment(postId, postCommentId,userId);
     return ResponseEntity.ok(ResponseDto.success("댓글 삭제 성공"));
   }
 }
