@@ -8,6 +8,7 @@ export const container = css`
 
 export const sidebar = css`
   width: 100%;
+  height: 100vh;
   background-color: #ffffff;
   border-right: 1px solid #e5e7eb;
   display: flex;
@@ -19,9 +20,25 @@ export const header = css`
   display: flex;
   flex-direction: column;
   align-items: start;
-  padding: 20px 16px;
   border-bottom: 1px solid #e5e7eb;
   background-color: #f8f9fa;
+`;
+
+export const closeButton = css`
+  display: flex;
+  justify-content: end;
+  padding: 0;
+  width: 100%;
+
+  & > * {
+    padding: 0;
+  }
+`;
+
+export const headerContentsContainer = css`
+  width: 100%;
+  height: 100%;
+  padding: 20px 16px;
 `;
 
 export const navItem = css`

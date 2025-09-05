@@ -5,8 +5,31 @@ const sideBarWidth = "20rem";
 export const adminLayout = css`
   display: flex;
   flex-direction: row;
+
+  justify-content: space-between;
   width: 100%;
   height: 100%;
+
+  & > div:first-of-type {
+    display: flex;
+    justify-content: start;
+    height: 4rem;
+  }
+`;
+
+export const adminLayoutFull = css`
+  display: flex;
+  flex-direction: row;
+
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  & > div:first-of-type {
+    display: flex;
+    justify-content: start;
+    height: 4rem;
+  }
 `;
 
 export const adminSideBar = css`
@@ -23,9 +46,13 @@ export const adminChildrenContainer = css`
   align-items: center;
   width: calc(100% - ${sideBarWidth});
   height: 100%;
+`;
 
-  overflow: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+export const adminChildrenContainerFull = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* 전체 너비 사용 */
+  height: 100%;
 `;

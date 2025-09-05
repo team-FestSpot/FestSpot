@@ -26,7 +26,8 @@ public class AdminController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPerformance(@RequestBody AdminUploadPerformanceReqDto dto) {
-        if (adminService.uploadPerformance(dto) == 0) {
+        int result = adminService.uploadPerformance(dto);
+        if (result == 0) {
             return ResponseEntity.badRequest().body(HttpStatus.SERVICE_UNAVAILABLE);
         }
         return ResponseEntity.ok("공연 정보 업로드 성공");

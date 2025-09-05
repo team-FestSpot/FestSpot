@@ -12,9 +12,23 @@ export const adminGridLayout = css`
 `;
 
 export const dataGridContainer = css`
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 130rem;
-  height: 80rem;
+  height: 70rem;
+`;
+
+export const imgContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  & > img {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 export const paginationButtonLayout = css`

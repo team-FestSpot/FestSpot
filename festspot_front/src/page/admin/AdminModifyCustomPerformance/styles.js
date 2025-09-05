@@ -10,7 +10,26 @@ export const layout = css`
   overflow: hidden;
 `;
 
-export const header = css``;
+export const header = css`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding-left: 4rem;
+  width: 100%;
+  height: 20%;
+`;
+
+export const searchLayout = css`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  max-width: 40rem;
+  height: auto;
+
+  @media (max-width: 620px) {
+    flex-direction: column;
+  }
+`;
 
 export const titleContainer = css``;
 
@@ -20,13 +39,6 @@ export const searchContainer = css`
 `;
 
 export const main = css``;
-
-export const searchLayout = css`
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  height: auto;
-`;
 
 export const updateModalLayout = css`
   display: flex;

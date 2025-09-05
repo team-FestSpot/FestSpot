@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import useAdminPerformanceUpdateStore from "../../../../stores/AdminPerformanceUpdateStore";
+s;
 import ReactModal from "react-modal";
 import { Global } from "@emotion/react";
 import { CiSquareMinus, CiSquarePlus } from "react-icons/ci";
-import { baseURL } from "../../../../api/axios";
 import Button from "@mui/material/Button";
 import { reqModifyCustomPerformanceApi } from "../../../../api/adminApi";
 import Checkbox from "@mui/material/Checkbox";
 import { useCustomPerformanceListQuery } from "../../../../querys/admin/useCustomPerformanceListQuery";
 import useAdminCustomPerformanceRowsStore from "../../../../stores/AdminPerformanceCustomRowsStore";
+import { PERFORMANCE_POSTER_IMG_PATH } from "../../../../constants/performancePosterImgPath";
+import { FiX } from "react-icons/fi";
 
 function AdminPerformanceUpdateModal({
   isOpen,
@@ -59,7 +60,7 @@ function AdminPerformanceUpdateModal({
         <div>
           <p>{placeholder}</p>
         </div>
-        <div>
+        <div css={s.inputBox}>
           <input
             id={id}
             type={type}
@@ -76,18 +77,22 @@ function AdminPerformanceUpdateModal({
   const selectComponent = (id, defaultValue, placeholder, options) => {
     return (
       <div css={s.inputComponent}>
-        <div>{placeholder}</div>
-        <select
-          id={id}
-          defaultValue={defaultValue}
-          onChange={(e) => handleInputOnChange(e, id)}
-        >
-          {options.map((option, index) => (
-            <option key={index} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+        <div>
+          <p>{placeholder}</p>
+        </div>
+        <div css={s.selectBox}>
+          <select
+            id={id}
+            defaultValue={defaultValue}
+            onChange={(e) => handleInputOnChange(e, id)}
+          >
+            {options.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     );
   };
@@ -124,7 +129,7 @@ function AdminPerformanceUpdateModal({
   // 모달 열리면 수정할 공연정보를 모달 내에서 사용할 상태들에 저장
   // performance = 공연 정보, ticketingList = 기존에 저장했던 예매처 목록
   useEffect(() => {
-    // console.log(performanceToUpdate);
+    console.log(performanceToUpdate);
     setPerformance(performanceToUpdate);
     setTicketingList(performanceToUpdate.relates);
   }, [performanceToUpdate]);
@@ -159,8 +164,9 @@ function AdminPerformanceUpdateModal({
     ]);
   };
 
-  // 새로 추가할 예매처 목록 옆 - 누르면 입력란 한줄씩 삭제(1줄만 있을 땐 -버튼은 사라짐)
+  // 새로 추가할 예매처 목록 옆 - 누르면 입력란 한줄씩 삭제
   const handleTicketingMinusOnClick = (e, deleteIndex) => {
+    // 새로 추가할 예매처 목록이 1줄만 있을 땐 -버튼은 사라지지만 만약에 안 사라졌더라도 눌렀을때 동작 안 하게 함
     if (deleteIndex < 1) {
       return;
     }
@@ -237,7 +243,6 @@ function AdminPerformanceUpdateModal({
     await reqModifyCustomPerformanceApi(formData);
 
     const refetchResult = await customPerformanceListQuery.refetch();
-    // console.log(refetchResult?.data?.data?.body);
     setTicketingInputValue([
       {
         relatenm: "",
@@ -256,6 +261,7 @@ function AdminPerformanceUpdateModal({
         isOpen={isOpen}
         onRequestClose={closeModal}
         appElement={document.getElementById("root")}
+        className="modal-content" // CSS 클래스 적용
         style={{
           overlay: {
             display: "flex",
@@ -264,33 +270,52 @@ function AdminPerformanceUpdateModal({
             backgroundColor: "#00000088",
             zIndex: "10",
           },
-          content: {
-            display: "flex",
-            position: "static",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "50%",
-            height: "100vh",
-          },
+          // content: {
+          //   display: "flex",
+          //   position: "static",
+          //   justifyContent: "center",
+          //   alignItems: "center",
+          //   width: "50%",
+          //   height: "100vh",
+          // },
         }}
       >
         <div css={s.mainContainer}>
-          {newPosterUrl.length < 1 ? (
-            <div css={s.imgContainer}>
-              <img
-                src={`${baseURL}/image/poster/${performance.poster}`}
-                alt=""
-              />
-            </div>
-          ) : (
-            <div css={s.imgContainer}>
-              <img src={newPosterUrl} alt="" />
-            </div>
-          )}
-          <div css={s.inputComponent}>
-            <input type="file" onChange={handleFileInputOnChange} />
+          <div css={s.closeModalButton}>
+            <Button
+              sx={{
+                width: "3rem",
+                height: "3rem",
+                minWidth: "3rem",
+                minHeight: "3rem",
+                padding: 0,
+                "& svg": {
+                  fontSize: 16, // 아이콘 크기도 조정
+                },
+              }}
+              variant="outline"
+              onClick={() => closeModal()}
+            >
+              <FiX />
+            </Button>
           </div>
-
+          <div>
+            {newPosterUrl.length < 1 ? (
+              <div css={s.imgBox}>
+                <img
+                  src={`${PERFORMANCE_POSTER_IMG_PATH}${performance.poster}`}
+                  alt=""
+                />
+              </div>
+            ) : (
+              <div css={s.imgBox}>
+                <img src={newPosterUrl} alt="" />
+              </div>
+            )}
+            <div css={s.inputFileComponent}>
+              <input type="file" onChange={handleFileInputOnChange} />
+            </div>
+          </div>
           <div>
             {inputComponent(
               "prfnm",
@@ -353,59 +378,75 @@ function AdminPerformanceUpdateModal({
               ["Y", "N"]
             )}
 
-            {performanceToUpdate.relates.map((relate, index) => (
-              <div key={index} css={s.ticketingInputContainer}>
-                {inputComponent(
-                  "prevrelatenm",
-                  "text",
-                  relate.relatenm,
-                  "예매처명",
-                  index
-                )}
-                {inputComponent(
-                  "prevrelateurl",
-                  "text",
-                  relate.relateurl,
-                  "예매처 URL",
-                  index
-                )}
-                <Checkbox
-                  id={relate.ticketingUrlId}
-                  defaultChecked
-                  onChange={(e) => handleUrlCheckboxOnChange(e, relate)}
-                />
-              </div>
-            ))}
+            {/* 기존 예매처 */}
+            <div css={s.ticketingInputContainer}>
+              {performanceToUpdate.relates.map((relate, index) => (
+                <div key={index} css={s.ticketingInputs}>
+                  <div>
+                    {inputComponent(
+                      "prevrelatenm",
+                      "text",
+                      relate.relatenm,
+                      "예매처명",
+                      index
+                    )}
+                  </div>
+                  <div>
+                    {inputComponent(
+                      "prevrelateurl",
+                      "text",
+                      relate.relateurl,
+                      "예매처 URL",
+                      index
+                    )}
+                  </div>
 
-            {ticketingInputValue.map((inputValue, index) => (
-              <div key={index} css={s.ticketingInputContainer}>
-                {inputComponent(
-                  "newrelatenm",
-                  "text",
-                  inputValue.relatenm,
-                  "예매처명",
-                  index
-                )}
-                {inputComponent(
-                  "newrelateurl",
-                  "text",
-                  inputValue.relateurl,
-                  "예매처 URL",
-                  index
-                )}
-                <div css={s.urlAddRemoveButtonsContainer}>
-                  {index === ticketingInputValue.length - 1 && (
-                    <CiSquarePlus onClick={handleTicketingPlusOnClick} />
-                  )}
-
-                  {index > 0 && index === ticketingInputValue.length - 1 && (
-                    <CiSquareMinus
-                      onClick={(e) => handleTicketingMinusOnClick(e, index)}
-                    />
-                  )}
+                  <Checkbox
+                    id={relate.ticketingUrlId}
+                    defaultChecked
+                    onChange={(e) => handleUrlCheckboxOnChange(e, relate)}
+                  />
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* 신규 예매처 */}
+            <div css={s.ticketingInputContainer}>
+              {ticketingInputValue.map((inputValue, index) => (
+                <div key={index} css={s.ticketingInputs}>
+                  <div>
+                    {inputComponent(
+                      "newrelatenm",
+                      "text",
+                      inputValue.relatenm,
+                      "예매처명",
+                      index
+                    )}
+                  </div>
+                  <div>
+                    {inputComponent(
+                      "newrelateurl",
+                      "text",
+                      inputValue.relateurl,
+                      "예매처 URL",
+                      index
+                    )}
+                  </div>
+
+                  <div css={s.urlAddRemoveButtonsContainer}>
+                    {index === ticketingInputValue.length - 1 && (
+                      <CiSquarePlus onClick={handleTicketingPlusOnClick} />
+                    )}
+
+                    {index > 0 && index === ticketingInputValue.length - 1 && (
+                      <CiSquareMinus
+                        onClick={(e) => handleTicketingMinusOnClick(e, index)}
+                      />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
           <div css={s.modifyButtonContainer}>
             <Button onClick={handleModifyButtonOnClick}>수정</Button>

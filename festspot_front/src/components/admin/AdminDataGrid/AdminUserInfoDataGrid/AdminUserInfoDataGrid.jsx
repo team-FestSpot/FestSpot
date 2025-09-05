@@ -4,20 +4,21 @@ import * as s from "./styles";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import Pagination from "@mui/material/Pagination";
 import { useUserListQuery } from "../../../../querys/admin/useUserListQuery";
-import { data, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { baseURL } from "../../../../api/axios";
 import Button from "@mui/material/Button";
 import { FaCheck, FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
+import { FiX } from "react-icons/fi";
 import TextField from "@mui/material/TextField";
 import { useUserInfoUpdateMutation } from "../../../../querys/admin/useUserInfoUpdateMutation";
 import { reqDeleteUserApi } from "../../../../api/adminApi";
+import { USER_PROFILE_IMG_PATH } from "../../../../constants/userProfileImgPath";
 
-function AdminUserInfoDataGrid(props) {
+function AdminUserInfoDataGrid({ searchResult }) {
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const userListQuery = useUserListQuery();
-  const queryResponse = userListQuery?.data?.data?.body;
+  const userList = userListQuery?.data?.data?.body;
   const [rows, setRows] = useState([]);
   const [dataToUpdate, setDataToUpdate] = useState({
     userId: -1,
@@ -34,6 +35,7 @@ function AdminUserInfoDataGrid(props) {
       field: "userProfileImgUrl",
       headerName: "프로필 이미지",
       width: 150,
+      maxWidth: 150,
       editable: false,
       renderCell: (params) =>
         params.row.userId === dataToUpdate.userId ? (
@@ -42,7 +44,7 @@ function AdminUserInfoDataGrid(props) {
               src={
                 !!newProfileImgUrl
                   ? `${newProfileImgUrl}`
-                  : `${baseURL}/image/profile/${params.row.userProfileImgUrl}`
+                  : `${USER_PROFILE_IMG_PATH}${params.row.userProfileImgUrl}`
               }
             />
             <input type="file" onChange={handleProfileImgFileOnChange} />
@@ -106,7 +108,7 @@ function AdminUserInfoDataGrid(props) {
     {
       field: "edit",
       headerName: "수정",
-      width: 100,
+      width: 150,
       editable: false,
       renderCell: (params) =>
         params.row.userId === dataToUpdate.userId ? (
@@ -118,16 +120,36 @@ function AdminUserInfoDataGrid(props) {
                 );
                 userListQuery.refetch();
               }}
+              sx={{
+                minWidth: "3rem",
+                minHeight: "3rem",
+                color: "white",
+              }}
+              variant="contained"
             >
               <FaCheck />
             </Button>
-            <Button onClick={handleModifyCancelButtonOnClick}>
-              <FaXmark />
+            <Button
+              sx={{
+                minWidth: "3rem",
+                minHeight: "3rem",
+                color: "white",
+                fontSize: "1.4rem",
+              }}
+              variant="contained"
+              color="error"
+              onClick={handleModifyCancelButtonOnClick}
+            >
+              <FiX />
             </Button>
           </div>
         ) : (
           <div css={s.modifyButton}>
-            <Button onClick={(e) => handleModifyButtonOnClick(e, params)}>
+            <Button
+              variant="outline"
+              sx={{ fontSize: "1.2rem" }}
+              onClick={(e) => handleModifyButtonOnClick(e, params)}
+            >
               <FaRegEdit />
             </Button>
           </div>
@@ -140,7 +162,11 @@ function AdminUserInfoDataGrid(props) {
       editable: false,
       renderCell: (params) => (
         <div>
-          <Button onClick={(e) => handleDeleteButtonOnClick(e, params)}>
+          <Button
+            variant="outline"
+            sx={{ fontSize: "1.2rem" }}
+            onClick={(e) => handleDeleteButtonOnClick(e, params)}
+          >
             <FaRegTrashAlt />
           </Button>
         </div>
@@ -201,16 +227,16 @@ function AdminUserInfoDataGrid(props) {
   };
 
   useEffect(() => {
-    if (!userListQuery.isLoading && !!queryResponse && rows.length < 0) {
-      // console.log(queryResponse);
-      setRows(queryResponse);
+    if (!userListQuery.isLoading && !!userList && rows.length < 0) {
+      // console.log(userList);
+      setRows(userList);
     }
   }, [userListQuery.isLoading]);
 
   useEffect(() => {
-    if (!userListQuery.isRefetching && !!queryResponse) {
-      // console.log(queryResponse);
-      setRows(queryResponse);
+    if (!userListQuery.isRefetching && !!userList) {
+      // console.log(userList);
+      setRows(userList);
     }
   }, [userListQuery.isRefetching]);
 
@@ -241,11 +267,11 @@ function AdminUserInfoDataGrid(props) {
   useEffect(() => {
     if (
       !userListQuery.isLoading &&
-      Array.isArray(queryResponse) &&
-      queryResponse.length > 0 &&
+      Array.isArray(userList) &&
+      userList.length > 0 &&
       rows.length < 1
     ) {
-      setRows([...queryResponse]);
+      setRows([...userList]);
     }
   }, [userListQuery.isLoading]);
 
@@ -253,7 +279,11 @@ function AdminUserInfoDataGrid(props) {
     <div css={s.adminGridLayout}>
       <div css={s.dataGridContainer}>
         <DataGrid
-          rows={rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)} // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
+          rows={
+            searchResult.length > 0
+              ? searchResult.slice((pageParam - 1) * 20, pageParam * 20)
+              : rows.slice((pageParam - 1) * 20, pageParam * 20)
+          } // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
           getRowId={(row) => row.userId}
           rowHeight={200}
           columns={columns}
@@ -266,15 +296,17 @@ function AdminUserInfoDataGrid(props) {
           }}
           sx={{
             fontSize: "1rem",
-            width: "100%",
-            height: "100%",
+            display: "grid",
+            gridTemplateRows: "auto 1f auto",
           }}
           pageSizeOptions={[20]}
           checkboxSelection={false}
           disableRowSelectionOnClick
           hideFooter
           apiRef={gridRef}
-          // onColumnHeaderClick={handleColumnHeaderOnClick}
+          onCellKeyDown={(params, event) => {
+            event.defaultMuiPrevented = true;
+          }}
         />
       </div>
       <div css={s.paginationButtonLayout}>

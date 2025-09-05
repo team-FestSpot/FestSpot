@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { reqPublicDetailApi } from "../../api/publicDetailApi";
 import { convertXmlToJson } from "../../api/xmlToJson";
 import Swal from "sweetalert2";
@@ -6,8 +6,9 @@ import { reqUploadManyPerformanceApi } from "../../api/adminApi";
 
 // 관리자 대시보드 왼쪽 체크박스에 체크한 다음 헤더에 있는 추가 버튼 누르면 체크한 공연정보들 전부 상세정보 api로 가져와서 백엔드에 전달
 // 목록 왼쪽 체크박스에 체크한 공연 정보 전부 db에 한번에 넣을때 사용
-export const usePublicDetailUploadManyMutation = () =>
-  useMutation({
+export const usePublicDetailUploadManyMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: async (performanceApiIds) => {
       // 아무것도 체크 안 하고 추가 버튼 누르면 경고창만 띄움
       if (performanceApiIds.length < 1) {
@@ -54,4 +55,7 @@ export const usePublicDetailUploadManyMutation = () =>
 
       return reqUploadManyPerformanceApi(promiseJsonDatas);
     },
+    onSuccess: async () =>
+      await queryClient.refetchQueries(["getPerformanceApiIdList"]),
   });
+};

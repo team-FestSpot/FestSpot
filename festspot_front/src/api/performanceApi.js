@@ -6,6 +6,9 @@ export const reqPerformanceList = async () =>
 export const reqPerformanceDetail = async (performanceId) =>
   await api.get(`/api/performance/${performanceId}`);
 
+export const reqPerformanceApiIdList = async () =>
+  await api.get("/api/performance/apiId");
+
 export const reqPerformanceCommentRegister = async (data) =>
   await api.post(`/api/performance/comment`, data);
 

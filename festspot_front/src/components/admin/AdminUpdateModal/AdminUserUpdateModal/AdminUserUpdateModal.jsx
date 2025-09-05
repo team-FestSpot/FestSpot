@@ -1,5 +1,6 @@
 import React from "react";
 import ReactModal from "react-modal";
+//안씀
 
 function AdminUserUpdateModal({ isOpen, closeModal, dataToUpdate }) {
   return (

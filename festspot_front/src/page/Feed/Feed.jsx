@@ -2,16 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import Button from "@mui/material/Button";
-import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { usePerformanceDetailQuery } from "../../querys/performance/usePerformanceDetailQuery";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePerformanceCommentRegisterMutation } from "../../querys/performance/usePerformanceCommentRegisterMutation";
 import { usePerformanceCommentListQuery } from "../../querys/performance/usePerformanceCommentListQuery";
 import usePrincipalQuery from "../../querys/auth/usePrincipalQuery";
 import Swal from "sweetalert2";
 import { usePerformanceCommentDeleteMutation } from "../../querys/performance/usePerformanceCommentDeleteMutation";
 import { usePerformanceListQuery } from "../../querys/performance/usePerformanceListQuery";
-import { useQueryClient } from "@tanstack/react-query";
-import { baseURL } from "../../api/axios";
 import { USER_PROFILE_IMG_PATH } from "../../constants/userProfileImgPath";
 
 function Feed(props) {

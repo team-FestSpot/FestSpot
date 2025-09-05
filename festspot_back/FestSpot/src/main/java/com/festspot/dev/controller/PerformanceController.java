@@ -35,6 +35,11 @@ public class PerformanceController {
     return ResponseEntity.ok(ResponseDto.success(performanceService.getPerformanceDetailById(performanceId)));
   }
 
+  @GetMapping("/apiId")
+  public ResponseEntity<ResponseDto<?>> getPerformanceApiIdList() {
+    return ResponseEntity.ok(ResponseDto.success(performanceService.getPerformanceApiIdList()));
+  }
+
   @PostMapping("/comment")
   public ResponseEntity<ResponseDto<?>> registerOrUpdatePerformanceComment(@RequestBody PerformanceCommentRegisterDto dto) throws BadRequestException {
     if(dto.getContent().isEmpty()) {

@@ -25,6 +25,13 @@ function AdminLoginPage(props) {
     }));
   };
 
+  const handleLoginInputOnKeyDown = (e) => {
+    if (e.keyCode !== 13) {
+      return;
+    }
+    handleLoginButtonOnClick();
+  };
+
   const handleLoginButtonOnClick = async () => {
     try {
       const response = await reqLogin(inputValue);
@@ -44,6 +51,8 @@ function AdminLoginPage(props) {
         await Swal.fire({
           title: "아이디 또는 비밀번호를 확인하세요.",
           icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
         });
         localStorage.clear();
         return;
@@ -53,7 +62,6 @@ function AdminLoginPage(props) {
         icon: "success",
         showConfirmButton: false,
         timer: 1500,
-        timerProgressBar: true,
       });
       navigate("/admin/dashboard");
     } catch (error) {
@@ -74,6 +82,7 @@ function AdminLoginPage(props) {
           placeholder="username"
           name="userLoginId"
           onChange={handleInputOnChange}
+          onKeyDown={handleLoginInputOnKeyDown}
         />
         <TextField
           type="password"
@@ -81,6 +90,7 @@ function AdminLoginPage(props) {
           placeholder="password"
           name="userPassword"
           onChange={handleInputOnChange}
+          onKeyDown={handleLoginInputOnKeyDown}
         />
         <Button onClick={handleLoginButtonOnClick}>관리자 로그인</Button>
       </div>
