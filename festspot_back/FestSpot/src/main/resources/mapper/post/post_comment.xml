@@ -17,7 +17,6 @@
         <result property="likeCount" column="like_count" />
         <result property="parentCommentId" column="parent_comment_id" />
         <result property="parentUserNickName" column="parent_user_nickname" />
-        <result property="parentUserProfileImgUrl" column="parent_user_profile_img_url" />
         <result property="level" column="level" />
         <result property="path" column="path" />
         <association property="user" resultMap="UserMap" />
@@ -31,7 +30,7 @@
 
     <insert id="insertComment">
         insert into post_comment_tb
-        values (default, #{postId}, #{userId}, #{commentContent}, now())
+        values (default, #{postId}, #{userId}, #{commentContent}, #{parentCommentId}, now(), #{deletedAt}, #{updatedAt})
     </insert>
 
     <delete id="deleteComment">
@@ -44,7 +43,7 @@
 
     <select id="getCountByPostId" resultType="java.lang.Integer">
         select
-            *
+            count(*)
         from
             post_comment_tb
         where
