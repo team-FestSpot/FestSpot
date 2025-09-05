@@ -37,6 +37,8 @@ function FestivalBoard(props) {
   const postsQuery = usePostsQuery(boardKey, page);
   const posts = postsQuery.data?.data?.body || [];
 
+  console.log(postList);
+
   //게시글 리스트와 총 페이지 수 상태에 저장
   useEffect(() => {
     if (!!posts) {
@@ -115,7 +117,7 @@ function FestivalBoard(props) {
     }
   };
 
-  const handleCardOnClick = (postId) => {
+  const handleCardOnClick = (postId, postCategoryKey) => {
     //조회수 증가
     queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
       ...prev,
@@ -135,7 +137,7 @@ function FestivalBoard(props) {
         },
       },
     }));
-    navigate(`/board/${boardKey}/${postId}`);
+    navigate(`/board/${postCategoryKey}/${postId}`);
   };
 
   const handleWriteOnClick = (e) => {
@@ -157,7 +159,15 @@ function FestivalBoard(props) {
         <div css={s.boardLayout}>
           <div css={s.postContainer}>
             {postList.map((post, idx) => (
-              <Card key={idx} onClick={() => handleCardOnClick(post.postId)}>
+              <Card
+                key={idx}
+                onClick={() =>
+                  handleCardOnClick(
+                    post.postId,
+                    post.postCategory.postCategoryKey
+                  )
+                }
+              >
                 <div css={s.imageContainer}>
                   {!!post.postImgs[0] && (
                     <img
