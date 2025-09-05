@@ -7,13 +7,27 @@ export const adminGridLayout = css`
   justify-content: flex-start; // 변경
   align-items: center;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
+  padding: 2rem; // 추가
 `;
 
 export const dataGridContainer = css`
   width: 100%;
   max-width: 130rem;
-  height: 80vh;
+  height: 70rem;
+`;
+
+export const imgContainer = css`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  & > img {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 export const paginationButtonLayout = css`

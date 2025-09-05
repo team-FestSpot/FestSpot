@@ -87,12 +87,12 @@
     select
     *
     from
-      performance_tb
+      performance_tb pt
       left outer join performance_region_tb prt on(prt.performance_region_id = pt.performance_region_id)
       left outer join performance_state_tb pst on(pst.performance_state_id = pt.performance_state_id)
       left outer join ticketing_url_tb tut on(tut.performance_id = pt.performance_id)
     where
-      performance_api_id = #{performanceApiId}
+      pt.performance_api_id = #{performanceApiId}
   </select>
   <select id="findById" resultMap="PerformanceMap">
     select
@@ -226,6 +226,15 @@
             left outer join user_tb ut on (pct.user_id = ut.user_id)
         where
             pct.performance_id = #{performanceId}
+    </select>
+
+    <select id="findAllPerformanceApiId" resultType="java.lang.String">
+        select
+            performance_api_id
+        from
+            performance_tb
+        where
+            performance_api_id is not null
     </select>
 
     <update id="updateCommentDeletedAtById">

@@ -71,7 +71,6 @@ public class AdminService {
 
   @Transactional(rollbackFor = Exception.class)
   public int uploadPerformance(AdminUploadPerformanceReqDto dto) {
-    System.out.println(dto);
     if (performanceMapper.findByPerformanceApiId(dto.getMt20id()) != null) {
       return 0;
     }

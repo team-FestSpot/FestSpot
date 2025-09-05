@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import * as ss from "../../../components/admin/AdminInput/styles";
 import AdminInput from "../../../components/admin/AdminInput/AdminInput";
 import Button from "@mui/material/Button";
 import useAdminAddPerformanceStore from "../../../stores/AdminAddPerformanceStore";
 import { reqUploadCustomPerformanceApi } from "../../../api/adminApi";
 import { CiSquarePlus, CiSquareMinus } from "react-icons/ci";
+import TextField from "@mui/material/TextField";
+import Swal from "sweetalert2";
 
 function AdminAddPerformance(props) {
   const [imageFile, setImageFile] = useState({}); // 업로드할 이미지파일 데이터 저장
@@ -208,10 +209,17 @@ function AdminAddPerformance(props) {
     formData.append("file", imageFile);
 
     try {
-      await reqUploadCustomPerformanceApi(formData);
-      // setDetailEmpty();
-      // setImageFile({});
-      // window.location.reload();
+      const response = await reqUploadCustomPerformanceApi(formData);
+      console.log(response);
+      await Swal.fire({
+        title: response.data,
+        icon: "success",
+        timer: 1500,
+        allowOutsideClick,
+      });
+      setDetailEmpty();
+      setImageFile({});
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -224,10 +232,12 @@ function AdminAddPerformance(props) {
   return (
     <div css={s.layout}>
       <div css={s.imgContainerLayout}>
-        {!!imageUrl && (
+        {!!imageUrl ? (
           <div css={s.imgContainer}>
             <img src={imageUrl} alt="" />
           </div>
+        ) : (
+          <div css={s.emptyImgBox}></div>
         )}
       </div>
       <div css={s.inputListContainerLayout}>
@@ -250,24 +260,28 @@ function AdminAddPerformance(props) {
                 <p>{ticketingUrl.placeholder1}</p>
               </div>
               <div css={s.inputTicketingAgencyNameContainer}>
-                <input
+                <TextField
                   id={ticketingUrl.id1}
                   type={ticketingUrl.type1}
                   placeholder={ticketingUrl.placeholder1}
                   value={ticketingInputValue.relatenm}
                   onChange={(e) => handleTicketingInputOnChange(e, index)}
+                  size="small"
+                  sx={{ width: "100%" }}
                 />
               </div>
               <div css={s.menuText}>
                 <p>{ticketingUrl.placeholder2}</p>
               </div>
               <div css={s.inputTicketingUrlContainer}>
-                <input
+                <TextField
                   id={ticketingUrl.id2}
                   type={ticketingUrl.type2}
                   placeholder={ticketingUrl.placeholder2}
                   value={ticketingInputValue.relateurl}
                   onChange={(e) => handleTicketingInputOnChange(e, index)}
+                  size="small"
+                  sx={{ width: "100%" }}
                 />
               </div>
               <div css={s.urlAddRemoveButtonsContainer}>
@@ -284,8 +298,13 @@ function AdminAddPerformance(props) {
             </div>
           ))}
         </div>
-        <div>
-          <Button onClick={handleAddPerformanceButtonOnClick}>공연 추가</Button>
+        <div css={s.addButtonContainer}>
+          <Button
+            variant="contained"
+            onClick={handleAddPerformanceButtonOnClick}
+          >
+            공연 추가
+          </Button>
         </div>
       </div>
     </div>
