@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,6 +64,12 @@ public class PostController {
   @PostMapping("/{boardKey}")
   public ResponseEntity<ResponseDto<?>> postRegister(@ModelAttribute PostRegisterReqDto dto) {
     return ResponseEntity.ok(ResponseDto.success(postService.register(dto)));
+  }
+
+  @PutMapping("/{boardKey}/{postId}")
+  public ResponseEntity<ResponseDto<?>> postPut(@ModelAttribute PostRegisterReqDto dto,
+      @PathVariable Integer postId) {
+    return ResponseEntity.ok(ResponseDto.success(postService.update(dto, postId)));
   }
 
   @PostMapping("/{postId}/like")

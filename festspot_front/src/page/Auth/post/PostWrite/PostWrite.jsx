@@ -5,14 +5,14 @@ import "react-quill-new/dist/quill.snow.css";
 import { AiOutlineSave } from "react-icons/ai";
 import { MdArrowBack } from "react-icons/md";
 import { FaCaretDown } from "react-icons/fa";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useFixQuillToolBarStore } from "../../../stores/useFixQuillToolBarStore";
-import usePostCategoryQuery from "../../../querys/post/usePostCategoryQuery";
-import QuillEditor from "../../../components/post/QuillEditor/QuillEditor";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useFixQuillToolBarStore } from "../../../../stores/useFixQuillToolBarStore";
+import usePostCategoryQuery from "../../../../querys/post/usePostCategoryQuery";
+import QuillEditor from "../../../../components/post/QuillEditor/QuillEditor";
 import SparkMD5 from "spark-md5";
-import { reqPostRegister } from "../../../api/postApi";
+import { reqPostRegister } from "../../../../api/postApi";
 import Swal from "sweetalert2";
-import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
+import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 import { css, Global } from "@emotion/react";
 
 const PostWrite = () => {

@@ -118,6 +118,12 @@ public class PostService {
     return "게시글 등록 완료";
   }
 
+  public String update(PostRegisterReqDto dto, Integer postId) {
+    System.out.println(dto);
+    System.out.println(postId);
+    return "수정 완료";
+  }
+
   // 특정 글 클릭해서 보기 (본문)
   public PostDetailRespDto getPost(Integer postId) {
     Integer userId = principalUtil.getUserIdOrNull();

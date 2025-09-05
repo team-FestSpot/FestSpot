@@ -103,18 +103,6 @@ export const countContainer = css`
   }
 `;
 
-export const verticalDivider = css`
-  height: 100%;
-  width: 0.05rem;
-  background-color: #ccc;
-`;
-
-export const horizontalDivider = css`
-  width: 100%;
-  height: 0.05rem;
-  background-color: #ccc;
-`;
-
 export const contentContainer = css`
   display: flex;
   justify-content: center;
@@ -122,6 +110,40 @@ export const contentContainer = css`
   width: 100%;
   padding: 2rem;
   box-sizing: border-box;
+`;
+
+export const rewriteContainer = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 2rem;
+`;
+
+export const rewriteButton = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  background-color: var(--main-color);
+  cursor: pointer;
+`;
+export const deleteButton = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 0.5rem;
+  color: #888;
+  background-color: #dbdbdb;
+  cursor: pointer;
 `;
 
 export const content = css`
@@ -191,4 +213,16 @@ export const postCommentContainer = css`
   align-items: start;
   width: 100%;
   margin: 2rem 0;
+`;
+
+export const verticalDivider = css`
+  height: 100%;
+  width: 0.05rem;
+  background-color: #ccc;
+`;
+
+export const horizontalDivider = css`
+  width: 100%;
+  height: 0.05rem;
+  background-color: #ccc;
 `;
