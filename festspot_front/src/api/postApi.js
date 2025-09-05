@@ -25,19 +25,23 @@ export const reqPostRegister = (data) =>
     },
   });
 
+export const reqPostUpdate = (data, postId) =>
+  api.put(`/api/board/${data.boardKey}/${postId}`, data, {
+    headers: {
+      "Content-Type": "multipart/for",
+    },
+  });
+
 export const reqPostLike = async (postId) =>
   await api.post(`/api/board/${postId}/like`);
 
 export const reqPostDislike = async (postId) =>
   await api.delete(`/api/board/${postId}/dislike`);
 
-// 좋아요
-export const reqToggleLike = async ({ boardKey, postId }) =>
-  await api.post(`/api/board/${boardKey}/${postId}/like`);
-
 //댓글
-export const reqCommentsList = async (boardKey, postId) =>
+export const reqPostComments = async (boardKey, postId) =>
   await api.get(`/api/board/${boardKey}/${postId}/comments`);
+
 export const reqAddComment = async ({
   boardKey,
   postId,
@@ -50,10 +54,17 @@ export const reqAddComment = async ({
   });
 };
 
-export const reqUpdateComment = async ({boardKey, postId, postCommentId, commentContent}) =>
-  api.put(`/api/board/${boardKey}/${postId}/comments/${postCommentId}`, {commentContent});
+export const reqUpdateComment = async ({
+  boardKey,
+  postId,
+  postCommentId,
+  commentContent,
+}) =>
+  api.put(`/api/board/${boardKey}/${postId}/comments/${postCommentId}`, {
+    commentContent,
+  });
 
-export const reqDeleteComment = async ({boardKey, postId, postCommentId}) =>
+export const reqDeleteComment = async ({ boardKey, postId, postCommentId }) =>
   await api.delete(
     `/api/board/${boardKey}/${postId}/comments/${postCommentId}`
   );

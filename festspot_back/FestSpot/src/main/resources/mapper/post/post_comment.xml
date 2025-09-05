@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.festspot.dev.domain.post.PostCommentMapper">
+
+    <resultMap id="PostCommentMap" type="com.festspot.dev.domain.post.PostComment">
+        <id property="postCommentId" column="post_comment_id" />
+        <result property="postId" column="post_id" />
+        <result property="userId" column="user_id" />
+        <result property="commentContent" column="comment_content" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+        <result property="deletedAt" column="deleted_at" />
+        <result property="isLike" column="is_like" />
+        <result property="likeCount" column="like_count" />
+        <result property="parentCommentId" column="parent_comment_id" />
+        <result property="parentUserNickName" column="parent_user_nickname" />
+        <result property="parentUserProfileImgUrl" column="parent_user_profile_img_url" />
+        <result property="level" column="level" />
+        <result property="path" column="path" />
+        <association property="user" resultMap="UserMap" />
+    </resultMap>
+
+    <resultMap id="UserMap" type="com.festspot.dev.domain.user.User">
+        <id property="userId" column="user_id" />
+        <result property="userNickName" column="user_nickname" />
+        <result property="userProfileImgUrl" column="user_profile_img_url" />
+    </resultMap>
+
+    <insert id="insertComment">
+        insert into post_comment_tb
+        values (default, #{postId}, #{userId}, #{commentContent}, now())
+    </insert>
+
+    <delete id="deleteComment">
+        delete from
+            post_comment_tb
+        where
+            post_comment_id = #{postCommentId}
+            and user_id = #{userId}
+    </delete>
+
+    <select id="getCountByPostId" resultType="java.lang.Integer">
+        select
+            *
+        from
+            post_comment_tb
+        where
+            post_id = #{postId}
+    </select>
+
+    <select id="findById" resultType="com.festspot.dev.domain.post.PostComment">
+        with recursive comment_tb as (
+            select
+                post_comment_id,
+                post_id,
+                user_id,
+                comment_content,
+                parent_comment_id,
+                created_at,
+                deleted_at,
+                updated_at,
+                0 as `level`,
+                cast(lpad(post_comment_id, 10, 0) as char(1000)) as `path`
+            from
+                post_comment_tb
+            where
+                post_id = #{postId}
+                and parent_comment_id is null
+
+            union all
+
+            select
+                pct.post_comment_id,
+                pct.post_id,
+                pct.user_id,
+                pct.comment_content,
+                pct.parent_comment_id,
+                pct.created_at,
+                pct.deleted_at,
+                pct.updated_at,
+                ct.`level` + 1,
+                concat(ct.path, ",", lpad(pct.post_comment_id, 10, 0)) as `path`
+            from
+                post_comment_tb pct
+                inner join comment_tb ct ON pct.parent_comment_id = ct.post_comment_id
+            where
+                pct.post_id = #{postId}
+        )
+        select
+            dense_rank() over(order by substr(ct.path, 1, 10)) as order_number,
+            ct.post_comment_id,
+            ct.post_id,
+            ut.user_id,
+            ct.comment_content,
+            ct.created_at,
+            ct.`deleted_at`,
+            ct.updated_at,
+            ut.user_nickname,
+            ut.user_profile_img_url,
+
+            <if test="userId != null">
+                ifnull(pclt.post_comment_like_id, 0) as is_like,
+            </if>
+            ifnull(pclct.like_count, 0) as like_count,
+
+            ct.parent_comment_id,
+            put.user_nickname as parent_user_nickname,
+            has_child_tb.has_child,
+
+            ct.level,
+            ct.path
+        from
+            comment_tb ct
+            left outer join post_comment_tb pct on (pct.post_comment_id = ct.parent_comment_id)
+            left outer join user_tb ut on(ut.user_id = ct.user_id)
+            left outer join user_tb put on(put.user_id = pct.user_id)
+            <if test="userId != null">
+                left outer join post_comment_like_tb pclt
+                    on (pclt.post_comment_id = ct.post_comment_id and pclt.user_id = #{userId})
+            </if>
+            left outer join
+                (select
+                    post_comment_id,
+                    count(*) as like_count
+                from
+                    post_comment_like_tb
+                group by
+                    post_comment_id) pclct
+                on (pclct.post_comment_id = ct.post_comment_id)
+            left outer join (
+                    select
+                        parent_comment_id, 1 as has_child
+                    from
+                        post_comment_tb
+                    where
+                        parent_comment_id is not null
+                    group by
+                        parent_comment_id) has_child_tb
+                on (has_child_tb.parent_comment_id = ct.post_comment_id)
+        order by
+            order_number desc,
+            `path`;
+    </select>
+
+    <select id="selectComments" resultType="com.festspot.dev.dto.post.PostCommentRespDto">
+        select
+            pmt.post_comment_id,
+            pmt.post_id,
+            pmt.user_id,
+            ut.user_nickname,
+            pmt.comment_content,
+            pmt.created_at,
+            pmt.updated_at
+        from
+            post_comment_tb pmt
+            left outer join user_tb ut on (ut.user_id and pmt.user_id)
+        where
+            pmt.post_id = #{postId}
+        order by pmt.post_comment_id DESC
+    </select>
+</mapper>

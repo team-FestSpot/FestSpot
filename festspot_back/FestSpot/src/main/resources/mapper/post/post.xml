@@ -13,6 +13,7 @@
         <result property="postContent" column="post_content" />
         <result property="viewCount" column="view_count" />
         <result property="likeCount" column="like_count" />
+        <result property="isLike" column="is_like" />
         <result property="commentCount" column="comment_count" />
         <result property="isLike" column="isLike" />
         <result property="createdAt" column="created_at" />
@@ -53,37 +54,51 @@
         where post_id = #{postId}
     </update>
 
-    <select id="findByPostId" resultMap="PostMap">
+    <select id="findById" resultMap="PostMap">
+      select
+        *
+      from (
         select
-            pt.post_id,
-            pt.user_id,
-            pt.post_category_id,
-            pt.post_title,
-            pt.post_content,
-            pt.view_count,
-            pt.comment_count,
-            pt.created_at,
-            pt.updated_at,
+          dense_rank() over(order by pt.created_at desc, pt.post_id desc) as post_number,
+          pt.post_id,
+          pt.user_id,
+          pt.post_category_id,
+          pt.post_title,
+          pt.post_content,
+          pt.view_count,
+          pt.comment_count,
+          pt.created_at,
+          pt.updated_at,
 
-            ut.user_id as ut_user_id,
-            ut.user_nickname,
-            ut.user_profile_img_url,
+          ut.user_id as ut_user_id,
+          ut.user_nickname,
+          ut.user_profile_img_url,
 
-            pit.post_img_id,
-            pit.post_id as pit_post_id,
-            pit.post_img_url,
-            pit.seq,
+          pit.post_img_id,
+          pit.seq,
+          pit.post_id as pit_post_id,
+          pit.post_img_url,
 
-            pcat.post_category_id,
-            pcat.post_category_key,
-            pcat.post_category_name
+          <if test="userId != null">
+            ifnull(plt.post_like_id, 0) as is_like,
+          </if>
+          ifnull(plct.like_count, 0) as like_count,
+
+          pcat.post_category_id as pcat_post_category_id,
+          pcat.post_category_key,
+          pcat.post_category_name
         from
-            post_tb pt
-            left outer join user_tb ut on(ut.user_id = pt.user_id)
-            left outer join post_img_tb pit on(pit.post_id = pt.post_id)
-            left outer join post_category_tb pcat on(pcat.post_category_id = pt.post_category_id)
-        where
-            pt.post_id = #{postId}
+          post_tb pt
+          left outer join user_tb ut on (ut.user_id = pt.user_id)
+          left outer join post_img_tb pit on (pt.post_id = pit.post_id)
+          <if test="userId != null">
+            left outer join post_like_tb plt on (pt.post_id = plt.post_id and plt.user_id = #{userId})
+          </if>
+          left outer join (select post_id, count(*) as like_count from post_like_tb group by post_id) plct on (plct.post_id = pt.post_id)
+          left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
+        ) post
+      where
+        post_id = #{postId}
     </select>
 
   <select id="findAll" resultMap="PostMap">
@@ -124,7 +139,7 @@
             left outer join user_tb ut on (ut.user_id = pt.user_id)
             left outer join post_img_tb pit on (pt.post_id = pit.post_id)
             <if test="userId != null">
-                left outer join post_like_tb plt on (pt.post_id = plt.post_id and plt.user_id = #{userId})
+              left outer join post_like_tb plt on (pt.post_id = plt.post_id and pt.user_id = #{userId})
             </if>
             left outer join (select post_id, count(*) as like_count from post_like_tb group by post_id) plct on (plct.post_id = pt.post_id)
             left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)
@@ -173,7 +188,7 @@
           left outer join user_tb ut on (ut.user_id = pt.user_id)
           left outer join post_img_tb pit on (pt.post_id = pit.post_id)
           <if test="userId != null">
-              left outer join post_like_tb plt on (pt.post_id = plt.post_id and plt.user_id = #{userId})
+            left outer join post_like_tb plt on (pt.post_id = plt.post_id and pt.user_id = #{userId})
           </if>
           left outer join (select post_id, count(*) as like_count from post_like_tb group by post_id) plct on (plct.post_id = pt.post_id)
           left outer join post_category_tb pcat on (pt.post_category_id = pcat.post_category_id)

@@ -32,6 +32,7 @@ export const postContainer = css`
     border: 1px solid #dbdbdb;
     margin: 0;
     padding: 0;
+    cursor: pointer;
 
     height: calc((71.5vh) / 3);
     width: calc((100% - 3vw) / 4);

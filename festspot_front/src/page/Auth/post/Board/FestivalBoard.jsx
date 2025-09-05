@@ -14,8 +14,6 @@ import { css, Global } from "@emotion/react";
 import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 
 function FestivalBoard(props) {
-  console.log("board");
-
   const location = useLocation();
   const navigate = useNavigate();
   const [postList, setPostList] = useState([]);
@@ -36,70 +34,41 @@ function FestivalBoard(props) {
   const boardKey = location.pathname.slice(7);
   const page = parseInt(searchParams.get("page")) || 1;
 
-  let response;
-  if (!!boardKey) {
-    const postsQuery = usePostsQuery(boardKey, page);
-    response = postsQuery.data?.data?.body;
-  } else {
-    const postsQuery = useAllPostsQuery(page);
-    response = postsQuery.data?.data?.body;
-  }
+  const postsQuery = usePostsQuery(boardKey, page);
+  const posts = postsQuery.data?.data?.body || [];
 
   //게시글 리스트와 총 페이지 수 상태에 저장
   useEffect(() => {
-    if (!!response) {
-      setPostList(response.postList);
-      setTotalPage(response.totalPage);
+    if (!!posts) {
+      setPostList(posts.postList);
+      setTotalPage(posts.totalPage);
     }
-  }, [response]);
+  }, [posts]);
 
-  const handleCardOnClick = (e) => {};
-
-  const handleLikeOnClick = async (postId) => {
+  const handleLikeOnClick = async (e, postId) => {
     try {
       await reqPostLike(postId);
 
-      if (!!boardKey) {
-        queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
-          ...prev,
-          data: {
-            ...prev.data,
-            body: {
-              ...prev.data.body,
-              postList: prev.data.body.postList.map((post) => {
-                if (post.postId === postId) {
-                  return {
-                    ...post,
-                    likeCount: post.likeCount + 1,
-                    isLike: true,
-                  };
-                }
-                return post;
-              }),
-            },
+      //좋아요 수 증가
+      queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          body: {
+            ...prev.data.body,
+            postList: prev.data.body.postList.map((post) => {
+              if (post.postId === postId) {
+                return {
+                  ...post,
+                  likeCount: post.likeCount + 1,
+                  isLike: true,
+                };
+              }
+              return post;
+            }),
           },
-        }));
-      } else {
-        queryClient.setQueryData(["posts", page], (prev) => ({
-          ...prev,
-          data: {
-            ...prev.data,
-            body: {
-              ...prev.data.body,
-              postList: prev.data.body.postList.map((post) => {
-                if (post.postId === postId) {
-                  return {
-                    ...post,
-                    likeCount: post.likeCount + 1,
-                    isLike: true,
-                  };
-                }
-                return post;
-              }),
-            },
-          },
-        }));
-      }
+        },
+      }));
     } catch (error) {
       await Swal.fire({
         icon: "error",
@@ -111,51 +80,30 @@ function FestivalBoard(props) {
     }
   };
 
-  const handleDislikeOnClick = async (postId) => {
+  const handleDislikeOnClick = async (e, postId) => {
     try {
       await reqPostDislike(postId);
 
-      if (!!boardKey) {
-        queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
-          ...prev,
-          data: {
-            ...prev.data,
-            body: {
-              ...prev.data.body,
-              postList: prev.data.body.postList.map((post) => {
-                if (post.postId === postId) {
-                  return {
-                    ...post,
-                    likeCount: post.likeCount - 1,
-                    isLike: false,
-                  };
-                }
-                return post;
-              }),
-            },
+      //좋아요 수 감소
+      queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          body: {
+            ...prev.data.body,
+            postList: prev.data.body.postList.map((post) => {
+              if (post.postId === postId) {
+                return {
+                  ...post,
+                  likeCount: post.likeCount - 1,
+                  isLike: false,
+                };
+              }
+              return post;
+            }),
           },
-        }));
-      } else {
-        queryClient.setQueryData(["posts", page], (prev) => ({
-          ...prev,
-          data: {
-            ...prev.data,
-            body: {
-              ...prev.data.body,
-              postList: prev.data.body.postList.map((post) => {
-                if (post.postId === postId) {
-                  return {
-                    ...post,
-                    likeCount: post.likeCount - 1,
-                    isLike: false,
-                  };
-                }
-                return post;
-              }),
-            },
-          },
-        }));
-      }
+        },
+      }));
     } catch (error) {
       await Swal.fire({
         icon: "error",
@@ -165,6 +113,29 @@ function FestivalBoard(props) {
         timerProgressBar: true,
       });
     }
+  };
+
+  const handleCardOnClick = (postId) => {
+    //조회수 증가
+    queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        body: {
+          ...prev.data.body,
+          postList: prev.data.body.postList.map((post) => {
+            if (post.postId === postId) {
+              return {
+                ...post,
+                viewCount: post.viewCount + 1,
+              };
+            }
+            return post;
+          }),
+        },
+      },
+    }));
+    navigate(`/board/${boardKey}/${postId}`);
   };
 
   const handleWriteOnClick = (e) => {
@@ -182,11 +153,11 @@ function FestivalBoard(props) {
           }
         `}
       />
-      {!!postList && !!response && (
+      {!!postList && !!posts && (
         <div css={s.boardLayout}>
           <div css={s.postContainer}>
             {postList.map((post, idx) => (
-              <Card key={idx} onClick={handleCardOnClick}>
+              <Card key={idx} onClick={() => handleCardOnClick(post.postId)}>
                 <div css={s.imageContainer}>
                   {!!post.postImgs[0] && (
                     <img
@@ -212,12 +183,18 @@ function FestivalBoard(props) {
                       <div>
                         {!!post.isLike ? (
                           <FaHeart
-                            onClick={() => handleDislikeOnClick(post.postId)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDislikeOnClick(e, post.postId);
+                            }}
                             style={{ color: "red" }}
                           />
                         ) : (
                           <FaRegHeart
-                            onClick={() => handleLikeOnClick(post.postId)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleLikeOnClick(e, post.postId);
+                            }}
                           />
                         )}
                         {post.likeCount}
