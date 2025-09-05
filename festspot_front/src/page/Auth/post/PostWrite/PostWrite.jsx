@@ -8,29 +8,24 @@ import { FaCaretDown } from "react-icons/fa";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useFixQuillToolBarStore } from "../../../../stores/useFixQuillToolBarStore";
 import usePostCategoryQuery from "../../../../querys/post/usePostCategoryQuery";
-import QuillEditor from "../../../../components/post/QuillEditor/QuillEditor";
 import SparkMD5 from "spark-md5";
 import { reqPostRegister } from "../../../../api/postApi";
 import Swal from "sweetalert2";
 import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 import { css, Global } from "@emotion/react";
+import PostEditor from "../../../../components/post/PostEditor/PostEditor";
+import PostCategory from "../../../../components/post/PostCategory/PostCategory";
 
 const PostWrite = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
-  const { isFixed } = useFixQuillToolBarStore();
-  const [selectIsOpen, setSelecteIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const principal = usePrincipalQuery().data?.data?.body;
 
-  const dropdownRef = useRef();
   const quillRef = useRef(null);
   const titleInputRef = useRef(null);
-
-  const postCategoryQuery = usePostCategoryQuery();
-  const postCategories = postCategoryQuery.data?.data?.body || [];
 
   useEffect(() => {
     if (!searchParams.get("boardKey")) {
@@ -45,33 +40,6 @@ const PostWrite = () => {
     }
   }, []);
 
-  //ref 등록
-  useEffect(() => {
-    //selectTitle 드롭다운
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setSelecteIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  //selct 선택
-  const handleSelectOnClick = (e, boardKey) => {
-    setSearchParams({ boardKey: boardKey });
-    setSelecteIsOpen(false);
-  };
-
-  const handleOpenSelectOnClick = (e) => {
-    if (selectIsOpen) {
-      setSelecteIsOpen(false);
-      return;
-    }
-    setSelecteIsOpen(true);
-  };
-
   //저장 버튼
   const handleSubmitOnClick = async () => {
     if (!title.trim())
@@ -81,11 +49,12 @@ const PostWrite = () => {
 
     try {
       const delta = quillRef.current.getEditor().getContents();
-      const imageUrls = delta
+
+      const hashedImageUrls = delta
         .filter((row) => !!row.insert.image)
         .map((row) => SparkMD5.hash(row.insert.image));
 
-      const sortedImages = imageUrls.map((dataUrlHash, idx) => {
+      const sortedImages = hashedImageUrls.map((dataUrlHash, idx) => {
         const foundImage = images.find(
           (image) => SparkMD5.hash(image.dataUrl) === dataUrlHash
         );
@@ -96,29 +65,42 @@ const PostWrite = () => {
         };
       });
 
-      let reqContent;
+      let quillContent;
       let idx = 0;
 
-      if (/<img[^>]*>/.test(content)) {
-        reqContent = content.replace(/<img[^>]*>/g, (match) => {
-          const seqNum = sortedImages[idx].seq;
-          idx++;
-          return `[img-${seqNum}]`;
-        });
-      } else {
-        reqContent = content;
-      }
+      // if (/<img[^>]*>/.test(content)) {
+      //   quillContent = content.replace(/<img[^>]*>/g, (match) => {
+      //     const seqNum = sortedImages[idx].seq;
+      //     idx++;
+      //     return `[img-${seqNum}]`;
+      //   });
+      // } else {
+      //   quillContent = content;
+      // }
+
+      const quillDelta = delta.map((row) => {
+        if (!!row.insert.image) {
+          return {
+            ...row,
+            insert: {
+              ...row.insert,
+              image: `[img-${sortedImages[idx++].seq}]`,
+            },
+          };
+        }
+        return row;
+      });
 
       const postReq = {
         boardKey: searchParams.get("boardKey"),
         postTitle: title,
-        postContent: reqContent,
+        postContent: JSON.stringify(quillDelta),
         files: sortedImages.map((image) => image.file),
       };
 
       await reqPostRegister(postReq);
 
-      navigate(`/board/${searchParams.get("boardKey")}`);
+      // navigate(`/board/${searchParams.get("boardKey")}`);
     } catch (error) {
       await Swal.fire({
         title: error?.response?.data?.body,
@@ -142,34 +124,8 @@ const PostWrite = () => {
           <button css={s.backButton} onClick={() => navigate(-1)}>
             <MdArrowBack /> 뒤로가기
           </button>
-          <div css={s.selectCategory} ref={dropdownRef}>
-            <div
-              css={s.selected(selectIsOpen)}
-              onClick={handleOpenSelectOnClick}
-            >
-              {
-                postCategories.find(
-                  (postCategory) =>
-                    postCategory.postCategoryKey ===
-                    searchParams.get("boardKey")
-                )?.postCategoryName
-              }
-              <FaCaretDown />
-            </div>
-            {selectIsOpen && (
-              <div css={s.options}>
-                {postCategories.map((postCategory, idx) => (
-                  <div
-                    key={idx}
-                    onClick={(e) =>
-                      handleSelectOnClick(e, postCategory.postCategoryKey)
-                    }
-                  >
-                    {postCategory.postCategoryName}
-                  </div>
-                ))}
-              </div>
-            )}
+          <div css={s.selectSection}>
+            <PostCategory />
           </div>
           <button css={s.saveButton} onClick={handleSubmitOnClick}>
             <AiOutlineSave /> 저장
@@ -177,35 +133,15 @@ const PostWrite = () => {
         </header>
 
         <main css={s.main}>
-          <div css={s.postContainer}>
-            <div css={s.title} onClick={() => titleInputRef.current?.focus()}>
-              <input
-                name="quillTitle"
-                placeholder="제목을 입력하세요"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                css={s.titleInput}
-                maxLength={100}
-                ref={titleInputRef}
-              />
-              <div css={s.titleCount}>{title.length}/100</div>
-            </div>
-
-            <div
-              css={[
-                s.quillContainer,
-                isFixed ? s.fixedQuillContainer : s.unfixedQuillContainer,
-              ]}
-              onClick={() => quillRef.current?.focus()}
-            >
-              <QuillEditor
-                quillRef={quillRef}
-                content={content}
-                setContent={setContent}
-                setImages={setImages}
-              />
-            </div>
-          </div>
+          <PostEditor
+            title={title}
+            setTitle={setTitle}
+            titleInputRef={titleInputRef}
+            quillRef={quillRef}
+            content={content}
+            setContent={setContent}
+            setImages={setImages}
+          />
         </main>
       </div>
     </>

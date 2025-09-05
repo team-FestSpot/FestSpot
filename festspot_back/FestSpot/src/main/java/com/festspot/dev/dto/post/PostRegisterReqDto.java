@@ -1,7 +1,6 @@
 package com.festspot.dev.dto.post;
 
 import com.festspot.dev.domain.post.Post;
-import com.festspot.dev.domain.user.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
@@ -16,9 +15,9 @@ public class PostRegisterReqDto {
 
   private List<MultipartFile> files;
 
-  public Post toPost(User user, Integer postCategoryId) {
+  public Post toPost(Integer userId, Integer postCategoryId) {
     return Post.builder()
-        .userId(user.getUserId())
+        .userId(userId)
         .postCategoryId(postCategoryId)
         .postTitle(postTitle)
         .postContent(postContent)

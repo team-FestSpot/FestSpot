@@ -90,14 +90,14 @@ public class PostService {
 
   @Transactional(rollbackFor = Exception.class)
   public String register(PostRegisterReqDto dto) {
-    if (principalUtil.getUserIdOrNull() == null) {
+    Integer userId = principalUtil.getUserIdOrNull();
+    if (userId == null) {
       throw new NotLoginException("NotLoginException", "로그인 정보 없음");
     }
 
-    Post post = dto.toPost(
-        principalUtil.getPrincipal().getUser(),
-        postCategoryMapper.findeByCategoryKey(dto.getBoardKey()).getPostCategoryId()
-    );
+    Integer postCategoryId = postCategoryMapper.findeByCategoryKey(dto.getBoardKey())
+        .getPostCategoryId();
+    Post post = dto.toPost(userId, postCategoryId);
 
     postMapper.insert(post);
 

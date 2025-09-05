@@ -61,9 +61,14 @@ public class PostController {
     return ResponseEntity.ok(ResponseDto.success(postService.getPostComment(postId)));
   }
 
+//  @PostMapping("/{boardKey}")
+//  public ResponseEntity<ResponseDto<?>> postRegister(@ModelAttribute PostRegisterReqDto dto) {
+//    return ResponseEntity.ok(ResponseDto.success(postService.register(dto)));
+//  }
+
   @PostMapping("/{boardKey}")
   public ResponseEntity<ResponseDto<?>> postRegister(@ModelAttribute PostRegisterReqDto dto) {
-    return ResponseEntity.ok(ResponseDto.success(postService.register(dto)));
+    return ResponseEntity.ok(ResponseDto.success(postService.register((dto))));
   }
 
   @PutMapping("/{boardKey}/{postId}")

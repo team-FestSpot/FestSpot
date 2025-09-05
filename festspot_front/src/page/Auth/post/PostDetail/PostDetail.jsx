@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { usePostDetailQuery } from "../../../../querys/post/usePostDetailQuery";
 import { getQuillContent } from "../../../../utils/getQuillContent";
 import PostComment from "../../../../components/post/PostComment/PostComment";
@@ -13,6 +13,8 @@ import Swal from "sweetalert2";
 function PostDetail(props) {
   const pathname = useLocation().pathname;
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const queryClient = useQueryClient();
   const userInfo = usePrincipalQuery().data?.data?.body?.user;
 
@@ -67,12 +69,8 @@ function PostDetail(props) {
   };
 
   const handleRewriteOnClick = (e) => {
-    navigate("/board/write", {
-      state: {
-        rewritePostId: postDetail.postId,
-        retitle: postDetail.postTitle,
-        rewriteContents: postContent,
-      },
+    navigate(`/board/edit/${postDetail.postId}?boardKey=${boardKey}`, {
+      state: { post: postDetail },
     });
   };
 
