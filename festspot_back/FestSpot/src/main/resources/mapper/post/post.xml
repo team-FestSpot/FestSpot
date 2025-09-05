@@ -45,7 +45,7 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="postId">
         insert into post_tb
-        values (default, #{userId}, #{postCategoryId}, #{postTitle}, #{postContent}, #{viewCount}, #{likeCount}, #{commentCount}, now(), null)
+        values (default, #{userId}, #{postCategoryId}, #{postTitle}, #{postContent}, #{viewCount}, #{commentCount}, now(), null)
     </insert>
 
     <update id="increaseViewCount">
