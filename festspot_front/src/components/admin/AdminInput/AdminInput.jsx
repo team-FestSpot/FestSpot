@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import useAdminAddPerformanceStore from "../../../stores/AdminAddPerformanceStore";
+import TextField from "@mui/material/TextField";
 
 function AdminInput({ props }) {
   const { setDetail } = useAdminAddPerformanceStore();
@@ -23,11 +24,13 @@ function AdminInput({ props }) {
       </div>
       {props.type === "text" ? (
         <div key={props.id} css={s.inputContainer}>
-          <input
+          <TextField
+            size="small"
             type={props.type}
             placeholder={props.placeholder}
             options={props.type === "select" ? options : null}
             onChange={(e) => handleInputOnChange(e, props.id)}
+            sx={{ width: "100%" }}
           />
         </div>
       ) : props.type === "select" ? (

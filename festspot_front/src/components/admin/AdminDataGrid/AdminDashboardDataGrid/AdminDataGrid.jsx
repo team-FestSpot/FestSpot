@@ -9,7 +9,6 @@ import useAdminPerformanceCheckBoxStore from "../../../../stores/AdminPerformanc
 import { usePublicDetailUploadMutation } from "../../../../querys/admin/usePublicDetailUploadMutation";
 import Pagination from "@mui/material/Pagination";
 import { usePublicApiAllQuery } from "../../../../querys/admin/usePublicApiAllQuery";
-import Box from "@mui/material/Box";
 import { usePerformanceApiIdListQuery } from "../../../../querys/admin/usePublicApiIdListQuery";
 
 function AdminDataGrid({ props }) {
@@ -32,10 +31,11 @@ function AdminDataGrid({ props }) {
       field: "poster",
       headerName: "포스터",
       width: 150,
+      maxWidth: 150,
       editable: false,
       renderCell: (params) => (
-        <div>
-          <img src={params.row.poster} width={"100%"} height={"100%"} />
+        <div css={s.imgContainer}>
+          <img src={params.row.poster} />
         </div>
       ),
     },

@@ -12,26 +12,28 @@ export const layout = css`
 
 export const header = css`
   display: flex;
+  flex-direction: column;
+  padding-left: 4rem;
+  width: 100%;
   height: 20%;
 `;
 
-export const searchContainer = css`
+export const searchLayout = css`
   display: flex;
   flex-direction: row;
+  gap: 1rem;
+  max-width: 40rem;
+  height: auto;
+
+  @media (max-width: 443px) {
+    flex-direction: column;
+  }
 `;
 
 export const main = css`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-`;
-
-export const searchLayout = css`
-  display: flex;
-  flex-direction: row;
-  padding: 0 2rem;
-  gap: 1rem;
-  height: auto;
 `;
 
 export const dataGridContainer = css`

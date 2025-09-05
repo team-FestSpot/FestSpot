@@ -12,6 +12,8 @@ export const layout = css`
 
 export const header = css`
   display: flex;
+  padding-left: 4rem;
+  width: 100%;
   height: 20%;
 `;
 
@@ -34,6 +36,16 @@ export const searchLayout = css`
   padding: 0 2rem;
   gap: 1rem;
   height: auto;
+
+  & > div {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
 `;
 
 export const dataGridContainer = css`

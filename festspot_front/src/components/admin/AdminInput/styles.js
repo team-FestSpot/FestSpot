@@ -22,10 +22,7 @@ export const inputContainer = css`
   flex-direction: row;
   align-items: center;
   width: 100%;
+  height: 3rem;
   gap: 10px;
   height: auto;
-
-  & > input {
-    width: 100%;
-  }
 `;

@@ -30,6 +30,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       field: "poster",
       headerName: "포스터",
       width: 150,
+      maxWidth: 150,
       editable: false,
       renderCell: (params) => (
         <div css={s.imgContainer}>
@@ -82,7 +83,11 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       editable: false,
       renderCell: (params) => (
         <div>
-          <Button onClick={(e) => handleModifyButtonOnClick(e, params)}>
+          <Button
+            variant="outline"
+            sx={{ fontSize: "1.2rem" }}
+            onClick={(e) => handleModifyButtonOnClick(e, params)}
+          >
             <FaRegEdit />
           </Button>
         </div>
@@ -96,6 +101,8 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       renderCell: (params) => (
         <div>
           <Button
+            variant="outline"
+            sx={{ fontSize: "1.2rem" }}
             onClick={async () => {
               await deletePerformanceMutation.mutateAsync(
                 params.row.performanceId
@@ -194,8 +201,8 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
         <DataGrid
           rows={
             searchResult.length > 0
-              ? searchResult.slice((pageParam - 1) * 20, pageParam * 20 - 1)
-              : rows.slice((pageParam - 1) * 20, pageParam * 20 - 1)
+              ? searchResult.slice((pageParam - 1) * 20, pageParam * 20)
+              : rows.slice((pageParam - 1) * 20, pageParam * 20)
           } // 1페이지면 rows의 0~19번 인덱스, 2페이지면 20~39번 인덱스, 3페이지면 40~59번 인덱스, ...
           getRowId={(row) => row.performanceId}
           rowHeight={200}
