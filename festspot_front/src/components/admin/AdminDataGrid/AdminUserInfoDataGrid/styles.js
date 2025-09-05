@@ -50,6 +50,7 @@ export const modifyButton = css`
   align-items: center;
   width: 100%;
   height: 100%;
+  gap: 0.2rem;
 `;
 
 export const paginationButtonLayout = css`

@@ -18,6 +18,19 @@ export const dataGridContainer = css`
   height: 70rem;
 `;
 
+export const imgContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  & > img {
+    width: 100%;
+    height: auto;
+  }
+`;
+
 export const paginationButtonLayout = css`
   display: flex;
   justify-content: center;

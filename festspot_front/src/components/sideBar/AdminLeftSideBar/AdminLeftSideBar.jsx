@@ -19,7 +19,7 @@ function AdminLeftSideBar({ setIsSideBar }) {
     {
       id: "dashboard",
       to: "/admin/dashboard",
-      placeholder: "관리자 메인",
+      placeholder: "API 공연 정보 검색/등록",
     },
     {
       id: "detail",

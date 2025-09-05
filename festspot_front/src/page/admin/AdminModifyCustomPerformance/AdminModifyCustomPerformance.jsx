@@ -67,41 +67,40 @@ function AdminModifyCustomPerformance(props) {
         <div>
           <h2>api 외 공연 정보 수정</h2>
         </div>
-      </header>
-      <main>
-        <div>
-          <div css={s.searchLayout}>
-            <TextField
-              id="name"
-              type="text"
-              size="small"
-              placeholder="공연/페스티벌명 검색"
-              css={s.searchInput}
-              onChange={handleSearchInputOnChange}
-            />
-            <TextField
-              id="venue"
-              type="text"
-              size="small"
-              placeholder="공연장 검색"
-              css={s.searchInput}
-              onChange={handleSearchInputOnChange}
-            />
-            <div>
-              <Button variant="contained" onClick={handleSearchButtonOnClick}>
-                검색
+        <div css={s.searchLayout}>
+          <TextField
+            id="name"
+            type="text"
+            size="small"
+            placeholder="공연/페스티벌명 검색"
+            css={s.searchInput}
+            onChange={handleSearchInputOnChange}
+          />
+          <TextField
+            id="venue"
+            type="text"
+            size="small"
+            placeholder="공연장 검색"
+            css={s.searchInput}
+            onChange={handleSearchInputOnChange}
+          />
+          <div>
+            <Button variant="contained" onClick={handleSearchButtonOnClick}>
+              검색
+            </Button>
+            {isSearch && (
+              <Button
+                variant="contained"
+                onClick={handleSearchResetButtonOnClick}
+              >
+                검색 초기화
               </Button>
-              {isSearch && (
-                <Button
-                  variant="contained"
-                  onClick={handleSearchResetButtonOnClick}
-                >
-                  검색 초기화
-                </Button>
-              )}
-            </div>
+            )}
           </div>
         </div>
+      </header>
+      <main>
+        <div></div>
         <div>
           <AdminCustomPerformanceDataGrid searchResult={searchResult} />
         </div>

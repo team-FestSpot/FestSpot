@@ -39,19 +39,13 @@ function AdminMainPage(props) {
   };
 
   const handleSearchButtonOnClick = async () => {
-    while (!!(await searchMutation.mutateAsync(searchMutationParams))) {
-      await searchMutation
-        .mutateAsync(searchMutationParams)
-        .then((result) =>
-          setRows(
-            result.filter(
-              (performance) =>
-                !performanceApiIdList?.includes(performance?.mt20id)
-            )
-          )
-        );
-      searchMutationParams.page++;
-    }
+    const result = await searchMutation.mutateAsync(searchMutationParams);
+
+    setRows(
+      result?.filter(
+        (performance) => !performanceApiIdList?.includes(performance?.mt20id)
+      )
+    );
   };
 
   useEffect(() => {
@@ -70,57 +64,61 @@ function AdminMainPage(props) {
       <main css={s.main}>
         <div>
           <div css={s.searchLayout}>
-            <TextField
-              id="name"
-              type="text"
-              size="small"
-              placeholder="공연/페스티벌명 검색"
-              css={s.searchInput}
-              onChange={handleSearchInputOnChange}
-            />
-            <TextField
-              id="venue"
-              type="text"
-              size="small"
-              placeholder="공연장 검색"
-              css={s.searchInput}
-              onChange={handleSearchInputOnChange}
-            />
             <div>
-              <Button
-                variant="contained"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  setRowsEmpty();
-                  handleSearchButtonOnClick();
-                }}
-              >
-                검색
-              </Button>
+              <TextField
+                id="name"
+                type="text"
+                size="small"
+                placeholder="공연/페스티벌명 검색"
+                css={s.searchInput}
+                onChange={handleSearchInputOnChange}
+              />
+              <TextField
+                id="venue"
+                type="text"
+                size="small"
+                placeholder="공연장 검색"
+                css={s.searchInput}
+                onChange={handleSearchInputOnChange}
+              />
             </div>
             <div>
-              <Button
-                variant="contained"
-                onClick={(e) => {
-                  e.preventDefault();
-                  uploadManyMutation.mutateAsync(checkedRows);
-                  setRowsEmpty();
-                }}
-              >
-                선택한 공연 추가
-              </Button>
-            </div>
-            <div>
-              <Button
-                variant="contained"
-                onClick={(e) => {
-                  e.preventDefault();
-                  uploadManyMutation.mutateAsync(rows);
-                  setRowsEmpty();
-                }}
-              >
-                전부 추가
-              </Button>
+              <div>
+                <Button
+                  variant="contained"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    setRowsEmpty();
+                    handleSearchButtonOnClick();
+                  }}
+                >
+                  검색
+                </Button>
+              </div>
+              <div>
+                <Button
+                  variant="contained"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    uploadManyMutation.mutateAsync(checkedRows);
+                    setRowsEmpty();
+                  }}
+                >
+                  선택한 공연 추가
+                </Button>
+              </div>
+              <div>
+                <Button
+                  variant="contained"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    uploadManyMutation.mutateAsync(rows);
+                    setRowsEmpty();
+                  }}
+                >
+                  전부 추가
+                </Button>
+              </div>
             </div>
           </div>
         </div>

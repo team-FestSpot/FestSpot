@@ -33,32 +33,33 @@ function AdminUserInfoManagement(props) {
         <div>
           <h2>사용자 관리</h2>
         </div>
+        <div css={s.searchLayout}>
+          <TextField
+            id="name"
+            type="text"
+            size="small"
+            placeholder="사용자 닉네임 검색"
+            css={s.searchInput}
+            onChange={handleSearchInputOnChange}
+            sx={{ maxWidth: "15rem" }}
+          />
+          <div>
+            <Button variant="contained" onClick={handleSearchButtonOnClick}>
+              검색
+            </Button>
+            {isSearch && (
+              <Button
+                variant="contained"
+                onClick={handleSearchResetButtonOnClick}
+              >
+                검색 초기화
+              </Button>
+            )}
+          </div>
+        </div>
       </header>
       <main>
         <div>
-          <div css={s.searchLayout}>
-            <TextField
-              id="name"
-              type="text"
-              size="small"
-              placeholder="사용자 닉네임 검색"
-              css={s.searchInput}
-              onChange={handleSearchInputOnChange}
-            />
-            <div>
-              <Button variant="contained" onClick={handleSearchButtonOnClick}>
-                검색
-              </Button>
-              {isSearch && (
-                <Button
-                  variant="contained"
-                  onClick={handleSearchResetButtonOnClick}
-                >
-                  검색 초기화
-                </Button>
-              )}
-            </div>
-          </div>
           <div css={s.dataGridContainer}>
             <AdminUserInfoDataGrid searchResult={searchResult} />
           </div>
