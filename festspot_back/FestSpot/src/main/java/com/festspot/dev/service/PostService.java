@@ -1,7 +1,6 @@
 package com.festspot.dev.service;
 
 import com.festspot.dev.domain.post.Post;
-import com.festspot.dev.domain.post.PostComment;
 import com.festspot.dev.domain.post.PostCommentMapper;
 import com.festspot.dev.domain.post.PostLikeMapper;
 import com.festspot.dev.domain.post.PostMapper;
@@ -86,18 +85,6 @@ public class PostService {
     }
   }
 
-  // 좋아요
-  public void like(Integer postId) {
-    Integer userId = principalUtil.getPrincipal().getUser().getUserId();
-    postLikeMapper.insert(postId, userId);
-  }
-
-  // 좋아요 취소
-  public void disLike(Integer postId) {
-    Integer userId = principalUtil.getPrincipal().getUser().getUserId();
-    postLikeMapper.delete(postId, userId);
-  }
-
   @Transactional(rollbackFor = Exception.class)
   public String register(PostRegisterReqDto dto) {
     if (principalUtil.getUserIdOrNull() == null) {
@@ -128,23 +115,22 @@ public class PostService {
     return "게시글 등록 완료";
   }
 
-  // 특정 글 클릭해서 보기 (댓글)
-  public List<PostComment> getPostComment(Integer categoryId, Integer postId) {
-    return postCommentMapper.findByPostId(categoryId, postId);
+  public String update(PostRegisterReqDto dto, Integer postId) {
+    System.out.println(dto);
+    System.out.println(postId);
+    return "수정 완료";
   }
 
   // 특정 글 클릭해서 보기 (본문)
   public PostDetailRespDto getPost(Integer postId) {
+    Integer userId = principalUtil.getUserIdOrNull();
+    return postMapper.findById(postId, userId).toRespDto(imageUrlUtil);
+  }
 
-    // 게시글 단건 조회
-    Post post = postMapper.findByPostId(postId);
-
-    System.out.println(
-        imageUrlUtil.buildImageUrl(post.getPostImgs().get(0).getPostImgUrl(), "post"));
-
-    PostDetailRespDto dto = post.toRespDto(imageUrlUtil);
-
-    return dto;
+  public List<PostCommentRespDto> getPostComment(Integer postId) {
+    Integer userId = principalUtil.getUserIdOrNull();
+    return postCommentMapper.findById(postId, userId).stream()
+        .map(postComment -> postComment.toRespDto(imageUrlUtil)).toList();
   }
 
   public int postLike(Integer postId) {
@@ -161,23 +147,6 @@ public class PostService {
       throw new NotLoginException("NotLoginException", "로그인 정보 없음");
     }
     return postLikeMapper.delete(postId, userId);
-  }
-
-  // 좋아요 삭제 또는 삽입
-  @Transactional
-  public boolean toggleLike(Integer postId, Integer userId) {
-    if (postLikeMapper.isLike(postId, userId) > 0) {
-      postLikeMapper.delete(postId, userId);
-      return false;
-    } else {
-      postLikeMapper.insert(postId, userId);
-      return true;
-    }
-  }
-
-  // 좋아요 수
-  public int getLikeCount(Integer postId) {
-    return postLikeMapper.getLikeCount(postId);
   }
 
   // 댓글 추가
@@ -200,10 +169,5 @@ public class PostService {
   @Transactional
   public void deleteComment(Integer postId, Integer postCommentId, Integer userId) {
     postCommentMapper.deleteComment(postId, postCommentId, userId);
-  }
-
-  // 댓글 가져오기
-  public List<PostComment> getComment(Integer postId) {
-    return postCommentMapper.selectComments(postId);
   }
 }

@@ -62,8 +62,6 @@ function UpperSideBarModal(props) {
       timer: 1000,
       timerProgressBar: true,
     });
-
-    navigate("/");
   };
 
   return (

@@ -1,21 +1,19 @@
 package com.festspot.dev.domain.post;
 
 import com.festspot.dev.dto.post.PostCommentRespDto;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 @Mapper
 public interface PostCommentMapper {
-    List<PostComment> findByPostId(Integer categoryId, Integer postId);
-    int getCountByPostId(Integer postId);
 
-    // 댓글 삽입 및 삭제
-//    int insertComment(@Param("postId") Integer postId,
-//                      @Param("userId") Integer userId,
-//                      @Param("commentContent") String commentContent);
-    int insertComment(PostComment postComment);
+  List<PostComment> findById(Integer postId, Integer userId);
+
+  int getCountByPostId(Integer postId);
+
+  //
+  int insertComment(PostComment postComment);
     int updateComment(@Param("postId") Integer postId,
                       @Param("postCommentId") Integer postCommentId,
                       @Param("userId") Integer userId,
