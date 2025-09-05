@@ -25,6 +25,13 @@ export const reqPostRegister = (data) =>
     },
   });
 
+export const reqPostUpdate = (data, postId) =>
+  api.put(`/api/board/${data.boardKey}/${postId}`, data, {
+    headers: {
+      "Content-Type": "multipart/for",
+    },
+  });
+
 export const reqPostLike = async (postId) =>
   await api.post(`/api/board/${postId}/like`);
 

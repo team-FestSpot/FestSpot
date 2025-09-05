@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { uppserSideBarHeight } from "../../../components/layout/MainLayout/styles";
+import { uppserSideBarHeight } from "../../../../components/layout/MainLayout/styles";
 
 const mainSidePadding = "2.4rem";
 

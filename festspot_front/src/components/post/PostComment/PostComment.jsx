@@ -15,7 +15,7 @@ function PostComment({ boardKey, postId, isLike, handleLikeOnClick }) {
     usePostCommentsQuery(boardKey, postId).data?.data?.body || [];
   const userInfo = usePrincipalQuery().data?.data?.body.user;
 
-  console.log(postComments);
+  // console.log(postComments);
 
   const handleRecommentOnClick = (userId, userNickName) => {
     setMention(userNickName);

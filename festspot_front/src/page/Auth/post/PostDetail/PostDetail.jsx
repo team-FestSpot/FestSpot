@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { usePostDetailQuery } from "../../../../querys/post/usePostDetailQuery";
 import { getQuillContent } from "../../../../utils/getQuillContent";
 import {
@@ -11,7 +11,6 @@ import {
   FaRegCommentDots,
   FaRegComments,
 } from "react-icons/fa";
-import { PiSiren } from "react-icons/pi";
 import PostComment from "../../../../components/post/PostComment/PostComment";
 import { useQueryClient } from "@tanstack/react-query";
 import { reqPostDislike, reqPostLike } from "../../../../api/postApi";
@@ -20,6 +19,7 @@ import Swal from "sweetalert2";
 
 function PostDetail2(props) {
   const pathname = useLocation().pathname;
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const userInfo = usePrincipalQuery().data?.data?.body?.user;
 
@@ -29,10 +29,11 @@ function PostDetail2(props) {
   const postDetailQuery = usePostDetailQuery(boardKey, postId);
   const postDetail = postDetailQuery.data?.data?.body;
 
-  console.log(postDetail);
   const postContent = !!postDetail
     ? getQuillContent(postDetail.postContent, postDetail.postImgs)
     : "<p><br></p>";
+
+  console.log(postDetail, userInfo.userId);
 
   const handleLikeOnClick = async (e) => {
     try {
@@ -72,6 +73,18 @@ function PostDetail2(props) {
     }
   };
 
+  const handleRewriteOnClick = (e) => {
+    navigate("/board/write", {
+      state: {
+        rewritePostId: postDetail.postId,
+        retitle: postDetail.postTitle,
+        rewriteContents: postContent,
+      },
+    });
+  };
+
+  const handleDeleteOnClick = (e) => {};
+
   return (
     <>
       {!!postDetail && (
@@ -108,6 +121,16 @@ function PostDetail2(props) {
                 dangerouslySetInnerHTML={{ __html: postContent }}
               ></div>
             </div>
+            {postDetail.user.userId === userInfo.userId && (
+              <div css={s.rewriteContainer}>
+                <div css={s.rewriteButton} onClick={handleRewriteOnClick}>
+                  수정
+                </div>
+                <div css={s.deleteButton} onClick={handleDeleteOnClick}>
+                  삭제
+                </div>
+              </div>
+            )}
             <div css={s.postCommentContainer}>
               <PostComment
                 boardKey={boardKey}

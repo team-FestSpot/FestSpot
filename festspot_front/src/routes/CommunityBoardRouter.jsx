@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import PostWrite from "../page/Auth/post/PostWrite";
 import FestivalBoard from "../page/Auth/Post/Board/FestivalBoard";
 import usePostCategoryQuery from "../querys/post/usePostCategoryQuery";
 import PostDetail from "../page/Auth/Post/PostDetail/PostDetail";
+import PostWrite from "../page/Auth/Post/PostWrite/PostWrite";
 
 function CommunityBoardRouter(props) {
   const postCategoryQuery = usePostCategoryQuery();
