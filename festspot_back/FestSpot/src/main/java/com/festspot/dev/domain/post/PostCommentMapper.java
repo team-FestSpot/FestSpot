@@ -13,10 +13,12 @@ public interface PostCommentMapper {
   int getCountByPostId(Integer postId);
 
   //
-  int insertComment(@Param("postId") Integer postId, @Param("userId") Integer userId,
-      @Param("commentContent") String commentContent);
+  int insertComment(PostComment postComment);
+    int updateComment(@Param("postId") Integer postId,
+                      @Param("postCommentId") Integer postCommentId,
+                      @Param("userId") Integer userId,
+                      @Param("commentContent") String commentContent);
+    int deleteComment(@Param("postId") Integer postId, @Param("postCommentId") Integer postCommentId, @Param("userId") Integer userId);
 
-  int deleteComment(@Param("postCommentId") Integer postCommentId, @Param("userId") Integer userId);
-
-  List<PostCommentRespDto> selectComments(@Param("postId") Integer postId);
+    List<PostComment> selectComments(@Param("postId") Integer postId);
 }

@@ -42,11 +42,27 @@ export const reqPostDislike = async (postId) =>
 export const reqPostComments = async (boardKey, postId) =>
   await api.get(`/api/board/${boardKey}/${postId}/comments`);
 
-export const reqAddComment = async ({ boardKey, postId, commentContent }) => {
+export const reqAddComment = async ({
+  boardKey,
+  postId,
+  commentContent,
+  commentLevel,
+}) => {
   await api.post(`/api/board/${boardKey}/${postId}/comments`, {
     commentContent,
+    commentLevel,
   });
 };
+
+export const reqUpdateComment = async ({
+  boardKey,
+  postId,
+  postCommentId,
+  commentContent,
+}) =>
+  api.put(`/api/board/${boardKey}/${postId}/comments/${postCommentId}`, {
+    commentContent,
+  });
 
 export const reqDeleteComment = async ({ boardKey, postId, postCommentId }) =>
   await api.delete(
