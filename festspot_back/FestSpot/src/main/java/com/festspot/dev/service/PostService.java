@@ -10,7 +10,6 @@ import com.festspot.dev.domain.postCategory.PostCategoryMapper;
 import com.festspot.dev.domain.postImg.PostImg;
 import com.festspot.dev.domain.postImg.PostImgMapper;
 import com.festspot.dev.domain.user.UserMapper;
-import com.festspot.dev.dto.post.PostCommentRespDto;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostRegisterReqDto;
 import com.festspot.dev.dto.post.PostsRespDto;
@@ -80,14 +79,6 @@ public class PostService {
     return postCategoryMapper.findAll();
   }
 
-  // 조회수 증가
-  public void increaseViewCount(Integer postId) {
-    int updated = postMapper.increaseViewCount(postId);
-    if (updated == 0) {
-      throw new IllegalArgumentException(postId + "의 게시글을 찾을 수 없습니다.");
-    }
-  }
-
   @Transactional(rollbackFor = Exception.class)
   public String register(PostRegisterReqDto dto) {
     Integer userId = principalUtil.getUserIdOrNull();
@@ -146,15 +137,11 @@ public class PostService {
   }
 
   // 특정 글 클릭해서 보기 (본문)
+  @Transactional(rollbackFor = Exception.class)
   public PostDetailRespDto getPost(Integer postId) {
+    postMapper.increaseViewCount(postId); // 조회수를 우선 증가
     Integer userId = principalUtil.getUserIdOrNull();
     return postMapper.findById(postId, userId).toRespDto(imageUrlUtil);
-  }
-
-  public List<PostCommentRespDto> getPostComment(Integer postId) {
-    Integer userId = principalUtil.getUserIdOrNull();
-    return postCommentMapper.findById(postId, userId).stream()
-        .map(postComment -> postComment.toRespDto(imageUrlUtil)).toList();
   }
 
   public int postLike(Integer postId) {

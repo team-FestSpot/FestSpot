@@ -28,10 +28,17 @@
         <result property="userProfileImgUrl" column="user_profile_img_url" />
     </resultMap>
 
-    <insert id="insertComment">
+    <insert id="insert">
         insert into post_comment_tb
         values (default, #{postId}, #{userId}, #{commentContent}, #{parentCommentId}, now(), #{deletedAt}, #{updatedAt})
     </insert>
+    <update id="update">
+        update post_comment_tb
+        set
+            comment_content = #{commentContent}
+        where
+            post_comment_id = #{postCommentId}
+    </update>
 
     <delete id="deleteComment">
         delete from
@@ -50,7 +57,7 @@
             post_id = #{postId}
     </select>
 
-    <select id="findById" resultType="com.festspot.dev.domain.post.PostComment">
+    <select id="findByPostId" resultType="com.festspot.dev.domain.post.PostComment">
         with recursive comment_tb as (
             select
                 post_comment_id,
@@ -159,5 +166,13 @@
         where
             pmt.post_id = #{postId}
         order by pmt.post_comment_id DESC
+    </select>
+    <select id="findById" resultMap="PostCommentMap">
+        select
+            *
+        from
+            post_comment_tb
+        where
+            post_comment_id = #{postCommentId}
     </select>
 </mapper>

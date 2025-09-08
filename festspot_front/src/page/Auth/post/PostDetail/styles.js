@@ -112,7 +112,7 @@ export const contentContainer = css`
   box-sizing: border-box;
 `;
 
-export const rewriteContainer = css`
+export const editContainer = css`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -121,7 +121,7 @@ export const rewriteContainer = css`
   gap: 2rem;
 `;
 
-export const rewriteButton = css`
+export const editButton = css`
   display: flex;
   justify-content: center;
   align-items: center;

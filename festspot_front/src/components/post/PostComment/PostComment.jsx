@@ -6,23 +6,59 @@ import React, { useEffect, useRef, useState } from "react";
 import { PiSiren } from "react-icons/pi";
 import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
 import { FiCornerDownRight } from "react-icons/fi";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
+import {
+  reqCommentRegister,
+  reqCommentDelete,
+  reqCommentUpdate,
+} from "../../../api/postCommentApi";
 
-function PostComment({ boardKey, postId, isLike, handleLikeOnClick }) {
-  const textareaRef = useRef(null);
+function PostComment({ postId, isLike, handleLikeOnClick }) {
   const [inputValue, setInputValue] = useState("");
-  const [mention, setMention] = useState("");
-  const postComments =
-    usePostCommentsQuery(boardKey, postId).data?.data?.body || [];
+  const [recommentValue, setRecommentValue] = useState("");
+  const [parentCommentId, setParentCommentId] = useState(0);
+
+  const [editCommentId, setEditCommentId] = useState(0);
+  const [editValue, setEditValue] = useState("");
+  const postComments = usePostCommentsQuery(postId).data?.data?.body || [];
   const userInfo = usePrincipalQuery().data?.data?.body.user;
 
-  // console.log(postComments);
-
-  const handleRecommentOnClick = (userId, userNickName) => {
-    setMention(userNickName);
+  const handleRecommentOnClick = (commentId) => {
+    if (parentCommentId === commentId) setParentCommentId(0);
+    else setParentCommentId(commentId);
   };
 
   const handleCommentOnChange = (e) => {
     setInputValue(e.target.value);
+  };
+
+  const handleRecommentOnChange = (e) => {
+    setRecommentValue(e.target.value);
+  };
+
+  const handleCommentConfirmOnClick = (e) => {
+    reqCommentRegister({ postId, commentContent: inputValue });
+  };
+
+  const handleRecommentConfirmOnClick = (e) => {
+    reqCommentRegister({
+      postId,
+      commentContent: recommentValue,
+      parentCommentId,
+    });
+  };
+
+  const handleEditCommentOnClick = (e, commentId, content) => {
+    setEditCommentId(commentId);
+    setEditValue(content);
+  };
+
+  const handleEditConfirmOnClick = (e, postCommentId) => {
+    reqCommentUpdate({ postId, commentContent: editValue, postCommentId });
+  };
+
+  const handleDeleteOnclick = (e, postCommentId) => {
+    reqCommentDelete({ postId, postCommentId });
   };
 
   return (
@@ -34,59 +70,130 @@ function PostComment({ boardKey, postId, isLike, handleLikeOnClick }) {
       <div css={s.commentBox}>
         <div css={s.commentContainer}>
           {postComments.map((comment) => (
-            <div key={comment.postCommentId} css={s.brace}>
-              {!!comment.level ? <FiCornerDownRight /> : <></>}
-              <div css={s.comment(comment.level, comment.hasChild)}>
-                <div css={s.profileImgContainer}>
-                  <img src={comment.userProfileImgUrl} alt="" />
-                </div>
-                <div css={s.commentDiv}>
-                  <div css={s.nickName}>
-                    <div>{comment.userNickName}</div>
-                    <div>
-                      {new Date(comment.createdAt).toLocaleDateString()}
-                      {new Date(comment.createdAt).toLocaleTimeString()}
-                    </div>
-                    <div>{!!comment.updated ? "(수정됨)" : ""}</div>
-                    {comment.userId === userInfo.userId ? (
-                      <div css={s.rewrtieContainer}>
-                        <div css={s.deleteButton}>삭제</div>
-                        <div css={s.rewriteButton}>수정</div>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
+            <>
+              <div key={comment.postCommentId} css={s.childContainer}>
+                {!!comment.level ? <FiCornerDownRight /> : <></>}
+                <div css={s.comment(comment.level, comment.hasChild)}>
+                  <div css={s.profileImgContainer}>
+                    <img src={comment.userProfileImgUrl} alt="" />
                   </div>
                   <div
-                    css={s.commentContent}
-                    onClick={() =>
-                      handleRecommentOnClick(
-                        comment.userId,
-                        comment.userNickName
-                      )
+                    css={s.commentDiv}
+                    onClick={(e) =>
+                      handleRecommentOnClick(comment.postCommentId)
                     }
                   >
-                    <div css={s.parent}>
-                      {!!comment.parentUserNickName ? (
-                        `@${comment.parentUserNickName}`
+                    <div css={s.nickName}>
+                      <div>{comment.userNickName}</div>
+                      <div>
+                        {new Date(comment.createdAt).toLocaleDateString()}
+                        {new Date(comment.createdAt).toLocaleTimeString()}
+                      </div>
+                      <div>{!!comment.updated ? "(수정됨)" : ""}</div>
+                      {comment.userId === userInfo.userId ? (
+                        <div css={s.rewrtieContainer}>
+                          {!!editCommentId ? (
+                            <div
+                              css={s.deleteButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditCommentId(0);
+                              }}
+                            >
+                              취소
+                            </div>
+                          ) : (
+                            <div
+                              css={s.deleteButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteOnclick(e, comment.postCommentId);
+                              }}
+                            >
+                              삭제
+                            </div>
+                          )}
+                          {!!editCommentId ? (
+                            <div
+                              css={s.editButton}
+                              onClick={handleEditConfirmOnClick}
+                            >
+                              확인
+                            </div>
+                          ) : (
+                            <div
+                              css={s.editButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditCommentOnClick(
+                                  e,
+                                  comment.postCommentId,
+                                  comment.commentContent
+                                );
+                              }}
+                            >
+                              수정
+                            </div>
+                          )}
+                        </div>
                       ) : (
                         <></>
                       )}
                     </div>
-                    {comment.commentContent}
+                    <div css={s.commentContent}>
+                      <div css={s.parent}>
+                        {!!comment.parentUserNickName ? (
+                          `@${comment.parentUserNickName}`
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+
+                      {editCommentId === comment.postCommentId ? (
+                        <input
+                          css={s.editInput}
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      ) : (
+                        comment.commentContent
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+              {comment.postCommentId === parentCommentId && (
+                <div css={s.recommentWriterContainer}>
+                  <FiCornerDownRight />
+                  <div css={s.withoutArrow(comment.level)}>
+                    <div css={s.recommentWriter}>
+                      <div>{userInfo.userNickName}</div>
+                      <div css={s.commentWriter(true)}>
+                        <TextareaAutosize
+                          type="text"
+                          onChange={handleRecommentOnChange}
+                          value={recommentValue}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      css={s.recommentButton}
+                      onClick={handleRecommentConfirmOnClick}
+                    >
+                      등록
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           ))}
         </div>
         <div css={s.commentWriterContainer}>
           <div>{userInfo.userNickName}</div>
-          <div css={s.commentWriter}>
-            <div css={s.metion}>{mention}</div>
-            <textarea
+          <div css={s.commentWriter(false)}>
+            <TextareaAutosize
               type="text"
-              ref={textareaRef}
               onChange={handleCommentOnChange}
               value={inputValue}
               placeholder="댓글을 남겨보세요"
@@ -102,7 +209,9 @@ function PostComment({ boardKey, postId, isLike, handleLikeOnClick }) {
             {!!isLike ? <FaHeart /> : <FaRegHeart />}
             <span>좋아요</span>
           </div>
-          <button css={s.confirmButton}>등록</button>
+          <button css={s.confirmButton} onClick={handleCommentConfirmOnClick}>
+            등록
+          </button>
         </div>
       </div>
     </div>

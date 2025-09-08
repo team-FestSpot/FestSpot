@@ -79,7 +79,7 @@ function PostDetail(props) {
     }
   };
 
-  const handleRewriteOnClick = (e) => {
+  const handleEditOnClick = (e) => {
     navigate(`/board/edit/${postDetail.postId}?boardKey=${boardKey}`);
   };
 
@@ -122,8 +122,8 @@ function PostDetail(props) {
               ></div>
             </div>
             {postDetail.user.userId === userInfo.userId && (
-              <div css={s.rewriteContainer}>
-                <div css={s.rewriteButton} onClick={handleRewriteOnClick}>
+              <div css={s.editContainer}>
+                <div css={s.editButton} onClick={handleEditOnClick}>
                   수정
                 </div>
                 <div css={s.deleteButton} onClick={handleDeleteOnClick}>
@@ -133,7 +133,6 @@ function PostDetail(props) {
             )}
             <div css={s.postCommentContainer}>
               <PostComment
-                boardKey={boardKey}
                 postId={postId}
                 isLike={postDetail.isLike}
                 handleLikeOnClick={handleLikeOnClick}
