@@ -28,7 +28,7 @@ export const reqPostRegister = (data) =>
 export const reqPostUpdate = (data, postId) =>
   api.put(`/api/board/${data.boardKey}/${postId}`, data, {
     headers: {
-      "Content-Type": "multipart/for",
+      "Content-Type": "multipart/form-data",
     },
   });
 

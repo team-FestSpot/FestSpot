@@ -9,4 +9,6 @@ public interface PostImgMapper {
   int insert(List<PostImg> postImgs);
 
   List<PostImg> findByPostId(Integer postId);
+
+  int deleteByPostId(Integer postId);
 }

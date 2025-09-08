@@ -20,4 +20,5 @@ public interface PostMapper {
 
   int increaseViewCount(Integer postId);
 
+  int update(Post post);
 }

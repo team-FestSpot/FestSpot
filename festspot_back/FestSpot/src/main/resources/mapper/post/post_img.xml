@@ -12,6 +12,12 @@
             (default, #{img.postId}, #{img.postImgUrl}, #{img.seq})
         </foreach>
     </insert>
+  <delete id="deleteByPostId">
+    delete from
+      post_img_tb
+    where
+      post_id = #{postId}
+  </delete>
   <select id="findByPostId" resultType="com.festspot.dev.domain.postImg.PostImg">
       select
         *
