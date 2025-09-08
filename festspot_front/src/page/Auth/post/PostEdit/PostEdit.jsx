@@ -4,18 +4,20 @@ import React, { useState, useRef, useEffect } from "react";
 import "react-quill-new/dist/quill.snow.css";
 import { AiOutlineSave } from "react-icons/ai";
 import { MdArrowBack } from "react-icons/md";
-import { FaCaretDown } from "react-icons/fa";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useFixQuillToolBarStore } from "../../../../stores/useFixQuillToolBarStore";
-import usePostCategoryQuery from "../../../../querys/post/usePostCategoryQuery";
 import SparkMD5 from "spark-md5";
-import { reqPostRegister } from "../../../../api/postApi";
 import Swal from "sweetalert2";
 import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 import { css, Global } from "@emotion/react";
 import PostEditor from "../../../../components/post/PostEditor/PostEditor";
 import PostCategory from "../../../../components/post/PostCategory/PostCategory";
 import { usePostDetailQuery } from "../../../../querys/post/usePostDetailQuery";
+import { getQuillDataUrl } from "../../../../utils/getQuillContent";
+import {
+  fileToDataUrl,
+  urlToFileObject,
+} from "../../../../utils/urlToFileObject";
+import { reqPostUpdate } from "../../../../api/postApi";
 
 const PostEdit = () => {
   const navigate = useNavigate();
@@ -25,8 +27,6 @@ const PostEdit = () => {
   const [images, setImages] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const principal = usePrincipalQuery().data?.data?.body;
-
-  const [post, setPost] = useState({});
 
   const quillRef = useRef(null);
   const titleInputRef = useRef(null);
@@ -38,18 +38,32 @@ const PostEdit = () => {
   const postDetail = postDetailQuery.data?.data?.body;
 
   useEffect(() => {
-    const { post } = location.state || {};
-    setPost(post);
-  }, []);
+    const setQuill = async () => {
+      const quillContet = await getQuillDataUrl(
+        postDetail.postContent,
+        postDetail.postImgs
+      );
 
-  useEffect(() => {
-    const contents = post.postContent
-      .split(/<\/p><p>/)
-      .map((str) => str.replace(/<\/?p>/g, ""));
+      setTitle(postDetail.postTitle);
+      const delta = JSON.parse(quillContet);
+      quillRef.current.getEditor().setContents(delta);
 
-    console.log(contents);
-    quillRef.current.getEditor().setContents();
-  }, [post]);
+      postDetail.postImgs.map(async (img) => {
+        const filename = img.postImgUrl.split("/")[5];
+        const type = filename.split(".")[1];
+        const file = await urlToFileObject(
+          img.postImgUrl,
+          filename,
+          `image/${type}`
+        );
+        const dataUrl = await fileToDataUrl(file);
+
+        setImages((prev) => [...prev, { dataUrl: dataUrl, file: file }]);
+      });
+    };
+
+    setQuill();
+  }, [postDetail]);
 
   useEffect(() => {
     if (!principal) {
@@ -71,8 +85,6 @@ const PostEdit = () => {
     }
   }, [principal, postDetail.user.userId]);
 
-  console.log(postDetail);
-
   //저장 버튼
   const handleSubmitOnClick = async () => {
     if (!title.trim())
@@ -80,54 +92,55 @@ const PostEdit = () => {
     if (!content.trim() || content === "<p><br></p>")
       return Swal.fire({ icon: "error", title: "내용을 입력해주세요." });
 
-    if (writeMode === "write") {
-      try {
-        const delta = quillRef.current.getEditor().getContents();
-        const hashedImageUrls = delta
-          .filter((row) => !!row.insert.image)
-          .map((row) => SparkMD5.hash(row.insert.image));
+    try {
+      const delta = quillRef.current.getEditor().getContents();
 
-        const sortedImages = hashedImageUrls.map((dataUrlHash, idx) => {
-          const foundImage = images.find(
-            (image) => SparkMD5.hash(image.dataUrl) === dataUrlHash
-          );
+      const hashedImageDataUrls = delta
+        .filter((row) => !!row.insert.image)
+        .map((row) => SparkMD5.hash(row.insert.image));
 
-          return {
-            ...foundImage,
-            seq: idx + 1,
-          };
-        });
+      const sortedImages = hashedImageDataUrls.map((hashedImageUrl, idx) => {
+        const foundImage = images.find(
+          (image) => SparkMD5.hash(image.dataUrl) === hashedImageUrl
+        );
 
-        let quillContent;
-        let idx = 0;
-
-        if (/<img[^>]*>/.test(content)) {
-          quillContent = content.replace(/<img[^>]*>/g, (match) => {
-            const seqNum = sortedImages[idx].seq;
-            idx++;
-            return `[img-${seqNum}]`;
-          });
-        } else {
-          quillContent = content;
-        }
-
-        const postReq = {
-          boardKey: searchParams.get("boardKey"),
-          postTitle: title,
-          postContent: quillContent,
-          files: sortedImages.map((image) => image.file),
+        return {
+          ...foundImage,
+          seq: idx + 1,
         };
+      });
 
-        await reqPostRegister(postReq);
+      let idx = 0;
+      const quillDelta = delta.map((row) => {
+        if (!!row.insert.image) {
+          return {
+            ...row,
+            insert: {
+              ...row.insert,
+              image: `[img-${sortedImages[idx++].seq}]`,
+            },
+          };
+        }
+        return row;
+      });
 
-        navigate(`/board/${searchParams.get("boardKey")}`);
-      } catch (error) {
-        await Swal.fire({
-          title: error?.response?.data?.body,
-          text: error?.response?.data?.message,
-          icon: "error",
-        });
-      }
+      const postReq = {
+        boardKey: searchParams.get("boardKey"),
+        postTitle: title,
+        postContent: JSON.stringify(quillDelta),
+        files: sortedImages.map((image) => image.file),
+      };
+
+      await reqPostUpdate(postReq, postId);
+
+      navigate(`/board/${searchParams.get("boardKey")}/${postId}`);
+      postDetailQuery.refetch();
+    } catch (error) {
+      await Swal.fire({
+        title: error?.response?.data?.body,
+        text: error?.reponse?.data?.message,
+        icon: "error",
+      });
     }
   };
 

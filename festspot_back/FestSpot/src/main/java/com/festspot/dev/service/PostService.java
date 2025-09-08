@@ -118,9 +118,30 @@ public class PostService {
     return "게시글 등록 완료";
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public String update(PostRegisterReqDto dto, Integer postId) {
-    System.out.println(dto);
-    System.out.println(postId);
+    postImgMapper.deleteByPostId(postId); //기존 이미지 삭제
+
+    if (dto.getFiles() != null) {         //새 이미지 삽입
+      List<String> filePaths = dto.getFiles().stream()
+          .map(file -> fileService.uploadFile(file, "post")).toList();
+
+      AtomicInteger atomicInteger = new AtomicInteger(0);
+      List<PostImg> postImgs = filePaths.stream().map(filePath -> PostImg.builder()
+          .postId(postId)
+          .postImgUrl(filePath)
+          .seq(atomicInteger.getAndIncrement() + 1)
+          .build()).toList();
+
+      postImgMapper.insert(postImgs);
+    }
+
+    Post post = postMapper.findById(postId, principalUtil.getUserIdOrNull());
+    post.setPostContent(dto.getPostContent());
+    post.setPostTitle(dto.getPostTitle());
+    post.setPostCategoryId(
+        postCategoryMapper.findeByCategoryKey(dto.getBoardKey()).getPostCategoryId());
+    postMapper.update(post);
     return "수정 완료";
   }
 

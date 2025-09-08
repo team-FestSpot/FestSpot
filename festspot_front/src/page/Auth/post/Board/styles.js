@@ -130,6 +130,20 @@ export const countContainer = css`
   }
 `;
 
+export const notFound = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  min-height: 75vh;
+  height: auto;
+  gap: 1vh 1vw;
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--main-color);
+`;
+
 export const paginationContainer = css`
   width: 60%;
   box-sizing: border-box;

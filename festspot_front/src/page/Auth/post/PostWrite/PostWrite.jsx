@@ -65,19 +65,7 @@ const PostWrite = () => {
         };
       });
 
-      let quillContent;
       let idx = 0;
-
-      // if (/<img[^>]*>/.test(content)) {
-      //   quillContent = content.replace(/<img[^>]*>/g, (match) => {
-      //     const seqNum = sortedImages[idx].seq;
-      //     idx++;
-      //     return `[img-${seqNum}]`;
-      //   });
-      // } else {
-      //   quillContent = content;
-      // }
-
       const quillDelta = delta.map((row) => {
         if (!!row.insert.image) {
           return {
@@ -100,7 +88,7 @@ const PostWrite = () => {
 
       await reqPostRegister(postReq);
 
-      // navigate(`/board/${searchParams.get("boardKey")}`);
+      navigate(`/board/${searchParams.get("boardKey")}`);
     } catch (error) {
       await Swal.fire({
         title: error?.response?.data?.body,
