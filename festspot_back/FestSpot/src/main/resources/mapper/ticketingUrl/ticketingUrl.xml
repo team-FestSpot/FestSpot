@@ -54,6 +54,14 @@
         </foreach>
     </delete>
 
+    <delete id="deleteManyByPerformanceIds">
+        delete from ticketing_url_tb
+        where performance_id in
+        <foreach collection="list" item="performanceId" open="(" separator="," close=")">
+            #{performanceId}
+        </foreach>
+    </delete>
+
     <select id="findByPerformanceId" resultType="java.util.List">
         select
             *
