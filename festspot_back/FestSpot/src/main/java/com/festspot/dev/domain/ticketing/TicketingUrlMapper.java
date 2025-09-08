@@ -15,4 +15,6 @@ public interface TicketingUrlMapper {
     List<List<TicketingUrl>> findByPerformanceId(List<Performance> performanceList);
 
     int deleteMissing(List<TicketingUrl> deletedRelates);
+
+    int deleteManyByPerformanceIds(List<Integer> performanceIds);
 }
