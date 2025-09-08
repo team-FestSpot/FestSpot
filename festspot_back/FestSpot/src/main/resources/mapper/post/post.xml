@@ -53,8 +53,18 @@
         set view_count = view_count + 1
         where post_id = #{postId}
     </update>
+  <update id="update">
+    update post_tb
+    set
+      post_category_id = #{postCategoryId},
+      post_title = #{postTitle},
+      post_content = #{postContent},
+      updated_at = now()
+    where
+      post_id = #{postId}
+  </update>
 
-    <select id="findById" resultMap="PostMap">
+  <select id="findById" resultMap="PostMap">
       select
         *
       from (

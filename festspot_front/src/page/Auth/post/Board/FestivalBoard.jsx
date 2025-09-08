@@ -115,7 +115,7 @@ function FestivalBoard(props) {
     }
   };
 
-  const handleCardOnClick = (postId) => {
+  const handleCardOnClick = (postId, postCategoryKey) => {
     //조회수 증가
     queryClient.setQueryData(["posts", boardKey, page], (prev) => ({
       ...prev,
@@ -135,7 +135,7 @@ function FestivalBoard(props) {
         },
       },
     }));
-    navigate(`/board/${boardKey}/${postId}`);
+    navigate(`/board/${postCategoryKey}/${postId}`);
   };
 
   const handleWriteOnClick = (e) => {
@@ -155,56 +155,68 @@ function FestivalBoard(props) {
       />
       {!!postList && !!posts && (
         <div css={s.boardLayout}>
-          <div css={s.postContainer}>
-            {postList.map((post, idx) => (
-              <Card key={idx} onClick={() => handleCardOnClick(post.postId)}>
-                <div css={s.imageContainer}>
-                  {!!post.postImgs[0] && (
-                    <img
-                      src={post.postImgs[0].postImgUrl}
-                      alt="게시글 이미지"
-                    />
-                  )}
-                </div>
-                <div css={s.contentBox}>
-                  <div css={s.titleContainer}>{post.postTitle}</div>
-                  <div css={s.contentContainer}>
-                    <div css={s.userContainer}>
-                      <div css={s.profileImgContainer}>
-                        <img src={post.user.userProfileImgUrl} />
+          {!!postList.length ? (
+            <div css={s.postContainer}>
+              {postList.map((post, idx) => (
+                <Card
+                  key={idx}
+                  onClick={() =>
+                    handleCardOnClick(
+                      post.postId,
+                      post.postCategory.postCategoryKey
+                    )
+                  }
+                >
+                  <div css={s.imageContainer}>
+                    {!!post.postImgs[0] && (
+                      <img
+                        src={post.postImgs[0].postImgUrl}
+                        alt="게시글 이미지"
+                      />
+                    )}
+                  </div>
+                  <div css={s.contentBox}>
+                    <div css={s.titleContainer}>{post.postTitle}</div>
+                    <div css={s.contentContainer}>
+                      <div css={s.userContainer}>
+                        <div css={s.profileImgContainer}>
+                          <img src={post.user.userProfileImgUrl} />
+                        </div>
+                        <div>{post.user.userNickName}</div>
                       </div>
-                      <div>{post.user.userNickName}</div>
-                    </div>
-                    <div css={s.countContainer}>
-                      <div>
-                        <FaRegEye />
-                        {post.viewCount}
-                      </div>
-                      <div>
-                        {!!post.isLike ? (
-                          <FaHeart
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDislikeOnClick(e, post.postId);
-                            }}
-                            style={{ color: "red" }}
-                          />
-                        ) : (
-                          <FaRegHeart
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleLikeOnClick(e, post.postId);
-                            }}
-                          />
-                        )}
-                        {post.likeCount}
+                      <div css={s.countContainer}>
+                        <div>
+                          <FaRegEye />
+                          {post.viewCount}
+                        </div>
+                        <div>
+                          {!!post.isLike ? (
+                            <FaHeart
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDislikeOnClick(e, post.postId);
+                              }}
+                              style={{ color: "red" }}
+                            />
+                          ) : (
+                            <FaRegHeart
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleLikeOnClick(e, post.postId);
+                              }}
+                            />
+                          )}
+                          {post.likeCount}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div css={s.notFound}>게시물이 없습니다.</div>
+          )}
           <div css={s.paginationContainer}>
             <PaginationBar
               totalPage={totalPage}

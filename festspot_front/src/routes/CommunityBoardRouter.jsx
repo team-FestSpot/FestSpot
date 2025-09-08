@@ -4,6 +4,7 @@ import FestivalBoard from "../page/Auth/Post/Board/FestivalBoard";
 import usePostCategoryQuery from "../querys/post/usePostCategoryQuery";
 import PostDetail from "../page/Auth/Post/PostDetail/PostDetail";
 import PostWrite from "../page/Auth/Post/PostWrite/PostWrite";
+import PostEdit from "../page/Auth/Post/PostEdit/PostEdit";
 
 function CommunityBoardRouter(props) {
   const postCategoryQuery = usePostCategoryQuery();
@@ -17,6 +18,7 @@ function CommunityBoardRouter(props) {
       {postCategoryQuery.isFetched && (
         <Routes>
           <Route path="/write" element={<PostWrite />} />
+          <Route path="/edit/:id" element={<PostEdit />} />
           {boardKeys.map((boardKey) => (
             <>
               <Route path={`/${boardKey}`} element={<FestivalBoard />} />

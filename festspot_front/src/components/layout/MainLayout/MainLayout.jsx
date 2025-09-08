@@ -14,7 +14,11 @@ function MainLayout({ children }) {
   const { isFixed, setIsFixed } = useFixQuillToolBarStore();
 
   //게시글 쓰기, 피드 상세 화면에서는 PostSideBar 안보여줌
-  const hiddenSidebarPaths = ["/board/write", "/performance/feed"];
+  const hiddenSidebarPaths = [
+    "/board/write",
+    "/board/edit",
+    "/performance/feed",
+  ];
 
   useEffect(() => {
     setHidePostSideBar(

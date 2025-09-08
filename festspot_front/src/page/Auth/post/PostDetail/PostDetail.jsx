@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { usePostDetailQuery } from "../../../../querys/post/usePostDetailQuery";
 import { getQuillContent } from "../../../../utils/getQuillContent";
 import PostComment from "../../../../components/post/PostComment/PostComment";
@@ -9,10 +9,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { reqPostDislike, reqPostLike } from "../../../../api/postApi";
 import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 import Swal from "sweetalert2";
+import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import DOMPurify from "dompurify";
 
 function PostDetail(props) {
   const pathname = useLocation().pathname;
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [html, setHtml] = useState("");
+
   const queryClient = useQueryClient();
   const userInfo = usePrincipalQuery().data?.data?.body?.user;
 
@@ -22,11 +27,19 @@ function PostDetail(props) {
   const postDetailQuery = usePostDetailQuery(boardKey, postId);
   const postDetail = postDetailQuery.data?.data?.body;
 
-  const postContent = !!postDetail
-    ? getQuillContent(postDetail.postContent, postDetail.postImgs)
-    : "<p><br></p>";
+  useEffect(() => {
+    if (!!postDetail?.postContent) {
+      const delta = JSON.parse(
+        getQuillContent(postDetail.postContent, postDetail.postImgs)
+      );
 
-  console.log(postDetail, userInfo.userId);
+      const converter = new QuillDeltaToHtmlConverter(delta, {});
+      const html = converter.convert();
+      const cleanHtml = DOMPurify.sanitize(html); //XSS 공격 방지 라이브러리
+
+      setHtml(cleanHtml);
+    }
+  }, [postDetail]);
 
   const handleLikeOnClick = async (e) => {
     try {
@@ -58,8 +71,8 @@ function PostDetail(props) {
     } catch (error) {
       await Swal.fire({
         icon: "error",
-        title: error.response.data.body,
-        text: error.response.data.message,
+        title: error?.response?.data?.body,
+        text: error?.response?.data?.message,
         timer: 2000,
         timerProgressBar: true,
       });
@@ -67,13 +80,7 @@ function PostDetail(props) {
   };
 
   const handleRewriteOnClick = (e) => {
-    navigate("/board/write", {
-      state: {
-        rewritePostId: postDetail.postId,
-        retitle: postDetail.postTitle,
-        rewriteContents: postContent,
-      },
-    });
+    navigate(`/board/edit/${postDetail.postId}?boardKey=${boardKey}`);
   };
 
   const handleDeleteOnClick = (e) => {};
@@ -111,7 +118,7 @@ function PostDetail(props) {
             <div css={s.contentContainer}>
               <div
                 css={s.content}
-                dangerouslySetInnerHTML={{ __html: postContent }}
+                dangerouslySetInnerHTML={{ __html: html }}
               ></div>
             </div>
             {postDetail.user.userId === userInfo.userId && (
