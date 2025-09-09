@@ -67,12 +67,32 @@
             performance_id = #{performanceId}
     </update>
 
+    <update id="updateManyByApiIds">
+        <foreach collection="list" item="performance" separator=";">
+            update
+                performance_tb
+            set
+                performance_region_id = #{performance.performanceRegion.performanceRegionId},
+                performance_title = #{performance.performanceTitle},
+                performance_cast= #{performance.performanceCast},
+                performance_poster_url = #{performance.performancePosterUrl},
+                performance_start_date = #{performance.performanceStartDate},
+                performance_end_date = #{performance.performanceEndDate},
+                performance_venue = #{performance.performanceVenue},
+                performance_state_id = #{performance.performanceState.performanceStateId},
+                performance_last_modified = #{performance.performanceLastModified},
+                is_foreign = #{performance.isForeign},
+                is_festival = #{performance.isFestival},
+                updated_at = #{performance.updatedAt}
+            where
+                performance_api_id = #{performance.performanceApiId}
+        </foreach>
+    </update>
+
     <delete id="deleteById">
         delete from performance_tb
         where performance_id = #{performanceId}
     </delete>
-
-
 
     <select id="findAll" resultMap="PerformanceMap">
     select
@@ -244,4 +264,5 @@
         where
             performance_comment_id = #{performanceCommentId}
     </update>
+
 </mapper>
