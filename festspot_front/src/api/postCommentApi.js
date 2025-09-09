@@ -21,9 +21,11 @@ export const reqCommentUpdate = async ({
   commentContent,
   postCommentId,
 }) =>
-  api.put(`/api/board/comments//${postId}/${postCommentId}`, {
+  await api.put(`/api/board/comments/${postId}/${postCommentId}`, {
     commentContent,
   });
 
-export const reqCommentDelete = async ({ postId, postCommentId }) =>
-  await api.delete(`/api/board/comments//${postId}/${postCommentId}`);
+export const reqCommentDelete = async ({ postId, postCommentId }) => {
+  console.log(postId, postCommentId);
+  await api.delete(`/api/board/comments/${postId}/${postCommentId}`);
+};

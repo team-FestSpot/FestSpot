@@ -35,4 +35,7 @@ public class PostCommentService {
     return postCommentMapper.update(postComment);
   }
 
+  public int delete(Integer postCommentId) {
+    return postCommentMapper.softDelete(postCommentId);
+  }
 }

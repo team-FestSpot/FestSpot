@@ -5,6 +5,7 @@ import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.service.PostCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,6 @@ public class PostCommentController {
 
   @GetMapping("/{postId}")
   public ResponseEntity<ResponseDto<?>> getPostComments(@PathVariable Integer postId) {
-    System.out.println(postId);
     return ResponseEntity.ok(ResponseDto.success(postCommentService.getPostComment(postId)));
   }
 
@@ -38,5 +38,11 @@ public class PostCommentController {
       @PathVariable Integer postCommentId, @RequestBody PostCommentReqDto dto) {
     return ResponseEntity.ok(
         ResponseDto.success(postCommentService.update(dto, postCommentId)));
+  }
+
+  @DeleteMapping("/{postId}/{postCommentId}")
+  public ResponseEntity<ResponseDto<?>> deletePostComment(@PathVariable Integer postId,
+      @PathVariable Integer postCommentId) {
+    return ResponseEntity.ok(ResponseDto.success(postCommentService.delete(postCommentId)));
   }
 }

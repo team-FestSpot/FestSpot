@@ -13,6 +13,12 @@ export const sort = css`
   justify-content: start;
   align-items: center;
   width: 100%;
+  gap: 1rem;
+`;
+
+export const sortOption = (seleted) => css`
+  font-weight: ${seleted ? "600" : "default"};
+  cursor: pointer;
 `;
 
 export const commentBox = css`
@@ -43,6 +49,23 @@ export const commentContainer = css`
   justify-content: center;
   align-items: end;
   width: 100%;
+`;
+
+export const deletedComment = (level, hasChild) => css`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: ${!!level ? "95%" : "100%"};
+  padding: ${!!level ? "2rem 1rem" : "2rem 1rem"};
+  padding-right: 1rem;
+  margin: 0.5rem 0;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  border-top: ${!level ? "1px solid #dbdbdb" : 0};
+  border-bottom: ${!level && !hasChild ? "1px solid #dbdbdb" : 0};
+  background-color: ${!!level ? "#f9f9f9" : "white"};
+  font-size: 1.6rem;
 `;
 
 export const comment = (level, hasChild) => css`
@@ -124,6 +147,7 @@ export const editButton = css`
   color: white;
   background-color: var(--main-color);
 `;
+
 export const deleteButton = css`
   display: flex;
   justify-content: center;

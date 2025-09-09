@@ -34,7 +34,7 @@ function FestivalBoard(props) {
   const boardKey = location.pathname.slice(7);
   const page = parseInt(searchParams.get("page")) || 1;
 
-  const postsQuery = usePostsQuery(boardKey, page);
+  const postsQuery = usePostsQuery({ boardKey, page });
   const posts = postsQuery.data?.data?.body || [];
 
   //게시글 리스트와 총 페이지 수 상태에 저장

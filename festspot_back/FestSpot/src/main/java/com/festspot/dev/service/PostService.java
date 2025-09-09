@@ -1,5 +1,6 @@
 package com.festspot.dev.service;
 
+import com.festspot.dev.domain.post.PageSearchOption;
 import com.festspot.dev.domain.post.Post;
 import com.festspot.dev.domain.post.PostCommentMapper;
 import com.festspot.dev.domain.post.PostLikeMapper;
@@ -62,7 +63,7 @@ public class PostService {
         .startIndex((page - 1) * size + 1)
         .endIndex((page - 1) * size + size)
         .size(size)
-        .categoryId(postCategoryMapper.findeByCategoryKey(boardKey).getPostCategoryId())
+        .categoryId(postCategoryMapper.findByCategoryKey(boardKey).getPostCategoryId())
         .userId(principalUtil.getUserIdOrNull())
         .build();
 
@@ -73,6 +74,14 @@ public class PostService {
             postMapper.countByCategoryId(postSearchOption) / postSearchOption.getSize()))
         .size(postSearchOption.getSize())
         .build();
+  }
+
+  public int getPageNumByPostId(Integer postId, Integer postCategoryId, Integer size) {
+    return postMapper.findPageById(PageSearchOption.builder()
+        .postId(postId)
+        .size(size)
+        .postCategoryId(postCategoryId)
+        .build());
   }
 
   public List<PostCategory> getPostCategory() {
@@ -86,7 +95,7 @@ public class PostService {
       throw new NotLoginException("NotLoginException", "로그인 정보 없음");
     }
 
-    Integer postCategoryId = postCategoryMapper.findeByCategoryKey(dto.getBoardKey())
+    Integer postCategoryId = postCategoryMapper.findByCategoryKey(dto.getBoardKey())
         .getPostCategoryId();
     Post post = dto.toPost(userId, postCategoryId);
 
@@ -131,9 +140,13 @@ public class PostService {
     post.setPostContent(dto.getPostContent());
     post.setPostTitle(dto.getPostTitle());
     post.setPostCategoryId(
-        postCategoryMapper.findeByCategoryKey(dto.getBoardKey()).getPostCategoryId());
+        postCategoryMapper.findByCategoryKey(dto.getBoardKey()).getPostCategoryId());
     postMapper.update(post);
     return "수정 완료";
+  }
+
+  public int delete(Integer postId) {
+    return postMapper.delete(postId);
   }
 
   // 특정 글 클릭해서 보기 (본문)
@@ -159,4 +172,6 @@ public class PostService {
     }
     return postLikeMapper.delete(postId, userId);
   }
+
+
 }

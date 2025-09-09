@@ -17,8 +17,8 @@ public class PostCommentRespDto {
   private Integer userId;
   private String commentContent;
   private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
   private boolean isDeleted;
-  private boolean isUpdated;
   private String userNickName;
   private String userProfileImgUrl;
   private Integer isLike;
@@ -28,4 +28,5 @@ public class PostCommentRespDto {
   private boolean hasChild;
   private Integer level;
   private String path;
+  private Integer orderNumber;
 }

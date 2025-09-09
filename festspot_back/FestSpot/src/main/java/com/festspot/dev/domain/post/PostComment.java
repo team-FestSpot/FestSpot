@@ -32,6 +32,7 @@ public class PostComment {
   private boolean hasChild;
   private Integer level;
   private String path;
+  private Integer orderNumber;
 
   private User user;
 
@@ -41,9 +42,9 @@ public class PostComment {
         .postId(postId)
         .userId(userId)
         .commentContent(commentContent)
-        .createdAt(updatedAt != null ? updatedAt : createdAt)
+        .createdAt(createdAt)
+        .updatedAt(updatedAt)
         .isDeleted(deletedAt != null)
-        .isUpdated(updatedAt != null)
         .userNickName(userNickName)
         .userProfileImgUrl(imageUrlUtil.buildImageUrl(userProfileImgUrl, "profile"))
         .isLike(isLike)
@@ -53,6 +54,7 @@ public class PostComment {
         .hasChild(hasChild)
         .level(level)
         .path(path)
+        .orderNumber(orderNumber)
         .build();
   }
 }

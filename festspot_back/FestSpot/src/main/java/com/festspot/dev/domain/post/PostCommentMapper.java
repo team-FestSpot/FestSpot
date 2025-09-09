@@ -16,4 +16,5 @@ public interface PostCommentMapper {
 
   int update(PostComment postComment);
 
+  int softDelete(Integer postCommentId);
 }

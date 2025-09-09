@@ -215,6 +215,15 @@ export const postCommentContainer = css`
   margin: 2rem 0;
 `;
 
+export const postListTableContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 2rem;
+`;
+
 export const verticalDivider = css`
   height: 100%;
   width: 0.05rem;

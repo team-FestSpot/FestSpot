@@ -19,6 +19,7 @@
         <result property="parentUserNickName" column="parent_user_nickname" />
         <result property="level" column="level" />
         <result property="path" column="path" />
+        <result property="orderNumber" column="order_number" />
         <association property="user" resultMap="UserMap" />
     </resultMap>
 
@@ -35,18 +36,19 @@
     <update id="update">
         update post_comment_tb
         set
-            comment_content = #{commentContent}
+            comment_content = #{commentContent},
+            updated_at = now()
         where
             post_comment_id = #{postCommentId}
     </update>
 
-    <delete id="deleteComment">
-        delete from
-            post_comment_tb
+    <update id="softDelete">
+        update post_comment_tb
+        set
+            deleted_at = now()
         where
             post_comment_id = #{postCommentId}
-            and user_id = #{userId}
-    </delete>
+    </update>
 
     <select id="getCountByPostId" resultType="java.lang.Integer">
         select
@@ -99,13 +101,30 @@
             dense_rank() over(order by substr(ct.path, 1, 10)) as order_number,
             ct.post_comment_id,
             ct.post_id,
-            ut.user_id,
-            ct.comment_content,
+
+            case
+                when ct.deleted_at is not null then null
+                else ut.user_id
+            end as user_id,
+
+            case
+                when ct.deleted_at is not null then '삭제된 댓글입니다.'
+                else ct.comment_content
+            end as comment_content,
+
             ct.created_at,
             ct.`deleted_at`,
             ct.updated_at,
-            ut.user_nickname,
-            ut.user_profile_img_url,
+
+            case
+                when ct.deleted_at is not null then null
+                else ut.user_nickname
+            end as user_nickname,
+
+            case
+                when ct.deleted_at is not null then null
+                else ut.user_profile_img_url
+            end as user_profile_img_url,
 
             <if test="userId != null">
                 ifnull(pclt.post_comment_like_id, 0) as is_like,
@@ -147,7 +166,7 @@
                         parent_comment_id) has_child_tb
                 on (has_child_tb.parent_comment_id = ct.post_comment_id)
         order by
-            order_number desc,
+            order_number asc,
             `path`;
     </select>
 

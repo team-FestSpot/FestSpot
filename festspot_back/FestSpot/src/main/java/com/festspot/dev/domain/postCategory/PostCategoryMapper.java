@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PostCategoryMapper {
 
-  PostCategory findeByCategoryKey(String CategoryKey);
+  PostCategory findByCategoryKey(String CategoryKey);
 
   List<PostCategory> findAll();
 }

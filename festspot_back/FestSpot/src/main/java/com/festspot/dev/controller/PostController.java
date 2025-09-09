@@ -23,13 +23,6 @@ public class PostController {
 
   private final PostService postService;
 
-  @GetMapping()
-  public ResponseEntity<ResponseDto<?>> getAllPosts(@RequestParam Integer page, Integer size) {
-    return ResponseEntity.ok(ResponseDto.success(
-        postService.getAllPosts(page, size)
-    ));
-  }
-
   @GetMapping("/{boardKey}")
   public ResponseEntity<ResponseDto<?>> getPosts(
       @RequestParam Integer page, Integer size, @PathVariable String boardKey) {
@@ -54,15 +47,28 @@ public class PostController {
     return ResponseEntity.ok(ResponseDto.success(postService.getPost(postId)));
   }
 
+  @GetMapping("/{postId}/posts")
+  public ResponseEntity<ResponseDto<?>> getPageNumByPostId(@PathVariable Integer postId,
+      @RequestParam Integer size,
+      @RequestParam Integer postCategoryId) {
+    return ResponseEntity.ok(
+        ResponseDto.success(postService.getPageNumByPostId(postId, postCategoryId, size)));
+  }
+
   @PostMapping("/{boardKey}")
   public ResponseEntity<ResponseDto<?>> postRegister(@ModelAttribute PostRegisterReqDto dto) {
     return ResponseEntity.ok(ResponseDto.success(postService.register((dto))));
   }
 
-  @PutMapping("/{boardKey}/{postId}")
+  @PutMapping("/{postId}")
   public ResponseEntity<ResponseDto<?>> postPut(@ModelAttribute PostRegisterReqDto dto,
       @PathVariable Integer postId) {
     return ResponseEntity.ok(ResponseDto.success(postService.update(dto, postId)));
+  }
+
+  @DeleteMapping("/{postId}")
+  public ResponseEntity<ResponseDto<?>> postDelete(@PathVariable Integer postId) {
+    return ResponseEntity.ok(ResponseDto.success(postService.delete(postId)));
   }
 
   @PostMapping("/{postId}/like")

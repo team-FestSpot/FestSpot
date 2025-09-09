@@ -63,6 +63,12 @@
     where
       post_id = #{postId}
   </update>
+  <delete id="delete">
+    delete from
+      post_tb
+    where
+      post_id = #{postId}
+  </delete>
 
   <select id="findById" resultMap="PostMap">
       select
@@ -162,7 +168,7 @@
 
     <select id="findByCategoryId" resultMap="PostMap">
       select
-      *
+        *
       from (
         select
           dense_rank() over(order by pt.created_at desc, pt.post_id desc) as post_number,
@@ -207,8 +213,6 @@
         ) post
       where
         post_number between #{startIndex} and #{endIndex};
-
-
     </select>
 
     <select id="countAll" resultType="java.lang.Double">
@@ -226,6 +230,20 @@
         where
             post_category_id = #{categoryId}
     </select>
+  <select id="findPageById" resultType="integer">
+    select ceil(post_number /#{size}) as page_number
+    from (
+      select
+        dense_rank() over(order by pt.created_at desc, pt.post_id desc) as post_number,
+        pt.post_id,
+        pt.post_category_id
+      from
+        post_tb pt
+      where
+        pt.post_category_id = #{postCategoryId}
+    ) post
+      where post_id = #{postId};
+  </select>
 
 
 </mapper>

@@ -4,10 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "react-quill-new/dist/quill.snow.css";
 import { AiOutlineSave } from "react-icons/ai";
 import { MdArrowBack } from "react-icons/md";
-import { FaCaretDown } from "react-icons/fa";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useFixQuillToolBarStore } from "../../../../stores/useFixQuillToolBarStore";
-import usePostCategoryQuery from "../../../../querys/post/usePostCategoryQuery";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import SparkMD5 from "spark-md5";
 import { reqPostRegister } from "../../../../api/postApi";
 import Swal from "sweetalert2";
@@ -15,6 +12,7 @@ import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 import { css, Global } from "@emotion/react";
 import PostEditor from "../../../../components/post/PostEditor/PostEditor";
 import PostCategory from "../../../../components/post/PostCategory/PostCategory";
+import { usePostsQuery } from "../../../../querys/post/usePostsQuery";
 
 const PostWrite = () => {
   const navigate = useNavigate();
@@ -23,6 +21,7 @@ const PostWrite = () => {
   const [images, setImages] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const principal = usePrincipalQuery().data?.data?.body;
+  const postsQuery = usePostsQuery(searchParams.get("boardKey"), 1);
 
   const quillRef = useRef(null);
   const titleInputRef = useRef(null);
@@ -89,10 +88,11 @@ const PostWrite = () => {
       await reqPostRegister(postReq);
 
       navigate(`/board/${searchParams.get("boardKey")}`);
+      postsQuery.refetch();
     } catch (error) {
       await Swal.fire({
         title: error?.response?.data?.body,
-        text: error?.response?.data?.message,
+        text: error?.response?.data?.message || error,
         icon: "error",
       });
     }
