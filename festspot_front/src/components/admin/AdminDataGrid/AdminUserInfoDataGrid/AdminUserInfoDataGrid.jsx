@@ -42,7 +42,7 @@ function AdminUserInfoDataGrid({ searchResult }) {
           <div css={s.modifyProfileImg}>
             <img
               src={
-                !!newProfileImgUrl
+                newProfileImgUrl
                   ? `${newProfileImgUrl}`
                   : `${USER_PROFILE_IMG_PATH}${params.row.userProfileImgUrl}`
               }

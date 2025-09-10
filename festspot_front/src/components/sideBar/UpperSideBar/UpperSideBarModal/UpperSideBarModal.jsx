@@ -2,16 +2,14 @@ import React from "react";
 import { IoClose } from "react-icons/io5";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import { Link, useNavigate } from "react-router-dom";
-import useUpperSideBarStore from "../../../../stores/upperSideBarStore";
+import { Link } from "react-router-dom";
 import festSpotLogo from "./img/FestSpotLogoImg.png";
-import festSpotLogoText from "./img/FestSpotLogoText.png";
 import { useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
+import { useUpperSideBarStore } from "../../../../stores/UpperSideBarStore";
 
-function UpperSideBarModal(props) {
+function UpperSideBarModal() {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const { isMenuOpen, closeMenu } = useUpperSideBarStore();
 
   const modalMenus = [
@@ -26,11 +24,11 @@ function UpperSideBarModal(props) {
     },
     {
       id: 2,
-      majorCategory: { content: "공연 정보", link: "/performance" },
+      majorCategory: { content: "공연 정보", link: "/performance/all" },
       minorCategory: [
         { content: "국내 공연", link: "/performance/concert" },
         { content: "국내 페스티벌", link: "/performance/festival" },
-        { content: "내한 공연", link: "/performance/foreign" },
+        { content: "내한 공연", link: "/performance/visit" },
       ],
     },
     {

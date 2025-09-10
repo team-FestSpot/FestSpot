@@ -17,8 +17,11 @@ import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 import { reqLogin } from "../../../api/authApi";
 import Swal from "sweetalert2";
 import { useQueryClient } from "@tanstack/react-query";
+import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
 
 function Login(props) {
+  const principalQuery = usePrincipalQuery();
+  const principal = principalQuery?.data?.data?.body?.user || [];
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -102,6 +105,19 @@ function Login(props) {
       await queryClient.invalidateQueries({
         queryKey: ["principal"],
       });
+
+      // 탈퇴한 회원정보로 로그인하면 막음
+      if (principal.deletedAt !== null) {
+        localStorage.clear();
+        await queryClient.invalidateQueries({
+          queryKey: ["principal"],
+        });
+        await Swal.fire({
+          title: "탈퇴한 회원입니다.",
+          icon: "error",
+        });
+        return;
+      }
 
       await Swal.fire({
         title: "로그인 성공",

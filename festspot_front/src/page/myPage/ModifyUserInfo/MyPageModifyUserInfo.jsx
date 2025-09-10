@@ -177,7 +177,6 @@ function MyPageModifyUserInfo(props) {
   };
 
   useEffect(() => {
-    console.log(inputValues);
     // 현재 비밀번호, 새 비밀번호, 비밀번호 확인 중 아무것도 입력하지 않았으면 오류 메시지를 표시하지 않음
     if (allEmpty) {
       setErrorMessage((prev) => ({

@@ -66,7 +66,7 @@ const PostWrite = () => {
 
       let idx = 0;
       const quillDelta = delta.map((row) => {
-        if (!!row.insert.image) {
+        if (row.insert.image) {
           return {
             ...row,
             insert: {

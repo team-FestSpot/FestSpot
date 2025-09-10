@@ -24,6 +24,8 @@ public interface PerformanceMapper {
 
   int update(Performance performance);
 
+  int updateManyByApiIds(List<Performance> performanceList);
+
   int deleteById(Integer performanceId);
 
   int insertOrUpdateComment(PerformanceComment comment);

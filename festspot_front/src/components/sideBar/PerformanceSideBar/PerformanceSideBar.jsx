@@ -4,10 +4,11 @@ import React from "react";
 import { IoAirplane } from "react-icons/io5";
 import { IoIosListBox, IoIosMicrophone } from "react-icons/io";
 import { MdFestival } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function PerformanceSideBar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const performances = [
     {
       id: "all",
@@ -47,7 +48,9 @@ function PerformanceSideBar() {
           return (
             <button
               key={performance.id}
-              css={s.performanceBtn}
+              css={() =>
+                s.performanceBtn(location.pathname.slice(13) === performance.id)
+              }
               onClick={(e) =>
                 handlePerformanceCategoryOnClick(e, performance.id)
               }

@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../page/Auth/Login/Login";
 import SignUp from "../page/Auth/SignUp/SignUp";
 
-function AuthRouter(props) {
+function AuthRouter() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

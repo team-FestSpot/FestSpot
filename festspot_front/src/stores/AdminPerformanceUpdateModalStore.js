@@ -4,7 +4,7 @@ import { create } from "zustand";
 // react-modal 쓸거라서 안쓸듯
 const useAdminPerformanceUpdateModalStore = create((set) => ({
   isUpdate: false,
-  setIsUpdate: () => set((state) => ({ isUpdate: true })),
+  setIsUpdate: () => set(() => ({ isUpdate: true })),
   closeUpdateModal: () => set(() => ({ isUpdate: false })),
 }));
 

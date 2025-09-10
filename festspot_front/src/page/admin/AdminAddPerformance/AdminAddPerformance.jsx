@@ -232,7 +232,7 @@ function AdminAddPerformance(props) {
   return (
     <div css={s.layout}>
       <div css={s.imgContainerLayout}>
-        {!!imageUrl ? (
+        {imageUrl ? (
           <div css={s.imgContainer}>
             <img src={imageUrl} alt="" />
           </div>
