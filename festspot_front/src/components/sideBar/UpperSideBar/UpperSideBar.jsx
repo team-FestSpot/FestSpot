@@ -5,7 +5,7 @@ import { IoSearch } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import * as s from "./styles";
 import UpperSideBarModal from "./UpperSideBarModal/UpperSideBarModal";
-import useUpperSideBarStore from "../../../stores/upperSideBarStore";
+import useUpperSideBarStore from "../../../stores/UpperSideBarStore";
 import festSpotLogo from "./UpperSideBarModal/img/FestSpotLogoImg.png";
 import festSpotLogoText from "./UpperSideBarModal/img/FestSpotLogoText.png";
 import { useNavigate } from "react-router-dom";
