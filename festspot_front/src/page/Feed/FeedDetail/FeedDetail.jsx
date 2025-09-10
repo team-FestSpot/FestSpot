@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import Button from "@mui/material/Button";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePerformanceCommentListQuery } from "../../../querys/performance/usePerformanceCommentListQuery";
 import { usePerformanceListQuery } from "../../../querys/performance/usePerformanceListQuery";
 import FeedCommentList from "../../../components/feed/FeedCommentList/FeedCommentList";
 import FeedCommentSubmit from "../../../components/feed/FeedCommentSubmit/FeedCommentSubmit";
 
 function FeedDetail(props) {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams(); // 주소창 params에서 공연 id 가져옴
 
   const performanceListQuery = usePerformanceListQuery(); // 공연 목록 query
@@ -143,7 +144,10 @@ function FeedDetail(props) {
                   <>
                     <Button
                       variant="contained"
-                      sx={{ backgroundColor: "#ef5a39", width: "4rem" }}
+                      sx={{
+                        backgroundColor: "#ef5a39",
+                        width: "4rem",
+                      }}
                       onClick={() => handlePageMoveButtonOnClick(prev)}
                     >
                       이전
@@ -171,7 +175,6 @@ function FeedDetail(props) {
                 )}
               </div>
             </div>
-
             <div>
               <Button
                 variant="contained"

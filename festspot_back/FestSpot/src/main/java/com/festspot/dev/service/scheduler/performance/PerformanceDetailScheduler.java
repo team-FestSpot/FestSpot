@@ -130,8 +130,8 @@ public class PerformanceDetailScheduler {
             int ticketingUpdateResult = ticketingUrlMapper.insertMany(performanceList.stream()
                     .map(performance -> performance.getTicketingUrls()).toList());
 
-//            System.out.println("performance updated: " + performanceUpdateResult);
-//            System.out.println("ticketing url updated: " + ticketingUpdateResult / (ticketingDeleteResult/ticketingUpdateResult));
+            System.out.println("performance updated: " + performanceUpdateResult);
+            System.out.println("ticketing url updated: " + ticketingUpdateResult / (ticketingDeleteResult/ticketingUpdateResult));
         } catch (Exception e) {
             e.printStackTrace();
         }
