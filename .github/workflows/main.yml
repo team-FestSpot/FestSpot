@@ -44,7 +44,7 @@ jobs:
           
       - name: build spring boot app
         run: |
-          cd backend
+          cd festspot_back/FestSpot
           echo ${{ secrets.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
           chmod 777 ./mvnw
           ./mvnw clean package -DskipTests
@@ -52,7 +52,7 @@ jobs:
           docker push ${{ env.DOCKER_USERNAME }}/spring-app:latest
       - name: build react app
         run: |
-          cd web
+          cd festspot_front
           echo ${{ secrets.REACT_ENV }} | base64 --decode > .env
           ls -a
           cat .env
