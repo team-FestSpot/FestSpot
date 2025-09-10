@@ -26,6 +26,10 @@ jobs:
         github.ref_name == 'deploy_hoseop' && secrets.REACT_ENV_HOSEOP ||
         github.ref_name == 'deploy_gwangho' && secrets.REACT_ENV_GWANGHO
         }}
+      BUILD_MODE: ${{
+        github.ref_name == 'deploy_hoseop' && 'hoseop' ||
+        github.ref_name == 'deploy_gwangho' && 'gwangho'
+        }}
 
     steps:          
       - name: checkout
