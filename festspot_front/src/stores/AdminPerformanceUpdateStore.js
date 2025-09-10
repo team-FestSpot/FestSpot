@@ -4,14 +4,14 @@ import { create } from "zustand";
 const useAdminPerformanceUpdateStore = create((set) => ({
   performanceToUpdate: {},
   setPerformanceToUpdate: (row) =>
-    set((state) => ({
+    set(() => ({
       performanceToUpdate: {
         // ...state.performanceToUpdate,
         ...row,
       },
     })),
   resetPerformanceToUpdate: () =>
-    set((state) => ({
+    set(() => ({
       performanceToUpdate: {},
     })),
 }));

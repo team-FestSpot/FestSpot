@@ -9,7 +9,7 @@ import "tippy.js/animations/scale.css";
 import "tippy.js/animations/scale-extreme.css";
 import ReactDOM from "react-dom/client";
 import { css, Global } from "@emotion/react";
-import { PerformanceEventTippy } from "../tippy/performanceEventTippy";
+import { PerformanceEventTippy } from "../tippy/PerformanceEventTippy";
 import { DayClickTippy } from "../tippy/DayClickTippy";
 import {
   getDateDashForm,

@@ -1,5 +1,4 @@
 import tippy from "tippy.js";
-import { getLocalDotDate } from "../../../utils/getLocalDate";
 import ReactDOM from "react-dom/client";
 import { getDateDotForm } from "../../../utils/getDateForm";
 

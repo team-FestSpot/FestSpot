@@ -12,7 +12,7 @@ function Home(props) {
     ? performanceListQuery?.data?.data?.body
     : [];
 
-  if (!!performanceList.length) {
+  if (performanceList.length) {
     return (
       <div css={s.homeLayout}>
         <div css={s.homeLeftSide}>

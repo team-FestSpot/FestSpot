@@ -1,6 +1,6 @@
 import tippy from "tippy.js";
 import ReactDOM from "react-dom/client";
-import { TippyInTippy } from "./tippyInTippy";
+import { TippyInTippy } from "./TippyInTippy";
 
 export const DayClickTippy = (info, eventsListOnDate) => {
   // 페스티벌, 내한 여부에 따라 배경 색 다르게

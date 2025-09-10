@@ -7,7 +7,7 @@ import CommunityBoardRouter from "./CommunityBoardRouter";
 import MyPageRouter from "./MyPageRouter";
 import PerformanceRouter from "./PerformanceRouter";
 
-function UserRouter(props) {
+function UserRouter() {
   return (
     <MainLayout>
       <Routes>

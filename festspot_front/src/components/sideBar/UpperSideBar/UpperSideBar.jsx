@@ -1,22 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import React, { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import * as s from "./styles";
 import UpperSideBarModal from "./UpperSideBarModal/UpperSideBarModal";
-import useUpperSideBarStore from "../../../stores/upperSideBarStore";
 import festSpotLogo from "./UpperSideBarModal/img/FestSpotLogoImg.png";
 import festSpotLogoText from "./UpperSideBarModal/img/FestSpotLogoText.png";
 import { useNavigate } from "react-router-dom";
 import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
 import { USER_PROFILE_IMG_PATH } from "../../../constants/userProfileImgPath";
-import Swal from "sweetalert2";
-import { useQueryClient } from "@tanstack/react-query";
+import { useUpperSideBarStore } from "../../../stores/UpperSideBarStore";
 
-function UpperSideBar(props) {
+function UpperSideBar() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const principalQuery = usePrincipalQuery();
   const userInfo = principalQuery.data?.data?.body?.user;
   const { isMenuOpen, setOpenDetailMenus, closeMenu } = useUpperSideBarStore();
@@ -35,21 +30,8 @@ function UpperSideBar(props) {
     navigate(`/auth/login`);
   };
 
-  const handleToHomeOnClick = (e) => {
+  const handleToHomeOnClick = () => {
     navigate("/");
-  };
-
-  const badUserInfo = () => {
-    Swal.fire({
-      title: "잘못된 유저 정보입니다.",
-      icon: "error",
-      showConfirmButton: false,
-      timer: 1500,
-      timerProgressBar: true,
-    })
-      .then(localStorage.clear())
-      .then(queryClient.invalidateQueries("pricipal"))
-      .then(navigate("/admin/login"));
   };
 
   return (

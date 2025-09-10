@@ -4,7 +4,7 @@ import UserRouter from "./UserRouter";
 import AdminRouter from "./AdminRouter";
 import usePrincipalQuery from "../querys/auth/usePrincipalQuery";
 
-function RooteRouter(props) {
+function RooteRouter() {
   /* principal에서 role 가져온 다음 라우터 분리 해야 함 */
   const principalQuery = usePrincipalQuery();
   const adminAuthority = principalQuery?.data?.data?.body?.authorities.filter(

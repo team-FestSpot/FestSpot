@@ -50,15 +50,15 @@ export const comment = (level, hasChild) => css`
   flex-direction: row;
   justify-content: start;
   align-items: center;
-  width: ${!!level ? "95%" : "100%"};
-  padding: ${!!level ? "2rem 1rem" : "2rem 0"};
+  width: ${level ? "95%" : "100%"};
+  padding: ${level ? "2rem 1rem" : "2rem 0"};
   padding-right: 1rem;
   margin: 0.5rem 0;
   box-sizing: border-box;
   border-radius: 0.5rem;
   border-top: ${!level ? "1px solid #dbdbdb" : 0};
   border-bottom: ${!level && !hasChild ? "1px solid #dbdbdb" : 0};
-  background-color: ${!!level ? "#f9f9f9" : "white"};
+  background-color: ${level ? "#f9f9f9" : "white"};
   gap: 1rem;
 `;
 
