@@ -20,6 +20,7 @@ function MyPageRouter(props) {
       <Routes>
         <Route path="/info" element={<MyPageModifyUserInfo />} />
         <Route path="/" element={<MyPageUserInfo />} />
+
         <Route path="*" element={<></>} />
       </Routes>
     </MyPageMain>
