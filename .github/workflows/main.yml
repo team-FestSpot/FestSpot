@@ -26,6 +26,10 @@ jobs:
         github.ref_name == 'deploy_hoseop' && secrets.REACT_ENV_HOSEOP ||
         github.ref_name == 'deploy_gwangho' && secrets.REACT_ENV_GWANGHO
         }}
+      BUILD_MODE: ${{
+        github.ref_name == 'deploy_hoseop' && 'hoseop' ||
+        github.ref_name == 'deploy_gwangho' && 'gwangho'
+        }}
 
     steps:          
       - name: checkout
@@ -44,7 +48,7 @@ jobs:
           
       - name: build spring boot app
         run: |
-          cd backend
+          cd festspot_back/FestSpot
           echo ${{ secrets.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
           chmod 777 ./mvnw
           ./mvnw clean package -DskipTests
@@ -52,9 +56,6 @@ jobs:
           docker push ${{ env.DOCKER_USERNAME }}/spring-app:latest
       - name: build react app
         run: |
-          cd web
-          echo ${{ secrets.REACT_ENV }} | base64 --decode > .env
-          ls -a
-          cat .env
-          docker build -t ${{ env.DOCKER_USERNAME }}/react-app:latest ./
+          cd festspot_front
+          docker build --build-arg SERVERNAME=${{ env.BUILD_MODE }} -t ${{ env.DOCKER_USERNAME }}/react-app:latest ./
           docker push ${{ env.DOCKER_USERNAME }}/react-app:latest
