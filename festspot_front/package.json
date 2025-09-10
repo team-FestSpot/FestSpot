@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:hoseop": "vite build --mode hoseop",
+    "build:gwangho": "vite build --mode gwangho",
     "lint": "eslint .",
     "preview": "vite preview"
   },

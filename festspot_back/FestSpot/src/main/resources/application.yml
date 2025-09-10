@@ -1,0 +1,89 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+
+  profiles:
+    active: local
+    group:
+      local: local-server, common, secret
+      hoseop: hoseop-server, common, secret
+      gwangho: gwangho-server, common, secret
+      suwon: suwon-server, common, secret
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local-server
+
+app:
+  web-host: "http://localhost:5173"
+  server-host: "http://localhost:8080"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: hoseop-server
+
+app:
+  web-host: "https://festspot2.store"
+  server-host: "https://festspot2.store"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: gwangho-server
+
+app:
+  server-host: "http://festspot.store"
+
+---
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.festspot.dev.domain.entity
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: common
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: "${app.server-host}/login/oauth2/code/google"
+          kakao:
+            redirect-uri: "${app.server-host}/login/oauth2/code/kakao"
+          naver:
+            redirect-uri: "${app.server-host}/login/oauth2/code/naver"
+
+app:
+  image-configs:
+    profile:
+      prefix: "${app.server-host}/image/profile"
+      dirPath: "${user.dir}/upload/profile"
+      default-img: "default_profile.jpg"
+    post:
+      prefix: "${app.server-host}/image/post"
+      dirPath: "${user.dir}/upload/post"
+    poster:
+      prefix: "${app.server-host}/image/poster"
+      dirPath: "${user.dir}/upload/poster"
+
+---
+
+
