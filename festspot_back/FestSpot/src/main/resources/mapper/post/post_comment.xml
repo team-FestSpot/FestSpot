@@ -165,6 +165,20 @@
                     group by
                         parent_comment_id) has_child_tb
                 on (has_child_tb.parent_comment_id = ct.post_comment_id)
+
+            -- 삭제된 댓글중 자식이 없거나 자식도 모두 삭제된 댓글 제외
+            where not (
+                ct.deleted_at is not null
+                and has_child_tb.has_child = 1
+                and not exists (
+                    select 1
+                    from
+                        post_comment_tb delete_pct
+                    where
+                        delete_pct.parent_comment_id = ct.post_comment_id
+                        and delete_pct.deleted_at is null
+                ) or (ct.deleted_at is not null and has_child_tb.has_child is null)
+            )
         order by
             order_number asc,
             `path`;

@@ -158,17 +158,13 @@ function PostComment({ postId, isLike, handleLikeOnClick }) {
             {postCommentsState.map((comment) => (
               <React.Fragment key={comment.postCommentId}>
                 {comment.deleted ? (
-                  comment.hasChild ? (
-                    <>
-                      <div
-                        css={s.deletedComment(comment.level, comment.hasChild)}
-                      >
-                        삭제된 댓글입니다.
-                      </div>
-                    </>
-                  ) : (
-                    <></>
-                  )
+                  <>
+                    <div
+                      css={s.deletedComment(comment.level, comment.hasChild)}
+                    >
+                      삭제된 댓글입니다.
+                    </div>
+                  </>
                 ) : (
                   <>
                     <div css={s.childContainer}>
