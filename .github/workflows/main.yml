@@ -12,23 +12,28 @@ jobs:
     env:
       DOCKER_USERNAME: ${{
         github.ref_name == 'deploy_hoseop' && secrets.DOCKER_USERNAME_HOSEOP ||
-        github.ref_name == 'deploy_gwangho' && secrets.DOCKER_USERNAME_GWANGHO
+        github.ref_name == 'deploy_gwangho' && secrets.DOCKER_USERNAME_GWANGHO ||
+        github.ref_name == 'deploy_suwon' && secrets.DOCKER_USERNAME_SUWON
         }}
       DOCKER_PASSWORD: ${{
         github.ref_name == 'deploy_hoseop' && secrets.DOCKER_PASSWORD_HOSEOP ||
-        github.ref_name == 'deploy_gwangho' && secrets.DOCKER_PASSWORD_GWANGHO
+        github.ref_name == 'deploy_gwangho' && secrets.DOCKER_PASSWORD_GWANGHO ||
+        github.ref_name == 'deploy_suwon' && secrets.DOCKER_PASSWORD_SUWON
         }}
       APPLICATION_SECRET: ${{
         github.ref_name == 'deploy_hoseop' && secrets.APPLICATION_SECRET_HOSEOP ||
-        github.ref_name == 'deploy_gwangho' && secrets.APPLICATION_SECRET_GWANGHO
+        github.ref_name == 'deploy_gwangho' && secrets.APPLICATION_SECRET_GWANGHO ||
+        github.ref_name == 'deploy_suwon' && secrets.APPLICATION_SECRET_SUWON
         }}
       REACT_ENV: ${{
         github.ref_name == 'deploy_hoseop' && secrets.REACT_ENV_HOSEOP ||
-        github.ref_name == 'deploy_gwangho' && secrets.REACT_ENV_GWANGHO
+        github.ref_name == 'deploy_gwangho' && secrets.REACT_ENV_GWANGHO ||
+        github.ref_name == 'deploy_suwon' && secrets.REACT_ENV_SUWON
         }}
       BUILD_MODE: ${{
         github.ref_name == 'deploy_hoseop' && 'hoseop' ||
-        github.ref_name == 'deploy_gwangho' && 'gwangho'
+        github.ref_name == 'deploy_gwangho' && 'gwangho' ||
+        github.ref_name == 'deploy_suwon' && 'suwon'
         }}
 
     steps:
