@@ -3,7 +3,7 @@ import { IoClose } from "react-icons/io5";
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
 import { Link, useNavigate } from "react-router-dom";
-import useUpperSideBarStore from "../../../../stores/upperSideBarStore";
+import useUpperSideBarStore from "../../../../stores/UpperSideBarStore";
 import festSpotLogo from "./img/FestSpotLogoImg.png";
 import festSpotLogoText from "./img/FestSpotLogoText.png";
 import { useQueryClient } from "@tanstack/react-query";

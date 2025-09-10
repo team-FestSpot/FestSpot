@@ -39,7 +39,7 @@ function FestivalBoard(props) {
 
   //게시글 리스트와 총 페이지 수 상태에 저장
   useEffect(() => {
-    if (!!posts) {
+    if (posts) {
       setPostList(posts.postList);
       setTotalPage(posts.totalPage);
     }
@@ -139,7 +139,7 @@ function FestivalBoard(props) {
   };
 
   const handleWriteOnClick = (e) => {
-    !!boardKey
+    boardKey
       ? navigate(`/board/write?boardKey=${boardKey}`)
       : navigate(`/board/write`);
   };
@@ -155,7 +155,7 @@ function FestivalBoard(props) {
       />
       {!!postList && !!posts && (
         <div css={s.boardLayout}>
-          {!!postList.length ? (
+          {postList.length ? (
             <div css={s.postContainer}>
               {postList.map((post, idx) => (
                 <Card
@@ -190,7 +190,7 @@ function FestivalBoard(props) {
                           {post.viewCount}
                         </div>
                         <div>
-                          {!!post.isLike ? (
+                          {post.isLike ? (
                             <FaHeart
                               onClick={(e) => {
                                 e.stopPropagation();

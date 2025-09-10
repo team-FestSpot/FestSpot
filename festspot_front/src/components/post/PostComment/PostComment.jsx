@@ -35,7 +35,7 @@ function PostComment({ boardKey, postId, isLike, handleLikeOnClick }) {
         <div css={s.commentContainer}>
           {postComments.map((comment) => (
             <div key={comment.postCommentId} css={s.brace}>
-              {!!comment.level ? <FiCornerDownRight /> : <></>}
+              {comment.level ? <FiCornerDownRight /> : <></>}
               <div css={s.comment(comment.level, comment.hasChild)}>
                 <div css={s.profileImgContainer}>
                   <img src={comment.userProfileImgUrl} alt="" />
@@ -47,7 +47,7 @@ function PostComment({ boardKey, postId, isLike, handleLikeOnClick }) {
                       {new Date(comment.createdAt).toLocaleDateString()}
                       {new Date(comment.createdAt).toLocaleTimeString()}
                     </div>
-                    <div>{!!comment.updated ? "(수정됨)" : ""}</div>
+                    <div>{comment.updated ? "(수정됨)" : ""}</div>
                     {comment.userId === userInfo.userId ? (
                       <div css={s.rewrtieContainer}>
                         <div css={s.deleteButton}>삭제</div>
@@ -67,7 +67,7 @@ function PostComment({ boardKey, postId, isLike, handleLikeOnClick }) {
                     }
                   >
                     <div css={s.parent}>
-                      {!!comment.parentUserNickName ? (
+                      {comment.parentUserNickName ? (
                         `@${comment.parentUserNickName}`
                       ) : (
                         <></>
@@ -99,7 +99,7 @@ function PostComment({ boardKey, postId, isLike, handleLikeOnClick }) {
             신고
           </div>
           <div css={s.likeButton} onClick={handleLikeOnClick}>
-            {!!isLike ? <FaHeart /> : <FaRegHeart />}
+            {isLike ? <FaHeart /> : <FaRegHeart />}
             <span>좋아요</span>
           </div>
           <button css={s.confirmButton}>등록</button>
