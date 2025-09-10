@@ -37,6 +37,7 @@ public class PerformanceDetailScheduler {
     private final String API_KEY1 = "30b291671db940319288ebbf6a417f4f";
     private final String API_KEY2 = "a65dc49e0db540c985f6e41ff1865fca";
     private final String API_KEY3 = "763fe25fd3cc4a6cbde68058a651e359";
+    private final List<String> API_KEYS = List.of(API_KEY1, API_KEY2, API_KEY3);
     private final PerformanceRegionMapper performanceRegionMapper;
     private final PerformanceStateMapper performanceStateMapper;
     private final TicketingUrlMapper ticketingUrlMapper;
@@ -60,8 +61,9 @@ public class PerformanceDetailScheduler {
         List<Performance> performanceList = apiPerformanceList.stream()
                 .map(performance -> {
                     try {
+                        String apiKey = API_KEYS.get((int) Math.ceil(Math.random() * API_KEYS.size()));
                         // 요청 받으면 xml로 옴. xml의 dbs.db를 꺼내서 json 형태로 변환
-                        String performanceDetailXML = restTemplate.getForObject(url, String.class, performance.getPerformanceApiId(), API_KEY1);
+                        String performanceDetailXML = restTemplate.getForObject(url, String.class, performance.getPerformanceApiId(), apiKey);
                         JSONObject performanceDetailJson = XML.toJSONObject(performanceDetailXML)
                                 .getJSONObject("dbs")
                                 .getJSONObject("db");

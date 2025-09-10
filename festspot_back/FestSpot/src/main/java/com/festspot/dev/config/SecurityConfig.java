@@ -6,6 +6,7 @@ import com.festspot.dev.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -49,15 +50,13 @@ public class SecurityConfig {
 
     // 모든 요청 허용
     http.authorizeHttpRequests(auth -> {
-//          auth.requestMatchers("/oauth2/**").permitAll();
-//            auth.requestMatchers("/login/oauth2/code/**").permitAll();
-//            auth.requestMatchers("/api/auth/**").permitAll();
-//            auth.requestMatchers("/api/board/**").permitAll();
-//            auth.requestMatchers("/image/**").permitAll();
-//            auth.requestMatchers("/admin/**").hasRole("ADMIN");
-//            auth.requestMatchers("/**").hasRole("USER");
-//            auth.requestMatchers("/login").permitAll();
-//            auth.requestMatchers("/admin/login").permitAll();
+            auth.requestMatchers(HttpMethod.GET, "/api/board").permitAll();
+            auth.requestMatchers("/api/board").authenticated();
+            auth.requestMatchers(HttpMethod.GET, "/api/board/comments/").permitAll();
+            auth.requestMatchers("/api/board/comments/").authenticated();
+            auth.requestMatchers("/api/auth/withdraw").authenticated();
+            auth.requestMatchers("/api/user/update/*").authenticated();
+            auth.requestMatchers("/admin/*").hasRole("ADMIN");
             auth.anyRequest().permitAll();
         });
 
