@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import PostWrite from "../page/Auth/post/PostWrite/PostWrite";
-import PostEdit from "../page/Auth/Post/PostEdit/PostEdit";
-import PostDetail from "../page/Auth/Post/PostDetail/PostDetail";
+import PostEdit from "../page/Auth/post/PostEdit/PostEdit";
+import PostDetail from "../page/Auth/post/PostDetail/PostDetail";
 import usePostCategoryQuery from "../querys/post/usePostCategoryQuery";
 import FestivalBoard from "../page/Auth/post/Board/FestivalBoard";
 
