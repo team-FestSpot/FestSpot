@@ -46,14 +46,14 @@ jobs:
       - name: docker login
         run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-      # - name: build spring boot app
-      #   run: |
-      #     cd festspot_back/FestSpot
-      #     echo ${{ env.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
-      #     chmod 777 ./mvnw
-      #     ./mvnw clean package -DskipTests
-      #     docker build -t ${{ env.DOCKER_USERNAME }}/spring-app:latest .
-      #     docker push ${{ env.DOCKER_USERNAME }}/spring-app:latest
+      - name: build spring boot app
+        run: |
+          cd festspot_back/FestSpot
+          echo ${{ env.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
+          chmod 777 ./mvnw
+          ./mvnw clean package -DskipTests
+          docker build -t ${{ env.DOCKER_USERNAME }}/spring-app:latest .
+          docker push ${{ env.DOCKER_USERNAME }}/spring-app:latest
       - name: build react app
         run: |
           cd festspot_front
