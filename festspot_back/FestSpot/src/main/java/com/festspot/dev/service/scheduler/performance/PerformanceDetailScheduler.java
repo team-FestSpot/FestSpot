@@ -61,7 +61,7 @@ public class PerformanceDetailScheduler {
                 .map(performance -> {
                     try {
                         // 요청 받으면 xml로 옴. xml의 dbs.db를 꺼내서 json 형태로 변환
-                        String performanceDetailXML = restTemplate.getForObject(url, String.class, performance.getPerformanceApiId(), API_KEY2);
+                        String performanceDetailXML = restTemplate.getForObject(url, String.class, performance.getPerformanceApiId(), API_KEY1);
                         JSONObject performanceDetailJson = XML.toJSONObject(performanceDetailXML)
                                 .getJSONObject("dbs")
                                 .getJSONObject("db");
@@ -130,8 +130,8 @@ public class PerformanceDetailScheduler {
             int ticketingUpdateResult = ticketingUrlMapper.insertMany(performanceList.stream()
                     .map(performance -> performance.getTicketingUrls()).toList());
 
-//            System.out.println("performance updated: " + performanceUpdateResult);
-//            System.out.println("ticketing url updated: " + ticketingUpdateResult / (ticketingDeleteResult/ticketingUpdateResult));
+            System.out.println("performance updated: " + performanceUpdateResult);
+            System.out.println("ticketing url updated: " + ticketingUpdateResult / (ticketingDeleteResult/ticketingUpdateResult));
         } catch (Exception e) {
             e.printStackTrace();
         }

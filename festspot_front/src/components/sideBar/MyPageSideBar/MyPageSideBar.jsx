@@ -13,7 +13,9 @@ function MyPageSideBar(props) {
         <li>
           <Link to={"/mypage/info"}>정보 수정</Link>
         </li>
-        <li>회원 탈퇴</li>
+        <li>
+          <Link to={"/mypage/withdraw"}> 회원 탈퇴</Link>
+        </li>
       </ul>
     </div>
   );

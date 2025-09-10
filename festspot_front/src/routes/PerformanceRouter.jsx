@@ -1,15 +1,14 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import PerformanceMain from "../page/performance/PerformanceMain/PerformanceMain";
-import Feed from "../page/Feed/Feed";
+import FeedDetail from "../page/Feed/FeedDetail/FeedDetail";
+import PerformanceAll from "../page/performance/PerformanceAll/PerformanceAll";
 
 function PerformanceRouter() {
   return (
-    <PerformanceMain>
-      <Routes>
-        <Route path="/feed" element={<Feed />} />
-      </Routes>
-    </PerformanceMain>
+    <Routes>
+      <Route path="/feed" element={<FeedDetail />} />
+      <Route path="/:category" element={<PerformanceAll />} />
+    </Routes>
   );
 }
 
