@@ -160,7 +160,7 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/react,windows,intellij
 
 #db secret
-application.yml
+application-secret.yml
 
 # Maven build folder
 target/
