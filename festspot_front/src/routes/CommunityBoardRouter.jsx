@@ -6,7 +6,7 @@ import PostDetail from "../page/Auth/post/PostDetail/PostDetail";
 import usePostCategoryQuery from "../querys/post/usePostCategoryQuery";
 import FestivalBoard from "../page/Auth/post/Board/FestivalBoard";
 
-function CommunityBoardRouter(props) {
+function CommunityBoardRouter() {
   const postCategoryQuery = usePostCategoryQuery();
   const boardKeys =
     postCategoryQuery?.data?.data?.body.map(

@@ -4,7 +4,7 @@ import { create } from "zustand";
 // 검색 기능, 카테고리별 분류, 공연 정보 db에 추가 기능 때문에 만듬
 const useAdminPerformanceRowsStore = create((set) => ({
   rows: [],
-  setRows: (newRows) => set((state) => ({ rows: [...newRows] })),
+  setRows: (newRows) => set(() => ({ rows: [...newRows] })),
   setRowsEmpty: () => set(() => ({ rows: [] })),
 }));
 

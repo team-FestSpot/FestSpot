@@ -28,7 +28,7 @@ function PostDetail(props) {
   const postDetail = postDetailQuery.data?.data?.body;
 
   useEffect(() => {
-    if (!!postDetail?.postContent) {
+    if (postDetail?.postContent) {
       const delta = JSON.parse(
         getQuillContent(postDetail.postContent, postDetail.postImgs)
       );
@@ -43,7 +43,7 @@ function PostDetail(props) {
 
   const handleLikeOnClick = async (e) => {
     try {
-      !!postDetail.isLike
+      postDetail.isLike
         ? (await reqPostDislike(postId),
           queryClient.setQueryData(["post", boardKey, postId], (prev) => ({
             ...prev,

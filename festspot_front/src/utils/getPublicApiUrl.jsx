@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { getLocalDate, getLocalDateAfterMonths } from "./getLocalDate";
 
 export const getPublicApiUrl = (page, size) => {

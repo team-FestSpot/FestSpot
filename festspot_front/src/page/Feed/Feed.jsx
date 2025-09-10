@@ -195,8 +195,8 @@ function Feed(props) {
         <header css={s.header}>
           <div>{performanceDetail?.performanceTitle}</div>
           <div>
-            {!!performanceDetail?.isForeign ? "내한" : "국내"}{" "}
-            {!!performanceDetail?.isFestival ? "페스티벌" : "공연"}
+            {performanceDetail?.isForeign ? "내한" : "국내"}{" "}
+            {performanceDetail?.isFestival ? "페스티벌" : "공연"}
           </div>
         </header>
         <main css={s.main}>

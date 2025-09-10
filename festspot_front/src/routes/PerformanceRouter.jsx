@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import PerformanceMain from "../page/performance/PerformanceMain/PerformanceMain";
 import Feed from "../page/Feed/Feed";
 
-function PerformanceRouter(props) {
+function PerformanceRouter() {
   return (
     <PerformanceMain>
       <Routes>
