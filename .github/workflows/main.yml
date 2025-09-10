@@ -26,6 +26,10 @@ jobs:
         github.ref_name == 'deploy_hoseop' && secrets.REACT_ENV_HOSEOP ||
         github.ref_name == 'deploy_gwangho' && secrets.REACT_ENV_GWANGHO
         }}
+      BUILD_MODE: ${{
+        github.ref_name == 'deploy_hoseop' && 'hoseop' ||
+        github.ref_name == 'deploy_gwangho' && 'gwangho'
+        }}
 
     steps:          
       - name: checkout
@@ -53,8 +57,5 @@ jobs:
       - name: build react app
         run: |
           cd festspot_front
-          echo ${{ secrets.REACT_ENV }} | base64 --decode > .env
-          ls -a
-          cat .env
-          docker build -t ${{ env.DOCKER_USERNAME }}/react-app:latest ./
+          docker build --build-arg SERVERNAME=${{ env.BUILD_MODE }} -t ${{ env.DOCKER_USERNAME }}/react-app:latest ./
           docker push ${{ env.DOCKER_USERNAME }}/react-app:latest
