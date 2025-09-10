@@ -33,6 +33,7 @@ public class PostComment {
   private Integer level;
   private String path;
   private Integer orderNumber;
+  private Integer isAlive;
 
   private User user;
 
@@ -55,6 +56,7 @@ public class PostComment {
         .level(level)
         .path(path)
         .orderNumber(orderNumber)
+        .isAlive(isAlive)
         .build();
   }
 }

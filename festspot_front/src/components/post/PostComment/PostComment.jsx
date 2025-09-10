@@ -157,160 +157,173 @@ function PostComment({ postId, isLike, handleLikeOnClick }) {
           <div css={s.commentContainer}>
             {postCommentsState.map((comment) => (
               <React.Fragment key={comment.postCommentId}>
-                {comment.deleted ? (
+                {comment.isAlive ? (
                   <>
-                    <div
-                      css={s.deletedComment(comment.level, comment.hasChild)}
-                    >
-                      삭제된 댓글입니다.
-                    </div>
+                    {!!comment.deleted ? (
+                      <>
+                        <div
+                          css={s.deletedComment(
+                            comment.level,
+                            comment.hasChild
+                          )}
+                        >
+                          삭제된 댓글입니다.
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div css={s.childContainer}>
+                          {!!comment.level ? <FiCornerDownRight /> : <></>}
+                          <div css={s.comment(comment.level, comment.hasChild)}>
+                            <div css={s.profileImgContainer}>
+                              <img src={comment.userProfileImgUrl} alt="" />
+                            </div>
+                            <div
+                              css={s.commentDiv}
+                              onClick={(e) =>
+                                handleRecommentOnClick(comment.postCommentId)
+                              }
+                            >
+                              <div css={s.nickName}>
+                                <div>{comment.userNickName}</div>
+                                <div>
+                                  {!!comment.updatedAt ? (
+                                    <>
+                                      {new Date(
+                                        comment.updatedAt
+                                      ).toLocaleDateString()}
+                                      {new Date(
+                                        comment.updatedAt
+                                      ).toLocaleTimeString()}
+                                    </>
+                                  ) : (
+                                    <>
+                                      {new Date(
+                                        comment.createdAt
+                                      ).toLocaleDateString()}
+                                      {new Date(
+                                        comment.createdAt
+                                      ).toLocaleTimeString()}
+                                    </>
+                                  )}
+                                </div>
+                                <div>
+                                  {!!comment.updatedAt ? "(수정됨)" : ""}
+                                </div>
+                                {!!userInfo &&
+                                comment.userId === userInfo.userId ? (
+                                  <div css={s.rewrtieContainer}>
+                                    {!!editCommentId ? (
+                                      <div
+                                        css={s.deleteButton}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setEditCommentId(0);
+                                        }}
+                                      >
+                                        취소
+                                      </div>
+                                    ) : (
+                                      <div
+                                        css={s.deleteButton}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleDeleteOnclick(
+                                            e,
+                                            comment.postCommentId
+                                          );
+                                        }}
+                                      >
+                                        삭제
+                                      </div>
+                                    )}
+                                    {!!editCommentId ? (
+                                      <div
+                                        css={s.editButton}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleEditConfirmOnClick(
+                                            e,
+                                            comment.postCommentId
+                                          );
+                                        }}
+                                      >
+                                        확인
+                                      </div>
+                                    ) : (
+                                      <div
+                                        css={s.editButton}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleEditCommentOnClick(
+                                            e,
+                                            comment.postCommentId,
+                                            comment.commentContent
+                                          );
+                                        }}
+                                      >
+                                        수정
+                                      </div>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <></>
+                                )}
+                              </div>
+                              <div css={s.commentContent}>
+                                <div css={s.parent}>
+                                  {!!comment.parentUserNickName ? (
+                                    `@${comment.parentUserNickName}`
+                                  ) : (
+                                    <></>
+                                  )}
+                                </div>
+
+                                {editCommentId === comment.postCommentId ? (
+                                  <input
+                                    css={s.editInput}
+                                    value={editValue}
+                                    onChange={(e) =>
+                                      setEditValue(e.target.value)
+                                    }
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                ) : (
+                                  comment.commentContent
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {!!userInfo &&
+                          comment.postCommentId === parentCommentId && (
+                            <div css={s.recommentWriterContainer}>
+                              <FiCornerDownRight />
+                              <div css={s.withoutArrow(comment.level)}>
+                                <div css={s.recommentWriter}>
+                                  <div>{userInfo.userNickName}</div>
+                                  <div css={s.commentWriter(true)}>
+                                    <TextareaAutosize
+                                      type="text"
+                                      onChange={handleRecommentOnChange}
+                                      value={recommentValue}
+                                    />
+                                  </div>
+                                </div>
+                                <button
+                                  css={s.recommentButton}
+                                  onClick={handleRecommentConfirmOnClick}
+                                >
+                                  등록
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                      </>
+                    )}
                   </>
                 ) : (
-                  <>
-                    <div css={s.childContainer}>
-                      {!!comment.level ? <FiCornerDownRight /> : <></>}
-                      <div css={s.comment(comment.level, comment.hasChild)}>
-                        <div css={s.profileImgContainer}>
-                          <img src={comment.userProfileImgUrl} alt="" />
-                        </div>
-                        <div
-                          css={s.commentDiv}
-                          onClick={(e) =>
-                            handleRecommentOnClick(comment.postCommentId)
-                          }
-                        >
-                          <div css={s.nickName}>
-                            <div>{comment.userNickName}</div>
-                            <div>
-                              {!!comment.updatedAt ? (
-                                <>
-                                  {new Date(
-                                    comment.updatedAt
-                                  ).toLocaleDateString()}
-                                  {new Date(
-                                    comment.updatedAt
-                                  ).toLocaleTimeString()}
-                                </>
-                              ) : (
-                                <>
-                                  {new Date(
-                                    comment.createdAt
-                                  ).toLocaleDateString()}
-                                  {new Date(
-                                    comment.createdAt
-                                  ).toLocaleTimeString()}
-                                </>
-                              )}
-                            </div>
-                            <div>{!!comment.updatedAt ? "(수정됨)" : ""}</div>
-                            {!!userInfo &&
-                            comment.userId === userInfo.userId ? (
-                              <div css={s.rewrtieContainer}>
-                                {!!editCommentId ? (
-                                  <div
-                                    css={s.deleteButton}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setEditCommentId(0);
-                                    }}
-                                  >
-                                    취소
-                                  </div>
-                                ) : (
-                                  <div
-                                    css={s.deleteButton}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleDeleteOnclick(
-                                        e,
-                                        comment.postCommentId
-                                      );
-                                    }}
-                                  >
-                                    삭제
-                                  </div>
-                                )}
-                                {!!editCommentId ? (
-                                  <div
-                                    css={s.editButton}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleEditConfirmOnClick(
-                                        e,
-                                        comment.postCommentId
-                                      );
-                                    }}
-                                  >
-                                    확인
-                                  </div>
-                                ) : (
-                                  <div
-                                    css={s.editButton}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleEditCommentOnClick(
-                                        e,
-                                        comment.postCommentId,
-                                        comment.commentContent
-                                      );
-                                    }}
-                                  >
-                                    수정
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <></>
-                            )}
-                          </div>
-                          <div css={s.commentContent}>
-                            <div css={s.parent}>
-                              {!!comment.parentUserNickName ? (
-                                `@${comment.parentUserNickName}`
-                              ) : (
-                                <></>
-                              )}
-                            </div>
-
-                            {editCommentId === comment.postCommentId ? (
-                              <input
-                                css={s.editInput}
-                                value={editValue}
-                                onChange={(e) => setEditValue(e.target.value)}
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                            ) : (
-                              comment.commentContent
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {!!userInfo &&
-                      comment.postCommentId === parentCommentId && (
-                        <div css={s.recommentWriterContainer}>
-                          <FiCornerDownRight />
-                          <div css={s.withoutArrow(comment.level)}>
-                            <div css={s.recommentWriter}>
-                              <div>{userInfo.userNickName}</div>
-                              <div css={s.commentWriter(true)}>
-                                <TextareaAutosize
-                                  type="text"
-                                  onChange={handleRecommentOnChange}
-                                  value={recommentValue}
-                                />
-                              </div>
-                            </div>
-                            <button
-                              css={s.recommentButton}
-                              onClick={handleRecommentConfirmOnClick}
-                            >
-                              등록
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                  </>
+                  <></>
                 )}
               </React.Fragment>
             ))}

@@ -20,6 +20,7 @@
         <result property="level" column="level" />
         <result property="path" column="path" />
         <result property="orderNumber" column="order_number" />
+        <result property="isAlive" column="is_alive" />
         <association property="user" resultMap="UserMap" />
     </resultMap>
 
@@ -96,6 +97,19 @@
                 inner join comment_tb ct ON pct.parent_comment_id = ct.post_comment_id
             where
                 pct.post_id = #{postId}
+        ),
+        alive_descendants as (
+            select
+                ct2.post_comment_id,
+                exists (
+                    select 1
+                    from
+                        comment_tb d
+                    where
+                        d.path like concat(ct2.path, '%')
+                        and d.deleted_at is null
+                ) as is_alive
+            from comment_tb ct2
         )
         select
             dense_rank() over(order by substr(ct.path, 1, 10)) as order_number,
@@ -108,7 +122,12 @@
             end as user_id,
 
             case
-                when ct.deleted_at is not null then '삭제된 댓글입니다.'
+                when ct.deleted_at is not null and not ad.is_alive
+                then null
+
+                when ct.deleted_at is not null and ad.is_alive
+                then '삭제된 댓글입니다'
+
                 else ct.comment_content
             end as comment_content,
 
@@ -136,9 +155,11 @@
             has_child_tb.has_child,
 
             ct.level,
-            ct.path
+            ct.path,
+            ad.is_alive
         from
             comment_tb ct
+            left outer join alive_descendants ad on (ct.post_comment_id = ad.post_comment_id)
             left outer join post_comment_tb pct on (pct.post_comment_id = ct.parent_comment_id)
             left outer join user_tb ut on(ut.user_id = ct.user_id)
             left outer join user_tb put on(put.user_id = pct.user_id)
@@ -165,20 +186,6 @@
                     group by
                         parent_comment_id) has_child_tb
                 on (has_child_tb.parent_comment_id = ct.post_comment_id)
-
-            -- 삭제된 댓글중 자식이 없거나 자식도 모두 삭제된 댓글 제외
-            where not (
-                ct.deleted_at is not null
-                and has_child_tb.has_child = 1
-                and not exists (
-                    select 1
-                    from
-                        post_comment_tb delete_pct
-                    where
-                        delete_pct.parent_comment_id = ct.post_comment_id
-                        and delete_pct.deleted_at is null
-                ) or (ct.deleted_at is not null and has_child_tb.has_child is null)
-            )
         order by
             order_number asc,
             `path`;

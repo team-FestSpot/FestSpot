@@ -29,4 +29,5 @@ public class PostCommentRespDto {
   private Integer level;
   private String path;
   private Integer orderNumber;
+  private Integer isAlive;
 }
