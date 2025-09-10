@@ -3,6 +3,7 @@ name: github-actions-test
 on:
   push:
     branches: [deploy_hoseop]
+  workflow_dispatch:  #
 
 jobs:
   build:
