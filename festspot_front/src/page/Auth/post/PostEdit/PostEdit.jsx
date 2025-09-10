@@ -26,7 +26,8 @@ const PostEdit = () => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const principal = usePrincipalQuery().data?.data?.body;
+  const principalQuery = usePrincipalQuery();
+  const principal = principalQuery.data?.data?.body;
 
   const quillRef = useRef(null);
   const titleInputRef = useRef(null);
@@ -34,35 +35,40 @@ const PostEdit = () => {
   const boardKey = searchParams.get("boardKey");
   const postId = location.pathname.split("/")[3];
 
-  const postDetailQuery = usePostDetailQuery(boardKey, postId);
+  const postDetailQuery = usePostDetailQuery({
+    boardKey: boardKey || "free",
+    postId,
+  });
   const postDetail = postDetailQuery.data?.data?.body;
 
   useEffect(() => {
-    const setQuill = async () => {
-      const quillContet = await getQuillDataUrl(
-        postDetail.postContent,
-        postDetail.postImgs
-      );
-
-      setTitle(postDetail.postTitle);
-      const delta = JSON.parse(quillContet);
-      quillRef.current.getEditor().setContents(delta);
-
-      postDetail.postImgs.map(async (img) => {
-        const filename = img.postImgUrl.split("/")[5];
-        const type = filename.split(".")[1];
-        const file = await urlToFileObject(
-          img.postImgUrl,
-          filename,
-          `image/${type}`
+    if (!!postDetail) {
+      const setQuill = async () => {
+        const quillContet = await getQuillDataUrl(
+          postDetail?.postContent,
+          postDetail?.postImgs
         );
-        const dataUrl = await fileToDataUrl(file);
 
-        setImages((prev) => [...prev, { dataUrl: dataUrl, file: file }]);
-      });
-    };
+        setTitle(postDetail?.postTitle);
+        const delta = JSON.parse(quillContet);
+        quillRef.current.getEditor().setContents(delta);
 
-    setQuill();
+        postDetail?.postImgs.map(async (img) => {
+          const filename = img.postImgUrl.split("/")[5];
+          const type = filename.split(".")[1];
+          const file = await urlToFileObject(
+            img.postImgUrl,
+            filename,
+            `image/${type}`
+          );
+          const dataUrl = await fileToDataUrl(file);
+
+          setImages((prev) => [...prev, { dataUrl: dataUrl, file: file }]);
+        });
+      };
+
+      setQuill();
+    }
   }, [postDetail]);
 
   useEffect(() => {
@@ -71,10 +77,12 @@ const PostEdit = () => {
         title: "로그인 정보 없음",
         text: "로그인 후 이용해 주세요",
         icon: "error",
+      }).then(() => {
+        navigate("/");
       });
     }
     if (!!principal && !!postDetail) {
-      if (principal.user.userId !== postDetail.user.userId) {
+      if (principal?.user?.userId !== postDetail?.user?.userId) {
         Swal.fire({
           title: "잘못된 접근",
           text: "게시글 작성자가 아닙니다.",
@@ -83,7 +91,7 @@ const PostEdit = () => {
         navigate(`/board/all`);
       }
     }
-  }, [principal, postDetail.user.userId]);
+  }, [principalQuery.isFetched, principal, postDetail?.user?.userId]);
 
   //저장 버튼
   const handleSubmitOnClick = async () => {
