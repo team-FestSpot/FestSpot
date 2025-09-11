@@ -87,8 +87,8 @@ const PostWrite = () => {
 
       await reqPostRegister(postReq);
 
+      await postsQuery.refetch();
       navigate(`/board/${searchParams.get("boardKey")}`);
-      postsQuery.refetch();
     } catch (error) {
       await Swal.fire({
         title: error?.response?.data?.body,

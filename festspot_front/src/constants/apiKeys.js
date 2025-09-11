@@ -5,6 +5,6 @@ const API_KEY3 = "763fe25fd3cc4a6cbde68058a651e359";
 const API_KEYS = [API_KEY1, API_KEY2, API_KEY3];
 
 export const randomApiKey = () => {
-  const randomIndex = Math.floor(Math.random() * API_KEYS.length);
+  const randomIndex = Math.floor(Math.random() * API_KEYS.length - 1);
   return API_KEYS[randomIndex];
 };
