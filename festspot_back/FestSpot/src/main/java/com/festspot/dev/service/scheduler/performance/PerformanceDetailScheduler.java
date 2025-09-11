@@ -61,7 +61,7 @@ public class PerformanceDetailScheduler {
         List<Performance> performanceList = apiPerformanceList.stream()
                 .map(performance -> {
                     try {
-                        String apiKey = API_KEYS.get((int) Math.ceil(Math.random() * API_KEYS.size()));
+                        String apiKey = API_KEYS.get((int) Math.ceil(Math.random() * API_KEYS.size() - 1));
                         // 요청 받으면 xml로 옴. xml의 dbs.db를 꺼내서 json 형태로 변환
                         String performanceDetailXML = restTemplate.getForObject(url, String.class, performance.getPerformanceApiId(), apiKey);
                         JSONObject performanceDetailJson = XML.toJSONObject(performanceDetailXML)
