@@ -7,10 +7,13 @@ import festSpotLogo from "./img/FestSpotLogoImg.png";
 import { useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useUpperSideBarStore } from "../../../../stores/UpperSideBarStore";
+import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 
 function UpperSideBarModal() {
   const queryClient = useQueryClient();
   const { isMenuOpen, closeMenu } = useUpperSideBarStore();
+  const principalQuery = usePrincipalQuery();
+  const userInfo = principalQuery?.data?.data?.body?.user || {};
 
   const modalMenus = [
     {
@@ -69,8 +72,11 @@ function UpperSideBarModal() {
           <IoClose onClick={handleCloseOnClick} />
         </div>
         <div css={s.modalUserInfo}>
-          <img src={festSpotLogo} alt="" />
-          <Link css={s.username}>nickname</Link>
+          <img
+            src={`http://localhost:8080/image/profile/${userInfo.userProfileImgUrl}`}
+            alt=""
+          />
+          <Link css={s.username}>{userInfo.userNickName}</Link>
           <div css={s.logoutContainer}>
             <Link onClick={handleLogoutOnClick} css={s.logout}>
               로그아웃
