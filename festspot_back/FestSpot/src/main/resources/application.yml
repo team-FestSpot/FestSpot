@@ -43,6 +43,7 @@ spring:
       on-profile: gwangho-server
 
 app:
+  web-host: "http://festspot.store"
   server-host: "http://festspot.store"
 
 ---
