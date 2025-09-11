@@ -1,8 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import MyPageModifyUserInfo from "../page/myPage/ModifyUserInfo/MyPageModifyUserInfo";
 import MyPageMain from "../page/myPage/MyPageMain/MyPageMain";
 import MyPageUserInfo from "../page/myPage/UserInfo/MyPageUserInfo";
 import usePrincipalQuery from "../querys/auth/usePrincipalQuery";
-import MyPageModifyUserInfo from "../page/myPage/ModifyUserInfo/MyPageModifyUserInfo";
+import MyPageWithdrawUserInfo from "../page/myPage/MyPageWithDrawUserInfo/MyPageWithdrawUserInfo";
 
 function MyPageRouter() {
   const principalQuery = usePrincipalQuery();
@@ -18,6 +19,7 @@ function MyPageRouter() {
     <MyPageMain>
       <Routes>
         <Route path="/info" element={<MyPageModifyUserInfo />} />
+        <Route path="/withdraw" element={<MyPageWithdrawUserInfo />} />
         <Route path="/" element={<MyPageUserInfo />} />
 
         <Route path="*" element={<></>} />

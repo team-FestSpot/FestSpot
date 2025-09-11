@@ -10,19 +10,16 @@ import com.festspot.dev.domain.ticketing.TicketingUrl;
 import com.festspot.dev.domain.ticketing.TicketingUrlMapper;
 import com.festspot.dev.domain.user.User;
 import com.festspot.dev.domain.user.UserMapper;
-import com.festspot.dev.domain.userRole.UserRole;
-import com.festspot.dev.domain.userRole.UserRoleMapper;
 import com.festspot.dev.dto.admin.AdminGetCustomPerformanceRespDto;
 import com.festspot.dev.dto.admin.AdminUploadPerformanceReqDto;
 import com.festspot.dev.dto.admin.AdminUserInfoModifyReqDto;
 import com.festspot.dev.dto.auth.TokenDto;
 import com.festspot.dev.dto.auth.UserLoginDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
-import java.util.List;
-import java.util.Objects;
-
 import com.festspot.dev.exception.auth.LoginException;
 import com.festspot.dev.security.jwt.JwtUtil;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,23 +29,23 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-    private final PerformanceMapper performanceMapper;
-    private final PerformanceRegionMapper performanceRegionMapper;
-    private final PerformanceStateMapper performanceStateMapper;
-    private final TicketingUrlMapper ticketingUrlMapper;
-    private final FileService fileService;
-    private final UserMapper userMapper;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
-    // 관리자용 로그인 서비스
-    @Transactional(rollbackFor = Exception.class)
-    public TokenDto adminLogin(UserLoginDto dto) {
-        User foundUser = userMapper.findByUserLoginId(dto.getUserLoginId());
-        System.out.println(foundUser);
+  private final PerformanceMapper performanceMapper;
+  private final PerformanceRegionMapper performanceRegionMapper;
+  private final PerformanceStateMapper performanceStateMapper;
+  private final TicketingUrlMapper ticketingUrlMapper;
+  private final FileService fileService;
+  private final UserMapper userMapper;
+  private final BCryptPasswordEncoder passwordEncoder;
+  private final JwtUtil jwtUtil;
 
-        // 권한 확인해서 관리자 권한(ROLE_ADMIN) 없으면 예외 처리
-        // 필터에서 로그인 처리해서 안쓸듯?
+  // 관리자용 로그인 서비스
+  @Transactional(rollbackFor = Exception.class)
+  public TokenDto adminLogin(UserLoginDto dto) {
+    User foundUser = userMapper.findByUserLoginId(dto.getUserLoginId());
+
+    // 권한 확인해서 관리자 권한(ROLE_ADMIN) 없으면 예외 처리
+    // 필터에서 로그인 처리해서 안쓸듯?
 //        List<String> userRoleIds = userRoleMapper.findByUserId(foundUser.getUserId()).stream()
 //                .map(userRole -> userRole.getRole().getRoleName()).toList();
 //        System.out.println(userRoleIds);
@@ -56,18 +53,18 @@ public class AdminService {
 //            throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
 //        }
 
-        if(foundUser == null) {
-            throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
-        }
-
-        if(!passwordEncoder.matches(dto.getUserPassword(), foundUser.getUserPassword())) {
-            throw new LoginException("로그인 오류", "비밀번호를 다시 확인하세요.");
-        }
-
-        return TokenDto.builder()
-                .accessToken(jwtUtil.generateAccessToken(foundUser))
-                .build();
+    if (foundUser == null) {
+      throw new LoginException("로그인 오류", "사용자 정보를 다시 확인하세요.");
     }
+
+    if (!passwordEncoder.matches(dto.getUserPassword(), foundUser.getUserPassword())) {
+      throw new LoginException("로그인 오류", "비밀번호를 다시 확인하세요.");
+    }
+
+    return TokenDto.builder()
+        .accessToken(jwtUtil.generateAccessToken(foundUser))
+        .build();
+  }
 
   @Transactional(rollbackFor = Exception.class)
   public int uploadPerformance(AdminUploadPerformanceReqDto dto) {
@@ -195,7 +192,6 @@ public class AdminService {
   }
 
   public void deletePerformanceInfo(Integer performanceId) {
-    System.out.println(performanceId);
     performanceMapper.deleteById(performanceId);
   }
 

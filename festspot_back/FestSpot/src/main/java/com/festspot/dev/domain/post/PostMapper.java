@@ -18,7 +18,11 @@ public interface PostMapper {
 
   double countByCategoryId(PostSearchOption postSearchOption);
 
+  int findPageById(PageSearchOption pageSearchOption);
+
   int increaseViewCount(Integer postId);
 
   int update(Post post);
+
+  int delete(Integer postId);
 }

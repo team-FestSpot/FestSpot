@@ -2,11 +2,9 @@
 import { remToPx } from "../../utils/remToPx";
 import * as s from "./styles";
 import React, { useEffect, useRef, useState } from "react";
-import { BiSolidRightArrow, BiSolidLeftArrow } from "react-icons/bi";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { useDivSize } from "../../hooks/useDivSize";
 import { useParentSize } from "../../hooks/useParentSize";
-import { PAGE_SIZE } from "../../constants/boardPageSize";
 
 function PaginationBar({ searchParams, setSearchParams, totalPage }) {
   const [count, setCount] = useState(3);

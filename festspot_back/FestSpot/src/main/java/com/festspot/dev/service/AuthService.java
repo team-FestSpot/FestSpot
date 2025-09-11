@@ -9,8 +9,10 @@ import com.festspot.dev.domain.userRole.UserRoleMapper;
 import com.festspot.dev.dto.auth.TokenDto;
 import com.festspot.dev.dto.auth.UserLoginDto;
 import com.festspot.dev.dto.auth.UserSignUpDto;
+import com.festspot.dev.dto.auth.UserWithdrawDto;
 import com.festspot.dev.exception.auth.LoginException;
 import com.festspot.dev.security.jwt.JwtUtil;
+import com.festspot.dev.security.model.PrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class AuthService {
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
     private final UserRoleMapper userRoleMapper;
+    private final PrincipalUtil principalUtil;
 
     @Transactional(rollbackFor = Exception.class)
     public User signUp(UserSignUpDto dto) throws BindException {
@@ -79,4 +82,17 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public String withdraw(UserWithdrawDto dto) {
+        int userId = principalUtil.getUserIdOrNull();
+        String userPassword = userMapper.findPasswordByUserId(userId);
+        if(!passwordEncoder.matches(dto.getPassword(), userPassword)) {
+            return "비밀번호가 일치하지 않습니다.";
+        }
+        int result = userMapper.updateDeletedDateByUserId(userId);
+        if(result == 0) {
+            return "회원 탈퇴 중 오류가 발생했습니다.";
+        }
+        return "회원 탈퇴가 완료되었습니다.";
+    }
 }

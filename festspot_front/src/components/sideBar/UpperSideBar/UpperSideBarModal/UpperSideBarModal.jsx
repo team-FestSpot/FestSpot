@@ -24,11 +24,11 @@ function UpperSideBarModal() {
     },
     {
       id: 2,
-      majorCategory: { content: "공연 정보", link: "/performance" },
+      majorCategory: { content: "공연 정보", link: "/performance/all" },
       minorCategory: [
         { content: "국내 공연", link: "/performance/concert" },
         { content: "국내 페스티벌", link: "/performance/festival" },
-        { content: "내한 공연", link: "/performance/foreign" },
+        { content: "내한 공연", link: "/performance/visit" },
       ],
     },
     {

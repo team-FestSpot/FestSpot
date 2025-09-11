@@ -29,7 +29,7 @@ export const performanceBtnContainer = css`
   }
 `;
 
-export const performanceBtn = css`
+export const performanceBtn = (isCurrentPath) => css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,8 +41,8 @@ export const performanceBtn = css`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-size: 1.4rem;
   font-weight: 600;
-  background: white;
-  color: #eb684b;
+  background-color: ${isCurrentPath ? "var(--main-color)" : "white"};
+  color: ${isCurrentPath ? "white" : "var(--main-color)"};
   transition: all 0.2s;
   cursor: pointer;
 

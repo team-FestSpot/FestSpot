@@ -112,7 +112,7 @@ export const contentContainer = css`
   box-sizing: border-box;
 `;
 
-export const rewriteContainer = css`
+export const editContainer = css`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -121,7 +121,7 @@ export const rewriteContainer = css`
   gap: 2rem;
 `;
 
-export const rewriteButton = css`
+export const editButton = css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -213,6 +213,15 @@ export const postCommentContainer = css`
   align-items: start;
   width: 100%;
   margin: 2rem 0;
+`;
+
+export const postListTableContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 2rem;
 `;
 
 export const verticalDivider = css`
