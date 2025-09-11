@@ -107,7 +107,7 @@ function Login(props) {
       });
 
       // 탈퇴한 회원정보로 로그인하면 막음
-      if (principal.deletedAt !== null) {
+      if (!!principal?.deletedAt) {
         localStorage.clear();
         await queryClient.invalidateQueries({
           queryKey: ["principal"],

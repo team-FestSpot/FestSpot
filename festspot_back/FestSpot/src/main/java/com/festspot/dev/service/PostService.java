@@ -1,5 +1,6 @@
 package com.festspot.dev.service;
 
+import com.festspot.dev.domain.post.PageSearchOption;
 import com.festspot.dev.domain.post.Post;
 import com.festspot.dev.domain.post.PostCommentMapper;
 import com.festspot.dev.domain.post.PostLikeMapper;
@@ -10,7 +11,6 @@ import com.festspot.dev.domain.postCategory.PostCategoryMapper;
 import com.festspot.dev.domain.postImg.PostImg;
 import com.festspot.dev.domain.postImg.PostImgMapper;
 import com.festspot.dev.domain.user.UserMapper;
-import com.festspot.dev.dto.post.PostCommentRespDto;
 import com.festspot.dev.dto.post.PostDetailRespDto;
 import com.festspot.dev.dto.post.PostRegisterReqDto;
 import com.festspot.dev.dto.post.PostsRespDto;
@@ -63,7 +63,7 @@ public class PostService {
         .startIndex((page - 1) * size + 1)
         .endIndex((page - 1) * size + size)
         .size(size)
-        .categoryId(postCategoryMapper.findeByCategoryKey(boardKey).getPostCategoryId())
+        .categoryId(postCategoryMapper.findByCategoryKey(boardKey).getPostCategoryId())
         .userId(principalUtil.getUserIdOrNull())
         .build();
 
@@ -76,16 +76,16 @@ public class PostService {
         .build();
   }
 
-  public List<PostCategory> getPostCategory() {
-    return postCategoryMapper.findAll();
+  public int getPageNumByPostId(Integer postId, Integer postCategoryId, Integer size) {
+    return postMapper.findPageById(PageSearchOption.builder()
+        .postId(postId)
+        .size(size)
+        .postCategoryId(postCategoryId)
+        .build());
   }
 
-  // 조회수 증가
-  public void increaseViewCount(Integer postId) {
-    int updated = postMapper.increaseViewCount(postId);
-    if (updated == 0) {
-      throw new IllegalArgumentException(postId + "의 게시글을 찾을 수 없습니다.");
-    }
+  public List<PostCategory> getPostCategory() {
+    return postCategoryMapper.findAll();
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -95,7 +95,7 @@ public class PostService {
       throw new NotLoginException("NotLoginException", "로그인 정보 없음");
     }
 
-    Integer postCategoryId = postCategoryMapper.findeByCategoryKey(dto.getBoardKey())
+    Integer postCategoryId = postCategoryMapper.findByCategoryKey(dto.getBoardKey())
         .getPostCategoryId();
     Post post = dto.toPost(userId, postCategoryId);
 
@@ -140,21 +140,21 @@ public class PostService {
     post.setPostContent(dto.getPostContent());
     post.setPostTitle(dto.getPostTitle());
     post.setPostCategoryId(
-        postCategoryMapper.findeByCategoryKey(dto.getBoardKey()).getPostCategoryId());
+        postCategoryMapper.findByCategoryKey(dto.getBoardKey()).getPostCategoryId());
     postMapper.update(post);
     return "수정 완료";
   }
 
-  // 특정 글 클릭해서 보기 (본문)
-  public PostDetailRespDto getPost(Integer postId) {
-    Integer userId = principalUtil.getUserIdOrNull();
-    return postMapper.findById(postId, userId).toRespDto(imageUrlUtil);
+  public int delete(Integer postId) {
+    return postMapper.delete(postId);
   }
 
-  public List<PostCommentRespDto> getPostComment(Integer postId) {
+  // 특정 글 클릭해서 보기 (본문)
+  @Transactional(rollbackFor = Exception.class)
+  public PostDetailRespDto getPost(Integer postId) {
+    postMapper.increaseViewCount(postId); // 조회수를 우선 증가
     Integer userId = principalUtil.getUserIdOrNull();
-    return postCommentMapper.findById(postId, userId).stream()
-        .map(postComment -> postComment.toRespDto(imageUrlUtil)).toList();
+    return postMapper.findById(postId, userId).toRespDto(imageUrlUtil);
   }
 
   public int postLike(Integer postId) {
@@ -172,4 +172,6 @@ public class PostService {
     }
     return postLikeMapper.delete(postId, userId);
   }
+
+
 }
