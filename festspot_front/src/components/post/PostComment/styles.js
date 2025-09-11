@@ -13,6 +13,12 @@ export const sort = css`
   justify-content: start;
   align-items: center;
   width: 100%;
+  gap: 1rem;
+`;
+
+export const sortOption = (seleted) => css`
+  font-weight: ${seleted ? "600" : "default"};
+  cursor: pointer;
 `;
 
 export const commentBox = css`
@@ -29,7 +35,7 @@ export const commentBox = css`
   border-bottom: 2px solid var(--main-color);
 `;
 
-export const brace = css`
+export const childContainer = css`
   display: flex;
   flex-direction: row;
   justify-content: end;
@@ -43,6 +49,23 @@ export const commentContainer = css`
   justify-content: center;
   align-items: end;
   width: 100%;
+`;
+
+export const deletedComment = (level, hasChild) => css`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: ${!!level ? "95%" : "100%"};
+  padding: ${!!level ? "2rem 1rem" : "2rem 1rem"};
+  padding-right: 1rem;
+  margin: 0.5rem 0;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  border-top: ${!level ? "1px solid #dbdbdb" : 0};
+  border-bottom: ${!level && !hasChild ? "1px solid #dbdbdb" : 0};
+  background-color: ${!!level ? "#f9f9f9" : "white"};
+  font-size: 1.6rem;
 `;
 
 export const comment = (level, hasChild) => css`
@@ -85,6 +108,7 @@ export const commentDiv = css`
   align-items: start;
   width: 100%;
   gap: 0.5rem;
+  cursor: pointer;
 `;
 
 export const nickName = css`
@@ -112,22 +136,23 @@ export const rewrtieContainer = css`
   gap: 1rem;
 `;
 
-export const rewriteButton = css`
+export const editButton = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   box-sizing: border-box;
   border: none;
   border-radius: 0.5rem;
   color: white;
   background-color: var(--main-color);
 `;
+
 export const deleteButton = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   box-sizing: border-box;
   border: none;
   border-radius: 0.5rem;
@@ -149,6 +174,17 @@ export const parent = css`
   color: #402bf8ff;
 `;
 
+export const editInput = css`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  outline: none;
+  border: 1px solid var(--main-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+`;
+
 export const commentWriterContainer = css`
   display: flex;
   flex-direction: column;
@@ -164,14 +200,50 @@ export const commentWriterContainer = css`
   }
 `;
 
+export const withoutArrow = (level) => css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  width: ${level ? "90%" : "95%"};
+  gap: 0.5rem;
+`;
+
+export const recommentWriterContainer = css`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
+`;
+
+export const recommentWriter = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  & > div {
+    justify-content: start;
+    width: 100%;
+    font-size: 1.6rem;
+  }
+`;
+
 export const metion = css`
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  top: 11%;
+  left: 1.2%;
+  color: #402bf8ff;
 `;
 
-export const commentWriter = css`
+export const commentWriter = (isRecomment) => css`
   position: relative;
   display: flex;
   justify-content: center;
@@ -192,7 +264,7 @@ export const commentWriter = css`
     outline: none;
     width: 100%;
     height: auto;
-    min-height: 10rem;
+    min-height: ${isRecomment ? " 4rem" : "10rem"};
     padding: 1.5rem 1rem;
     box-sizing: border-box;
     overflow: hidden;
@@ -204,6 +276,22 @@ export const commentWriter = css`
       font-weight: 100;
     }
   }
+`;
+
+export const recommentButton = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.6rem 1.6rem;
+  box-sizing: border-box;
+  border: 1px solid #dbdbdb;
+  border-radius: 0.8rem;
+  gap: 0.5rem;
+  color: white;
+  background-color: var(--main-color);
+  bottom: 2rem;
+  right: 0;
+  cursor: pointer;
 `;
 
 export const buttonContainer = css`
@@ -224,6 +312,7 @@ export const reportButton = css`
   border: 1px solid #dbdbdb;
   border-radius: 1rem;
   gap: 0.5rem;
+  cursor: pointer;
 `;
 
 export const likeButton = css`
@@ -252,4 +341,5 @@ export const confirmButton = css`
   gap: 0.5rem;
   color: white;
   background-color: var(--main-color);
+  cursor: pointer;
 `;

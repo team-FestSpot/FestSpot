@@ -6,26 +6,35 @@ import { usePostDetailQuery } from "../../../../querys/post/usePostDetailQuery";
 import { getQuillContent } from "../../../../utils/getQuillContent";
 import PostComment from "../../../../components/post/PostComment/PostComment";
 import { useQueryClient } from "@tanstack/react-query";
-import { reqPostDislike, reqPostLike } from "../../../../api/postApi";
+import {
+  reqPostDelete,
+  reqPostDislike,
+  reqPostLike,
+} from "../../../../api/postApi";
 import usePrincipalQuery from "../../../../querys/auth/usePrincipalQuery";
 import Swal from "sweetalert2";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import DOMPurify from "dompurify";
+import PostListTable from "../../../../components/post/PostListTable/PostListTable";
+import { usePostPageNumQuery } from "../../../../querys/post/usePostPageNumQuery";
+import { css, Global } from "@emotion/react";
+import { usePostsQuery } from "../../../../querys/post/usePostsQuery";
 
 function PostDetail(props) {
   const pathname = useLocation().pathname;
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [html, setHtml] = useState("");
 
   const queryClient = useQueryClient();
-  const userInfo = usePrincipalQuery().data?.data?.body?.user;
+  const principalQuery = usePrincipalQuery();
+  const userInfo = principalQuery.data?.data?.body?.user || null;
 
   const boardKey = pathname.split("/")[2];
   const postId = pathname.split("/")[3];
 
-  const postDetailQuery = usePostDetailQuery(boardKey, postId);
+  const postDetailQuery = usePostDetailQuery({ postId });
   const postDetail = postDetailQuery.data?.data?.body;
+  const [postCategoryId, setPostCategoryId] = useState(0);
 
   useEffect(() => {
     if (postDetail?.postContent) {
@@ -39,7 +48,16 @@ function PostDetail(props) {
 
       setHtml(cleanHtml);
     }
+    if (!!postDetail?.postCategoryId) {
+      setPostCategoryId(postDetail.postCategoryId);
+    }
   }, [postDetail]);
+
+  const postPageNumQeury = usePostPageNumQuery({
+    postId,
+    postCategoryId: !!postCategoryId ? postCategoryId : 1,
+  });
+  const postPageNum = postPageNumQeury?.data?.data.body || 1;
 
   const handleLikeOnClick = async (e) => {
     try {
@@ -79,14 +97,51 @@ function PostDetail(props) {
     }
   };
 
-  const handleRewriteOnClick = (e) => {
+  const handleEditOnClick = (e) => {
     navigate(`/board/edit/${postDetail.postId}?boardKey=${boardKey}`);
   };
 
-  const handleDeleteOnClick = (e) => {};
+  const postsQuery = usePostsQuery({ boardKey, page: 1 });
+
+  const handleDeleteOnClick = (e) => {
+    Swal.fire({
+      icon: "warning",
+      title: "게시글을 삭제 하시겠습니까?",
+      text: "삭제하신 글은 복구 할 수 없습니다.",
+      showConfirmButton: true,
+      confirmButtonText: "삭제",
+      showCancelButton: true,
+      cancelButtonText: "취소",
+      customClass: {
+        confirmButton: "swalConfirmButton",
+        cancelButton: "swalCancelButton",
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await reqPostDelete({ postId });
+        await postsQuery.refetch();
+        navigate(`/board/${boardKey}`);
+      }
+    });
+  };
 
   return (
     <>
+      <Global
+        styles={css`
+          .swal2-modal {
+            font-size: 12px;
+          }
+          .swalConfirmButton {
+            background-color: #ff6b4a !important;
+            color: white !important;
+          }
+          .swalCancelButton {
+            background-color: #dbdbdb !important;
+            color: #888 !important;
+          }
+        `}
+      />
       {!!postDetail && (
         <>
           <div css={s.postDetailLayout}>
@@ -121,9 +176,9 @@ function PostDetail(props) {
                 dangerouslySetInnerHTML={{ __html: html }}
               ></div>
             </div>
-            {postDetail.user.userId === userInfo.userId && (
-              <div css={s.rewriteContainer}>
-                <div css={s.rewriteButton} onClick={handleRewriteOnClick}>
+            {postDetail.user.userId === userInfo?.userId && (
+              <div css={s.editContainer}>
+                <div css={s.editButton} onClick={handleEditOnClick}>
                   수정
                 </div>
                 <div css={s.deleteButton} onClick={handleDeleteOnClick}>
@@ -133,11 +188,15 @@ function PostDetail(props) {
             )}
             <div css={s.postCommentContainer}>
               <PostComment
-                boardKey={boardKey}
                 postId={postId}
                 isLike={postDetail.isLike}
                 handleLikeOnClick={handleLikeOnClick}
               />
+            </div>
+            <div css={s.postListTableContainer}>
+              {!!postPageNum && (
+                <PostListTable boardKey={boardKey} postPageNum={postPageNum} />
+              )}
             </div>
           </div>
         </>
