@@ -3,7 +3,7 @@ import MyPageModifyUserInfo from "../page/myPage/ModifyUserInfo/MyPageModifyUser
 import MyPageMain from "../page/myPage/MyPageMain/MyPageMain";
 import MyPageUserInfo from "../page/myPage/UserInfo/MyPageUserInfo";
 import usePrincipalQuery from "../querys/auth/usePrincipalQuery";
-import MyPageWithdrawUserInfo from "../page/myPage/MyPageWithDrawUserInfo/MyPageWithdrawUserInfo";
+import MyPageWithdrawUserInfo from "../page/myPage/MyPageWithdrawUserInfo/MyPageWithdrawUserInfo";
 
 function MyPageRouter() {
   const principalQuery = usePrincipalQuery();
@@ -21,7 +21,6 @@ function MyPageRouter() {
         <Route path="/info" element={<MyPageModifyUserInfo />} />
         <Route path="/withdraw" element={<MyPageWithdrawUserInfo />} />
         <Route path="/" element={<MyPageUserInfo />} />
-
         <Route path="*" element={<></>} />
       </Routes>
     </MyPageMain>
