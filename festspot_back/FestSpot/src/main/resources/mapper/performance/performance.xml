@@ -102,6 +102,8 @@
       left outer join performance_region_tb prt on(prt.performance_region_id = pt.performance_region_id)
       left outer join performance_state_tb pst on(pst.performance_state_id = pt.performance_state_id)
       left outer join ticketing_url_tb tut on(tut.performance_id = pt.performance_id)
+    order by
+      pt.performance_start_date
   </select>
   <select id="findByPerformanceApiId" resultMap="PerformanceMap">
     select
