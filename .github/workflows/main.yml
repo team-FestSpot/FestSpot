@@ -38,6 +38,16 @@ jobs:
         github.ref_name == 'deploy_gwangho' && 'gwangho' ||
         github.ref_name == 'deploy_suwon' && 'suwon'
         }}
+      SSH_HOST: ${{
+        github.ref_name == 'deploy_hoseop' && secrets.SSH_HOST_HOSEOP ||
+        github.ref_name == 'deploy_gwangho' && secrets.SSH_HOST_GWANGHO ||
+        github.ref_name == 'deploy_suwon' && secrets.SSH_HOST_SUWON
+        }}
+      SSH_KEY: ${{
+        github.ref_name == 'deploy_hoseop' && secrets.SSH_KEY_HOSEOP ||
+        github.ref_name == 'deploy_gwangho' && secrets.SSH_KEY_GWANGHO ||
+        github.ref_name == 'deploy_suwon' && secrets.SSH_KEY_SUWON
+        }}
 
     steps:
       - name: checkout
@@ -67,3 +77,16 @@ jobs:
           cd festspot_front
           docker build --build-arg SERVERNAME=${{ env.BUILD_MODE }} -t ${{ env.DOCKER_USERNAME }}/react-app:latest .
           docker push ${{ env.DOCKER_USERNAME }}/react-app:latest
+      - name: ssh deploy
+        uses: appleboy/ssh-action@1.0.3
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ubuntu
+          key: ${{ env.SSH_KEY }}
+          script: |
+            cd /home/ubuntu/project
+            
+            sudo docker-compose pull
+            sudo docker-compose down
+            sudo docker-compose up -d
+            
