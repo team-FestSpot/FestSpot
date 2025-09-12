@@ -78,7 +78,7 @@ jobs:
           docker build --build-arg SERVERNAME=${{ env.BUILD_MODE }} -t ${{ env.DOCKER_USERNAME }}/react-app:latest .
           docker push ${{ env.DOCKER_USERNAME }}/react-app:latest
       - name: ssh deploy
-        uses: appleboy/ssh-action@1.0.3
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.SSH_HOST }}
           username: ubuntu
