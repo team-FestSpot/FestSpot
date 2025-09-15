@@ -12,6 +12,7 @@ import useAdminCustomPerformanceRowsStore from "../../../../stores/AdminPerforma
 import { useDeletePerformanceMutation } from "../../../../querys/performance/useDeletePerformanceMutation";
 import AdminPerformanceUpdateModal from "../../AdminUpdateModal/AdminPerformanceUpdateModal/AdminPerformanceUpdateModal";
 import { PERFORMANCE_POSTER_IMG_PATH } from "../../../../constants/performancePosterImgPath";
+import AdminPerformanceUpdateModal2 from "../../AdminUpdateModal/AdminPerformanceUpdateModal2/AdminPerformanceUpdateModal2";
 
 function AdminCustomPerformanceDataGrid({ searchResult }) {
   const { data, isLoading, isRefetching } = useCustomPerformanceListQuery();
@@ -190,7 +191,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
     <div css={s.adminGridLayout}>
       {Object.keys(performanceToUpdate).length > 0 && (
         <div css={s.updateModalLayout}>
-          <AdminPerformanceUpdateModal
+          <AdminPerformanceUpdateModal2
             isOpen={isOpen}
             closeModal={closeModal}
             performanceToUpdate={performanceToUpdate}

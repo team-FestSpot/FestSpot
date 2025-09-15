@@ -31,6 +31,7 @@ function AdminInput({ props }) {
             options={props.type === "select" ? options : null}
             onChange={(e) => handleInputOnChange(e, props.id)}
             sx={{ width: "100%" }}
+            defaultValue={props.defaultValue} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
           />
         </div>
       ) : props.type === "select" ? (
@@ -39,6 +40,7 @@ function AdminInput({ props }) {
             name=""
             id={props.id}
             onChange={(e) => handleInputOnChange(e, props.id)}
+            defaultValue={props.defaultValue} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
           >
             {props.options.map((option) => (
               <option key={option} value={option}>
@@ -53,6 +55,7 @@ function AdminInput({ props }) {
             type="date"
             onKeyDown={(e) => e.preventDefault()}
             onChange={(e) => handleInputOnChange(e, props.id)}
+            defaultValue={props.defaultValue} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
           />
         </div>
       ) : (
