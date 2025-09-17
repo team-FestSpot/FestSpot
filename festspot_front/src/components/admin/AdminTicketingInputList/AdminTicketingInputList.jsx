@@ -52,7 +52,8 @@ const handleTicketingPlusOnClick = () => {
         <>
             {ticketingUrlList.map((ticketingUrl, index) => (
                 <div css={s.inputTicketingContainer} key={index}>
-                    <div css={s.menuText}>
+                  <div css={s.oneSideInputContainer}>
+                    <div>
                         <p>{ticketingUrl.placeholder1}</p>
                     </div>
                     <div css={s.inputTicketingAgencyNameContainer}>
@@ -66,7 +67,9 @@ const handleTicketingPlusOnClick = () => {
                         sx={{ width: "100%" }}
                         />
                     </div>
-                    <div css={s.menuText}>
+                  </div>
+                  <div css={s.oneSideInputContainer}>
+                    <div>
                         <p>{ticketingUrl.placeholder2}</p>
                     </div>
                     <div css={s.inputTicketingUrlContainer}>
@@ -80,6 +83,7 @@ const handleTicketingPlusOnClick = () => {
                         sx={{ width: "100%" }}
                         />
                     </div>
+                  </div>
                     <div css={s.urlAddRemoveButtonsContainer}>
                         {index === ticketingUrlList.length - 1 && (
                         <CiSquarePlus onClick={handleTicketingPlusOnClick} />

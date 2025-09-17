@@ -17,7 +17,7 @@ export const layout = css`
     height: 100vh;
     background-color: #fff;
 
-    @media (min-width: 768px) {
+    @media (min-width: 1400px) {
       width: 50%;
     }
   }
@@ -63,53 +63,16 @@ export const inputFileComponent = css`
   justify-content: center;
 `;
 
-export const inputComponent = css`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  width: 100%;
-  height: 4rem;
-
-  & > div:first-of-type {
-    display: flex;
-    justify-content: start;
-    width: 10rem;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    align-items: start;
-    width: 95%;
-
-    & > div:first-of-type {
-      height: 3rem;
-    }
-  }
-`;
 
 export const inputBox = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #dbdbdb;
-  border-radius: 4px;
   width: 100%;
   height: 2.5rem;
-
-  & > input {
-    width: 100%;
-    border: none;
-    outline: none;
-  }
 `;
 
-export const selectBox = css`
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  box-sizing: border-box;
-`;
-
+// 기존 예매처
 export const ticketingInputContainer = css`
   display: flex;
   flex-direction: column;
@@ -136,15 +99,43 @@ export const ticketingInputs = css`
   }
 `;
 
-export const urlAddRemoveButtonsContainer = css`
+export const inputComponent = css`
   display: flex;
-  flex-direction: row;
-  font-size: 20px;
   align-items: center;
+  flex-direction: row;
+  width: 100%;
+  height: 4rem;
+
+  & > div:first-of-type {
+    display: flex;
+    justify-content: start;
+    width: 15rem;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: start;
+    width: 95%;
+  }
 `;
+
+//신규 예매처
+export const inputListContainerLayout = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+
+  @media (max-width: 1024px) {
+    width: 95%;
+  }
+`;
+
 
 export const modifyButtonContainer = css`
   & > Button {
     font-size: 14px;
   }
 `;
+
+

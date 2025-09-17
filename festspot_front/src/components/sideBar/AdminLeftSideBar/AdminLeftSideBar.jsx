@@ -46,9 +46,10 @@ function AdminLeftSideBar({ setIsSideBar }) {
       timer: 1500,
       timerProgressBar: true,
     })
-      .then(localStorage.clear())
-      .then(queryClient.invalidateQueries("pricipal"))
-      .then(navigate("/admin/login"));
+    .then(setIsSideBar(false))
+    .then(localStorage.clear())
+    .then(queryClient.invalidateQueries("pricipal"))
+    .then(navigate("/admin/login"));
   };
 
   return (

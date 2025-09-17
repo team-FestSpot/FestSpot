@@ -53,6 +53,6 @@ export const adminChildrenContainerFull = css`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%; /* 전체 너비 사용 */
+  width: 100%; 
   height: 100%;
 `;

@@ -100,7 +100,6 @@ function AdminModifyCustomPerformance(props) {
         </div>
       </header>
       <main>
-        <div></div>
         <div>
           <AdminCustomPerformanceDataGrid searchResult={searchResult} />
         </div>

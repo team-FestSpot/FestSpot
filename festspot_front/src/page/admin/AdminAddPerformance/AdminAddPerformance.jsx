@@ -302,6 +302,7 @@ function AdminAddPerformance(props) {
           <Button
             variant="contained"
             onClick={handleAddPerformanceButtonOnClick}
+            sx={{ backgroundColor:"#EA580C" }}
           >
             공연 추가
           </Button>

@@ -14,6 +14,7 @@ import { PERFORMANCE_POSTER_IMG_PATH } from "../../../../constants/performancePo
 import { FiX } from "react-icons/fi";
 import AdminInputList from "../../AdminInputList/AdminInputList";
 import AdminTicketingInputList from "../../AdminTicketingInputList/AdminTicketingInputList";
+import TextField from "@mui/material/TextField";
 
 function AdminPerformanceUpdateModal2({
   isOpen,
@@ -139,12 +140,14 @@ function AdminPerformanceUpdateModal2({
             <p>{placeholder}</p>
           </div>
           <div css={s.inputBox}>
-            <input
+            <TextField
               id={id}
               type={type}
               defaultValue={defaultValue}
               onChange={(e) => handleInputOnChange(e, index)}
               onKeyDown={(e) => (type !== "text" ? e.preventDefault() : null)}
+              size="small"
+              sx={{ width: "100%" }}
             />
           </div>
         </div>
@@ -389,18 +392,22 @@ function AdminPerformanceUpdateModal2({
 
             {/* 신규 예매처 */}
             <div css={s.inputListContainerLayout}>
-              <div css={s.inputTicketingContainer}>
-                  <AdminTicketingInputList 
-                    ticketingUrlList={ticketingUrlList} 
-                    setTicketingUrlList={setTicketingUrlList}  
-                    ticketingInputValue={ticketingInputValue}
-                    setTicketingInputValue={setTicketingInputValue}
-                  />
-              </div>
+              <AdminTicketingInputList 
+                ticketingUrlList={ticketingUrlList} 
+                setTicketingUrlList={setTicketingUrlList}  
+                ticketingInputValue={ticketingInputValue}
+                setTicketingInputValue={setTicketingInputValue}
+              />
             </div>
           </div>
           <div css={s.modifyButtonContainer}>
-            <Button onClick={handleModifyButtonOnClick}>수정</Button>
+            <Button 
+              onClick={handleModifyButtonOnClick}
+              variant="contained"
+              sx={{ backgroundColor:"#EA580C" }}
+            >
+              수정
+            </Button>
           </div>
         </div>
       </ReactModal>

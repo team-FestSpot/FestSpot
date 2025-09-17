@@ -92,7 +92,13 @@ function AdminLoginPage(props) {
           onChange={handleInputOnChange}
           onKeyDown={handleLoginInputOnKeyDown}
         />
-        <Button onClick={handleLoginButtonOnClick}>관리자 로그인</Button>
+        <Button 
+          onClick={handleLoginButtonOnClick}
+          variant="contained"
+          sx={{ backgroundColor:"#EA580C" }}
+        >
+          관리자 로그인
+        </Button>
       </div>
     </div>
   );

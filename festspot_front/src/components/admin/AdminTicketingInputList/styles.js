@@ -1,43 +1,70 @@
 import { css } from "@emotion/react";
 export const inputTicketingContainer = css`
   display: flex;
-  flex-direction: row;
   width: 100%;
-  gap: 10px;
-  flex-shrink: 0;
+  margin: 1rem 0;
 
-  @media (max-width: 1400px) {
-    flex-direction: column;
+  & > div:first-of-type {
+    width: 30%;
+    gap: 2rem;
+  }
+
+  & > div:nth-of-type(2) {
+    margin-left: 2rem;
+    width: 65%;
   }
 `;
+
+export const oneSideInputContainer = css`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  height: 4rem;
+
+  & > div:first-of-type {
+    display: flex;
+    justify-content: start;
+    width: 11rem;
+  }
+
+  & > div:last-of-type {
+    display: flex;
+    justify-content: start;
+  }
+
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 95%;
+  }
+`;
+
+
+export const inputTicketingAgencyNameContainer = css`
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 2.5rem;
+  `;
+
+export const inputTicketingUrlContainer = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 2.5rem;
+  `;
 
 export const urlAddRemoveButtonsContainer = css`
   display: flex;
   flex-direction: row;
-  font-size: 20px;
+  font-size: 2rem;
   align-items: center;
-`;
-
-export const inputTicketingAgencyNameContainer = css`
-  flex: 1;
-  max-width: 15rem;
-  min-width: 10rem;
-  align-content: center;
-
-  & > input {
-    width: 100%;
-    height: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-`;
-
-export const inputTicketingUrlContainer = css`
-  flex: 3;
-  max-width: 768px;
-  min-width: 300px;
-  align-content: center;
+  margin-left: 1rem;
 `;
 
 export const addButtonContainer = css`
