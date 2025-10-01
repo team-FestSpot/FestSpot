@@ -67,6 +67,7 @@ public class AdminController {
                                                           @RequestPart("performanceId") Integer performanceId,
                                                           @RequestPart("deletedTicketingList") List<TicketingReqDto> deletedTicketingListDto,
                                                           @RequestPart(required = false) MultipartFile file) {
+        System.out.println(dto);
         adminService.updateCustomPerformanceInfo(dto, performanceId, deletedTicketingListDto, file);
         return ResponseEntity.ok("공연 정보 수정 성공");
     }

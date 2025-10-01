@@ -1,12 +1,9 @@
 import React from 'react';
 /** @jsxImportSource @emotion/react */
 import * as s from "./styles";
-import useAdminAddPerformanceStore from '../../../stores/AdminAddPerformanceStore';
 import AdminInput from '../AdminInput/AdminInput';
-import Button from '@mui/material/Button';
 
 function AdminInputList({inputList}) {
-    const { detail, setDetail, setDetailEmpty } = useAdminAddPerformanceStore();
 
     return (
         <div css={s.inputListContainerLayout}>

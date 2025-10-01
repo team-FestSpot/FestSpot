@@ -5,15 +5,15 @@ import useAdminAddPerformanceStore from "../../../stores/AdminAddPerformanceStor
 import TextField from "@mui/material/TextField";
 
 function AdminInput({ props }) {
-  const { setDetail } = useAdminAddPerformanceStore();
+  const { detail, setDetail } = useAdminAddPerformanceStore();
 
   const handleInputOnChange = (e, id) => {
     setDetail(id, e.target.value);
   };
 
   useEffect(() => {
-    if (props.type === "select") {
-      setDetail(props.id, props.options[0]);
+    if(!!props.options && detail[props.id].length < 1) {
+      setDetail(props.id, props.options[0])
     }
   }, []);
 
@@ -31,7 +31,8 @@ function AdminInput({ props }) {
             options={props.type === "select" ? options : null}
             onChange={(e) => handleInputOnChange(e, props.id)}
             sx={{ width: "100%" }}
-            defaultValue={props.defaultValue} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
+            defaultValue={detail[props.id]} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
+
           />
         </div>
       ) : props.type === "select" ? (
@@ -40,7 +41,7 @@ function AdminInput({ props }) {
             name=""
             id={props.id}
             onChange={(e) => handleInputOnChange(e, props.id)}
-            defaultValue={props.defaultValue} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
+            defaultValue={detail[props.id]} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
           >
             {props.options.map((option) => (
               <option key={option} value={option}>
@@ -55,7 +56,7 @@ function AdminInput({ props }) {
             type="date"
             onKeyDown={(e) => e.preventDefault()}
             onChange={(e) => handleInputOnChange(e, props.id)}
-            defaultValue={props.defaultValue} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
+            defaultValue={detail[props.id]} // props 구조: AdminPerformanceUpdateModal2 -> AdminInputList -> AdminInput
           />
         </div>
       ) : (

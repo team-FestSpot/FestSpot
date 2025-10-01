@@ -112,7 +112,7 @@ function AdminAddPerformance2(props) {
     }
 
     for (const value of Object.values(detail)) {
-      // console.log(value);
+      console.log(value);
       if (!value) {
         alert("내용 누락");
         return;

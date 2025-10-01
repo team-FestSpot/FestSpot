@@ -15,6 +15,7 @@ import { FiX } from "react-icons/fi";
 import AdminInputList from "../../AdminInputList/AdminInputList";
 import AdminTicketingInputList from "../../AdminTicketingInputList/AdminTicketingInputList";
 import TextField from "@mui/material/TextField";
+import useAdminAddPerformanceStore from "../../../../stores/AdminAddPerformanceStore";
 
 function AdminPerformanceUpdateModal2({
   isOpen,
@@ -27,12 +28,12 @@ function AdminPerformanceUpdateModal2({
   //   useAdminPerformanceUpdateStore();
   const [newPoster, setNewPoster] = useState({});
   const [newPosterUrl, setNewPosterUrl] = useState(""); // 화면에 업로드할 이미지 표시
+  const { detail, setDetail } = useAdminAddPerformanceStore();
   const inputList = [
     {
       id: "prfnm",
       type: "text",
       placeholder: "공연/페스티벌명",
-      defaultValue: performanceToUpdate.prfnm,
     },
     {
       id: "area",
@@ -57,52 +58,44 @@ function AdminPerformanceUpdateModal2({
         "제주특별자치도",
         "전북특별자치도",
       ],
-      defaultValue: performanceToUpdate.area,
     },
     {
       id: "fcltynm",
       type: "text",
       placeholder: "공연 장소",
-      defaultValue: performanceToUpdate.fcltynm,
     },
     {
       id: "prfstate",
       type: "select",
       placeholder: "공연 진행 상황",
       options: ["공연예정", "공연중", "공연완료"],
-      defaultValue: performanceToUpdate.prfstate,
     },
     {
       id: "prfpdfrom",
       type: "date",
       placeholder: "공연 시작일",
-      defaultValue: performanceToUpdate.prfpdfrom,
     },
     {
       id: "prfpdto",
       type: "date",
       placeholder: "공연 종료일",
-      defaultValue: performanceToUpdate.prfpdto,
     },
     {
       id: "prfcast",
       type: "text",
       placeholder: "출연진",
-      defaultValue: performanceToUpdate.prfcast,
     },
     {
       id: "visit",
       type: "select",
       placeholder: "내한",
       options: ["Y", "N"],
-      defaultValue: performanceToUpdate.visit,
     },
     {
       id: "festival",
       type: "select",
       placeholder: "페스티벌",
       options: ["Y", "N"],
-      defaultValue: performanceToUpdate.festival,
     },
   ];
   const [performance, setPerformance] = useState({});
@@ -132,7 +125,7 @@ function AdminPerformanceUpdateModal2({
   // 기존에 있던 예매처/url 중 체크 해제한(삭제할) url 목록
   const [deletedTicketingList, setDeletedTicketingList] = useState([]);
 
-  // 입력창 컴포넌트
+  // 입력창 컴포넌트 (예매처 목록 전용)
     const inputComponent = (id, type, defaultValue, placeholder, index) => {
       return (
         <div css={s.inputComponent}>
@@ -154,7 +147,7 @@ function AdminPerformanceUpdateModal2({
       );
     };
 
-  // 입력창에 입력 시 동작하는 핸들러
+  // 입력창에 입력 시 동작하는 핸들러 (예매처 목록 전용)
   const handleInputOnChange = (e, index) => {
     const { id, value } = e.target;
     if (id.includes("prevrelate")) {
@@ -200,10 +193,19 @@ function AdminPerformanceUpdateModal2({
   // 모달 열리면 수정할 공연정보를 모달 내에서 사용할 상태들에 저장
   // performance = 공연 정보, ticketingList = 기존에 저장했던 예매처 목록
   useEffect(() => {
-    console.log(performanceToUpdate);
     setPerformance(performanceToUpdate);
+    Object.entries(performanceToUpdate).forEach((item) => {
+      if(item[0] === "relates") {
+        return;
+      }
+      setDetail(item[0], item[1]);
+    });
     setTicketingList(performanceToUpdate.relates);
   }, [performanceToUpdate]);
+
+  // useEffect(() => {
+  //   console.log(detail);
+  // }, [detail]);
 
   // 기존에 저장한 예매처 목록 옆 체크박스 체크 또는 해제 시 동작
   const handleUrlCheckboxOnChange = (e, relate) => {
@@ -236,8 +238,9 @@ function AdminPerformanceUpdateModal2({
       }
       ticketingUrlList.push(inputValue);
     }
-    data = { ...performance };
+    data = { ...detail };
     data.relates = ticketingUrlList;
+    // console.log(data);
 
     for (const [key, value] of Object.entries(data)) {
       if (key !== "relates") {
@@ -355,7 +358,7 @@ function AdminPerformanceUpdateModal2({
           </div>
           <div>
             <div>
-              <AdminInputList inputList={inputList} />
+              <AdminInputList inputList={inputList} setPerformance={setPerformance} />
             </div>
 
             {/* 기존 예매처 */}

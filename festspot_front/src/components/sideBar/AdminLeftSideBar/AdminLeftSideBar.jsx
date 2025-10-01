@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiX } from "react-icons/fi";
 import usePrincipalQuery from "../../../querys/auth/usePrincipalQuery";
+import useAdminAddPerformanceStore from "../../../stores/AdminAddPerformanceStore";
 
 function AdminLeftSideBar({ setIsSideBar }) {
   const location = useLocation();
@@ -14,6 +15,7 @@ function AdminLeftSideBar({ setIsSideBar }) {
   const principalQuery = usePrincipalQuery();
   const principal = principalQuery?.data?.data?.body || {};
   const queryClient = useQueryClient();
+  const { setDetailEmpty } = useAdminAddPerformanceStore();
 
   const menus = [
     {
@@ -93,6 +95,7 @@ function AdminLeftSideBar({ setIsSideBar }) {
                 s.navItem,
                 location.pathname.slice(7) === menu.id && s.activeNavItem,
               ]}
+              onClick={() => setDetailEmpty()}
             >
               {menu.placeholder}
             </Link>

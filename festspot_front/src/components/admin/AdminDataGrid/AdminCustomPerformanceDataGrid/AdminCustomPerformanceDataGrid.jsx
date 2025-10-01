@@ -10,9 +10,9 @@ import Button from "@mui/material/Button";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import useAdminCustomPerformanceRowsStore from "../../../../stores/AdminPerformanceCustomRowsStore";
 import { useDeletePerformanceMutation } from "../../../../querys/performance/useDeletePerformanceMutation";
-import AdminPerformanceUpdateModal from "../../AdminUpdateModal/AdminPerformanceUpdateModal/AdminPerformanceUpdateModal";
 import { PERFORMANCE_POSTER_IMG_PATH } from "../../../../constants/performancePosterImgPath";
 import AdminPerformanceUpdateModal2 from "../../AdminUpdateModal/AdminPerformanceUpdateModal2/AdminPerformanceUpdateModal2";
+import useAdminAddPerformanceStore from "../../../../stores/AdminAddPerformanceStore";
 
 function AdminCustomPerformanceDataGrid({ searchResult }) {
   const { data, isLoading, isRefetching } = useCustomPerformanceListQuery();
@@ -20,6 +20,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
   const { rows, setRows } = useAdminCustomPerformanceRowsStore();
   const [isOpen, setIsOpen] = useState(false);
   const [performanceToUpdate, setPerformanceToUpdate] = useState({});
+  const {setDetailEmpty} = useAdminAddPerformanceStore();
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const [paginationList, setPaginationList] = useState([]);
@@ -108,6 +109,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
               await deletePerformanceMutation.mutateAsync(
                 params.row.performanceId
               );
+              setPerformanceToUpdate({}); // 삭제 버튼 눌렀을 때 modal창 열리는거 막으려고 추가
             }}
           >
             <FaRegTrashAlt />
@@ -125,7 +127,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
   // 모달창 닫기
   const closeModal = () => {
     setIsOpen(false);
-    // setPerformanceToUpdate({});
+    setPerformanceToUpdate({});
   };
 
   // 수정 버튼 눌렀을 때 모달창 열림
@@ -140,10 +142,6 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       page: 1,
     });
   }, []);
-
-  // useEffect(() => {
-  //   console.log(rows);
-  // }, [rows]);
 
   // 직접 등록한 공연 목록 가져오는 query 로딩 끝나면 row에 넣어서 표에 표시되게 함
   useEffect(() => {
