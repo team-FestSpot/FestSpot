@@ -20,7 +20,7 @@ function AdminLayout({ children }) {
     else {
       setIsSideBar(true);
     }
-  }, [location])
+  }, [page])
 
   return (
     <div css={isSideBar ? s.adminLayout : s.adminLayoutFull}>

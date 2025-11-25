@@ -11,6 +11,8 @@ import com.festspot.dev.dto.reponse.ResponseDto;
 import com.festspot.dev.dto.ticketing.TicketingReqDto;
 import com.festspot.dev.service.AdminService;
 import java.util.List;
+
+import com.festspot.dev.service.PerformanceService;
 import lombok.RequiredArgsConstructor;
 import org.apache.el.parser.Token;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
+    private final PerformanceService performanceService;
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPerformance(@RequestBody AdminUploadPerformanceReqDto dto) {
@@ -52,6 +55,11 @@ public class AdminController {
         return ResponseEntity.ok("공연 정보 업로드 성공");
     }
 
+    @GetMapping("/list/api")
+    public ResponseEntity<?> getApiPerformanceInfoList () {
+        return ResponseEntity.ok(ResponseDto.success(adminService.getApiPerformanceInfoList()));
+    }
+
     @GetMapping("/list/custom")
     public ResponseEntity<?> getCustomPerformanceInfoList () {
         return ResponseEntity.ok(ResponseDto.success(adminService.getCustomPerformanceInfoList()));
@@ -67,7 +75,7 @@ public class AdminController {
                                                           @RequestPart("performanceId") Integer performanceId,
                                                           @RequestPart("deletedTicketingList") List<TicketingReqDto> deletedTicketingListDto,
                                                           @RequestPart(required = false) MultipartFile file) {
-        System.out.println(dto);
+//        System.out.println(dto);
         adminService.updateCustomPerformanceInfo(dto, performanceId, deletedTicketingListDto, file);
         return ResponseEntity.ok("공연 정보 수정 성공");
     }
@@ -80,8 +88,9 @@ public class AdminController {
 
     @DeleteMapping("/delete/performance/{performanceId}")
     public ResponseEntity<?> deletePerformanceInfo (@PathVariable Integer performanceId) {
+        String apiId = performanceService.getPerformanceDetailById(performanceId).getPerformanceApiId();
         adminService.deletePerformanceInfo(performanceId);
-        return ResponseEntity.ok("공연 정보 삭제 성공");
+        return ResponseEntity.ok(apiId);
     }
 
     @PutMapping("/delete/user/{userId}")

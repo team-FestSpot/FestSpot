@@ -5,26 +5,24 @@ import Box from "@mui/material/Box";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import Pagination from "@mui/material/Pagination";
 import { useSearchParams } from "react-router-dom";
-import { useCustomPerformanceListQuery } from "../../../../querys/admin/useCustomPerformanceListQuery";
 import Button from "@mui/material/Button";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import useAdminCustomPerformanceRowsStore from "../../../../stores/AdminPerformanceCustomRowsStore";
-import { useDeletePerformanceMutation } from "../../../../querys/performance/useDeletePerformanceMutation";
-import { PERFORMANCE_POSTER_IMG_PATH } from "../../../../constants/performancePosterImgPath";
 import AdminPerformanceUpdateModal2 from "../../AdminUpdateModal/AdminPerformanceUpdateModal2/AdminPerformanceUpdateModal2";
-import useAdminAddPerformanceStore from "../../../../stores/AdminAddPerformanceStore";
+import { useApiPerformanceListQuery } from "../../../../querys/admin/useApiPerformanceListQuery";
+import { useDeleteApiPerformanceMutation } from "../../../../querys/performance/useDeleteApiPerformanceMutation";
 
-function AdminCustomPerformanceDataGrid({ searchResult }) {
-  const { data, isLoading, isRefetching } = useCustomPerformanceListQuery();
+function AdminApiPerformanceDataGrid({ searchResult }) {
+  const { data, isLoading, isRefetching } = useApiPerformanceListQuery();
   const performanceList = data?.data?.body;
   const { rows, setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
   const [isOpen, setIsOpen] = useState(false);
-  const [performanceToUpdate, setPerformanceToUpdate] = useState({});
-  const {setDetailEmpty} = useAdminAddPerformanceStore();
+  // const [performanceToUpdate, setPerformanceToUpdate] = useState({});
+  // const {setDetailEmpty} = useAdminAddPerformanceStore();
   const [searchParams, setSearchParams] = useSearchParams(); // 페이지 params 가져오는데 씀
   const pageParam = Number(searchParams.get("page")); // 페이지 param을 숫자로 형변환
   const [paginationList, setPaginationList] = useState([]);
-  const deletePerformanceMutation = useDeletePerformanceMutation();
+  const deleteApiPerformanceMutation = useDeleteApiPerformanceMutation();
 
   const gridRef = useGridApiRef();
   const columns = [
@@ -36,7 +34,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
       editable: false,
       renderCell: (params) => (
         <div css={s.imgContainer}>
-          <img src={`${PERFORMANCE_POSTER_IMG_PATH}${params.row.poster}`} />
+          <img src={`${params.row.poster}`} />
         </div>
       ),
     },
@@ -106,7 +104,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
             variant="outline"
             sx={{ fontSize: "1.2rem" }}
             onClick={async () => {
-              await deletePerformanceMutation.mutateAsync(
+              await deleteApiPerformanceMutation.mutateAsync(
                 params.row.performanceId
               );
               setPerformanceToUpdate({}); // 삭제 버튼 눌렀을 때 modal창 열리는거 막으려고 추가
@@ -120,20 +118,19 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
   ];
 
   // 모달창 열기
-  const openModal = () => {
-    setIsOpen(true);
-  };
+  // const openModal = () => {
+  //   setIsOpen(true);
+  // };
 
   // 모달창 닫기
-  const closeModal = () => {
-    setIsOpen(false);
-    setPerformanceToUpdate({});
-  };
+  // const closeModal = () => {
+  //   setIsOpen(false);
+  //   setPerformanceToUpdate({});
+  // };
 
   // 수정 버튼 눌렀을 때 모달창 열림
   const handleModifyButtonOnClick = (e, params) => {
     setPerformanceToUpdate(params.row);
-    openModal();
   };
 
   // 처음 들어왔을 때 or 새로고침했을 때 주소에 ?page=1 param 붙임
@@ -141,10 +138,12 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
     setSearchParams({
       page: 1,
     });
+    
   }, []);
 
   // 직접 등록한 공연 목록 가져오는 query 로딩 끝나면 row에 넣어서 표에 표시되게 함
   useEffect(() => {
+    
     if (
       !isLoading &&
       Array.isArray(performanceList) &&
@@ -157,15 +156,15 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
 
   // 수정 모달 열고 값 수정하면 직접 등록한 공연 목록 가져오는 query가 refetch됨
   // refetch됐을 때 modal 다시 열어줌 (modal 화면에 수정한 값 즉시 반영)
-  useEffect(() => {
-    const updatedRow = rows.find(
-      (row) => row.performanceId === performanceToUpdate.performanceId
-    );
-    if (!isRefetching && !!updatedRow) {
-      setPerformanceToUpdate({ ...updatedRow });
-      openModal();
-    }
-  }, [isRefetching]);
+  // useEffect(() => {
+  //   const updatedRow = rows.find(
+  //     (row) => row.performanceId === performanceToUpdate.performanceId
+  //   );
+  //   if (!isRefetching && !!updatedRow) {
+  //     setPerformanceToUpdate({ ...updatedRow });
+  //     openModal();
+  //   }
+  // }, [isRefetching]);
 
   const getPaginationList = (total) => {
     if (total < 1) return [];
@@ -187,7 +186,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
 
   return (
     <div css={s.adminGridLayout}>
-      {Object.keys(performanceToUpdate).length > 0 && (
+      {/* {Object.keys(performanceToUpdate).length > 0 && (
         <div css={s.updateModalLayout}>
           <AdminPerformanceUpdateModal2
             isOpen={isOpen}
@@ -195,7 +194,7 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
             performanceToUpdate={performanceToUpdate}
           />
         </div>
-      )}
+      )} */}
       <div css={s.dataGridContainer}>
         <DataGrid
           rows={
@@ -235,4 +234,4 @@ function AdminCustomPerformanceDataGrid({ searchResult }) {
   );
 }
 
-export default AdminCustomPerformanceDataGrid;
+export default AdminApiPerformanceDataGrid;

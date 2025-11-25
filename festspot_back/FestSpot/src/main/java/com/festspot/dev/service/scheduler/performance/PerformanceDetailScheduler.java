@@ -24,9 +24,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,35 +62,51 @@ public class PerformanceDetailScheduler {
                     try {
                         String apiKey = API_KEYS.get((int) Math.floor(Math.random() * API_KEYS.size()));
                         // 요청 받으면 xml로 옴. xml의 dbs.db를 꺼내서 json 형태로 변환
-                        String performanceDetailXML = restTemplate.getForObject(url, String.class, performance.getPerformanceApiId(), apiKey);
+                        Map<String, String> params = new HashMap<>();
+                        params.put("performanceId", performance.getPerformanceApiId());
+                        params.put("serviceKey", apiKey);
+//                        String performanceDetailXML = restTemplate.getForObject(url, String.class, performance.getPerformanceApiId(), apiKey);
+                        String performanceDetailXML = restTemplate.getForObject(url, String.class, params);
                         JSONObject performanceDetailJson = XML.toJSONObject(performanceDetailXML)
                                 .getJSONObject("dbs")
                                 .getJSONObject("db");
 
+                        System.out.println(performanceDetailJson);
+
                         // json에서 예매처 정보만 가져와서 dto에 넣을 수 있도록 List<TicketingReqDto> 형태로 변환
-                        JSONObject relatesObj = performanceDetailJson.getJSONObject("relates");
-                        List<TicketingReqDto> ticketings = new ArrayList<>();
-                        if (relatesObj.has("relate")) {
-                            Object relateObj = relatesObj.get("relate"); // 공연 정보 json의 relates.relate
-                            if (relateObj instanceof JSONArray) {
-                                // 예매처가 여러 곳일 때 relateObj를 JSONArray로 바꿔서 반복문으로 예매처명, 예매처 url 들어있는 객체를 예매처 dto로 변환
-                                JSONArray relateArray = (JSONArray) relateObj;
-                                for (int i = 0; i < relateArray.length(); i++) {
-                                    JSONObject jsonObject = relateArray.getJSONObject(i);
-                                    TicketingReqDto ticketingReqDto = new TicketingReqDto();
-                                    ticketingReqDto.setRelatenm(jsonObject.optString("relatenm"));
-                                    ticketingReqDto.setRelateurl(jsonObject.optString("relateurl"));
-                                    ticketings.add(ticketingReqDto);
-                                }
-                            } else if (relateObj instanceof JSONObject) {
-                                // 예매처가 한 곳일 때 relateObj를 예매처 dto로 변환
-                                JSONObject jsonObject = (JSONObject) relateObj;
-                                TicketingReqDto ticketingReqDto = new TicketingReqDto();
-                                ticketingReqDto.setRelatenm(jsonObject.optString("relatenm"));
-                                ticketingReqDto.setRelateurl(jsonObject.optString("relateurl"));
-                                ticketings.add(ticketingReqDto);
-                            }
-                        }
+//                        JSONObject relatesObj = performanceDetailJson.getJSONObject("relates");
+//                        List<TicketingReqDto> ticketings = new ArrayList<>();
+//                        if (relatesObj.has("relate")) {
+//                            Object relateObj = relatesObj.get("relate"); // 공연 정보 json의 relates.relate
+//                            if (relateObj instanceof JSONArray) {
+//                                // 예매처가 여러 곳일 때 relateObj를 JSONArray로 바꿔서 반복문으로 예매처명, 예매처 url 들어있는 객체를 예매처 dto로 변환
+//                                JSONArray relateArray = (JSONArray) relateObj;
+//                                for (int i = 0; i < relateArray.length(); i++) {
+//                                    JSONObject jsonObject = relateArray.getJSONObject(i);
+//                                    TicketingReqDto ticketingReqDto = new TicketingReqDto();
+//                                    ticketingReqDto.setRelatenm(jsonObject.optString("relatenm"));
+//                                    ticketingReqDto.setRelateurl(jsonObject.optString("relateurl"));
+//                                    ticketings.add(ticketingReqDto);
+//                                }
+//                            } else if (relateObj instanceof JSONObject) {
+//                                // 예매처가 한 곳일 때 relateObj를 예매처 dto로 변환
+//                                JSONObject jsonObject = (JSONObject) relateObj;
+//                                TicketingReqDto ticketingReqDto = new TicketingReqDto();
+//                                ticketingReqDto.setRelatenm(jsonObject.optString("relatenm"));
+//                                ticketingReqDto.setRelateurl(jsonObject.optString("relateurl"));
+//                                ticketings.add(ticketingReqDto);
+//                            }
+//                        }
+
+                        List<TicketingReqDto> ticketings = performance.getTicketingUrls().stream()
+                                .map(ticketingUrl -> {
+                                    TicketingReqDto dto = new TicketingReqDto();
+                                    dto.setTicketingUrlId(ticketingUrl.getTicketingUrlId());
+                                    dto.setRelatenm(ticketingUrl.getTicketingAgencyName());
+                                    dto.setRelateurl(ticketingUrl.getTicketingUrl());
+                                    return dto;
+                                })
+                                .collect(Collectors.toList());
 
                         AdminUploadPerformanceReqDto relates = new AdminUploadPerformanceReqDto();
                         relates.setRelates(ticketings);
@@ -103,6 +118,8 @@ public class PerformanceDetailScheduler {
                         List<TicketingUrl> ticketingUrlList = dto.getRelates().stream()
                                 .map(ticketingReqDto -> ticketingReqDto.toEntity(performance.getPerformanceId()))
                                 .toList();
+
+                        System.out.println(dto);
 
                         // Performance Entity에 필요한 지역정보, 공연상태정보, 예매처정보 넣어서 return
                         Performance updatePerformance = dto.toEntity(performanceRegionMapper.findByRegionName(dto.getArea()),

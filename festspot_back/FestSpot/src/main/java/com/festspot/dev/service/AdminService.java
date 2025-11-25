@@ -133,6 +133,12 @@ public class AdminService {
     return performanceInsert * ticketingUrlInsert;
   }
 
+    public List<AdminGetCustomPerformanceRespDto> getApiPerformanceInfoList() {
+        List<Performance> performanceList = performanceMapper.findByPerformanceApiIdIsNotNull();
+//        System.out.println(performanceList);
+        return performanceList.stream().map(performance -> performance.toPerformanceDto()).toList();
+    }
+
   public List<AdminGetCustomPerformanceRespDto> getCustomPerformanceInfoList() {
     List<Performance> performanceList = performanceMapper.findByPerformanceApiIdIsNull();
     return performanceList.stream().map(performance -> performance.toPerformanceDto()).toList();

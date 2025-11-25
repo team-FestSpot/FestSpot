@@ -14,6 +14,7 @@ import AdminMainPage from "../page/admin/AdminMainPage/AdminMainPage";
 import AdminLoginPage from "../page/admin/AdminLoginPage/AdminLoginPage";
 import usePrincipalQuery from "../querys/auth/usePrincipalQuery";
 import AdminAddPerformance2 from "../page/admin/AdminAddPerformance2/AdminAddPerformance2";
+import AdminModifyApiPerformance from "../page/admin/AdminModifyApiPerformance/AdminModifyApiPerformance";
 
 function AdminRouter({ adminAuthority }) {
   const principalQuery = usePrincipalQuery(); 
@@ -50,6 +51,10 @@ function AdminRouter({ adminAuthority }) {
           <Routes>
             <Route path="/dashboard" element={<AdminMainPage />} />
             <Route path="/detail" element={<AdminAddPerformance2 />} />
+            <Route
+              path="/apiperformance"
+              element={<AdminModifyApiPerformance/>}
+            />
             <Route
               path="/performance"
               element={<AdminModifyCustomPerformance />}

@@ -1,12 +1,12 @@
 import React from "react";
 import { reqDeletePerformanceApi } from "../../api/adminApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useCustomPerformanceListQuery } from "../admin/useCustomPerformanceListQuery";
 import useAdminCustomPerformanceRowsStore from "../../stores/AdminPerformanceCustomRowsStore";
+import { useApiPerformanceListQuery } from "../admin/useApiPerformanceListQuery";
 
-export const useDeletePerformanceMutation = () => {
+export const useDeleteApiPerformanceMutation = () => {
   const { setRows, setRowsEmpty } = useAdminCustomPerformanceRowsStore();
-  const { refetch } = useCustomPerformanceListQuery();
+  const { refetch } = useApiPerformanceListQuery();
 
   return useMutation({
     mutationFn: (performanceId) => reqDeletePerformanceApi(performanceId),

@@ -67,25 +67,94 @@
             performance_id = #{performanceId}
     </update>
 
+<!--    <update id="updateManyByApiIds">-->
+<!--        <foreach collection="list" item="performance">-->
+<!--            update-->
+<!--                performance_tb-->
+<!--            set-->
+<!--                performance_region_id = #{performance.performanceRegion.performanceRegionId},-->
+<!--                performance_title = #{performance.performanceTitle},-->
+<!--                performance_cast= #{performance.performanceCast},-->
+<!--                performance_poster_url = #{performance.performancePosterUrl},-->
+<!--                performance_start_date = #{performance.performanceStartDate},-->
+<!--                performance_end_date = #{performance.performanceEndDate},-->
+<!--                performance_venue = #{performance.performanceVenue},-->
+<!--                performance_state_id = #{performance.performanceState.performanceStateId},-->
+<!--                performance_last_modified = #{performance.performanceLastModified},-->
+<!--                is_foreign = #{performance.isForeign},-->
+<!--                is_festival = #{performance.isFestival},-->
+<!--                updated_at = #{performance.updatedAt}-->
+<!--            where-->
+<!--                performance_api_id = #{performance.performanceApiId}-->
+<!--        </foreach>-->
+<!--    </update>-->
+
     <update id="updateManyByApiIds">
-        <foreach collection="list" item="performance" separator=";">
-            update
-                performance_tb
-            set
-                performance_region_id = #{performance.performanceRegion.performanceRegionId},
-                performance_title = #{performance.performanceTitle},
-                performance_cast= #{performance.performanceCast},
-                performance_poster_url = #{performance.performancePosterUrl},
-                performance_start_date = #{performance.performanceStartDate},
-                performance_end_date = #{performance.performanceEndDate},
-                performance_venue = #{performance.performanceVenue},
-                performance_state_id = #{performance.performanceState.performanceStateId},
-                performance_last_modified = #{performance.performanceLastModified},
-                is_foreign = #{performance.isForeign},
-                is_festival = #{performance.isFestival},
-                updated_at = #{performance.updatedAt}
-            where
-                performance_api_id = #{performance.performanceApiId}
+        UPDATE performance_tb
+        SET
+        performance_region_id = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performanceRegion.performanceRegionId}
+        </foreach>
+        END,
+        performance_title = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performanceTitle}
+        </foreach>
+        END,
+        performance_cast = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performanceCast}
+        </foreach>
+        END,
+        performance_poster_url = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performancePosterUrl}
+        </foreach>
+        END,
+        performance_start_date = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performanceStartDate}
+        </foreach>
+        END,
+        performance_end_date = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performanceEndDate}
+        </foreach>
+        END,
+        performance_venue = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performanceVenue}
+        </foreach>
+        END,
+        performance_state_id = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performanceState.performanceStateId}
+        </foreach>
+        END,
+        performance_last_modified = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.performanceLastModified}
+        </foreach>
+        END,
+        is_foreign = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.isForeign}
+        </foreach>
+        END,
+        is_festival = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.isFestival}
+        </foreach>
+        END,
+        updated_at = CASE performance_api_id
+        <foreach collection="list" item="performance">
+            WHEN #{performance.performanceApiId} THEN #{performance.updatedAt}
+        </foreach>
+        END
+        WHERE performance_api_id IN
+        <foreach collection="list" item="performance" open="(" separator="," close=")">
+            #{performance.performanceApiId}
         </foreach>
     </update>
 
@@ -107,7 +176,7 @@
   </select>
   <select id="findByPerformanceApiId" resultMap="PerformanceMap">
     select
-    *
+        *
     from
       performance_tb pt
       left outer join performance_region_tb prt on(prt.performance_region_id = pt.performance_region_id)
@@ -118,7 +187,7 @@
   </select>
   <select id="findById" resultMap="PerformanceMap">
     select
-    *
+        *
     from
       performance_tb pt
       left outer join performance_region_tb prt on(prt.performance_region_id = pt.performance_region_id)
@@ -138,6 +207,18 @@
             left outer join ticketing_url_tb tut on (tut.performance_id = pt.performance_id)
         where
             pt.performance_api_id is null;
+    </select>
+
+    <select id="findByPerformanceApiIdIsNotNull" resultMap="PerformanceMap">
+        select
+            *
+        from
+            performance_tb pt
+            left outer join performance_region_tb prt on (prt.performance_region_id = pt.performance_region_id)
+            left outer join performance_state_tb pst on (pst.performance_state_id = pt.performance_state_id)
+            left outer join ticketing_url_tb tut on (tut.performance_id = pt.performance_id)
+        where
+            pt.performance_api_id is not null;
     </select>
 
     <insert id="insert" keyProperty="performanceId" useGeneratedKeys="true">

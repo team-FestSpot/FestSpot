@@ -12,6 +12,8 @@ public interface PerformanceMapper {
 
   List<Performance> findByPerformanceApiIdIsNull();
 
+  List<Performance> findByPerformanceApiIdIsNotNull();
+
   Performance findByPerformanceApiId(String performanceApiId);
 
   Performance findById(Integer performanceId);

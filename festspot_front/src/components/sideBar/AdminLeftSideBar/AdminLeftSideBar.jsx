@@ -34,9 +34,14 @@ function AdminLeftSideBar({ setIsSideBar }) {
       placeholder: "사용자 관리",
     },
     {
+      id: "apiperformance",
+      to: "/admin/apiperformance",
+      placeholder: "공연 정보 관리",
+    },
+    {
       id: "performance",
       to: "/admin/performance",
-      placeholder: "API 외 공연 정보 관리",
+      placeholder: "추가한 공연 정보 관리",
     },
   ];
 
