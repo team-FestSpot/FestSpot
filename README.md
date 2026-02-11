@@ -36,6 +36,10 @@
 ### 댓글 구현 화면
 <img width="1650" height="927" alt="image" src="https://github.com/user-attachments/assets/9f60d5aa-d812-441c-bbc7-aee5f853fa2a" />
 
+### 게시글 작성 화면
+<img width="1655" height="935" alt="image" src="https://github.com/user-attachments/assets/bb098468-1e61-4670-a2c7-723f7ef8c671" />
+
+
 
 ----------------------------
 
