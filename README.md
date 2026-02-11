@@ -19,7 +19,10 @@
 
 ## 구현 화면
 ### 메인 화면
-<img width="1650" height="903" alt="image" src="https://github.com/user-attachments/assets/8d05addf-4fe8-46d8-8166-7acb15168e91" />
+<img width="3200" height="1800" alt="image" src="https://github.com/user-attachments/assets/8299a8df-adcc-495a-8f57-03ff173c2557" />
+
+### 우측 메뉴바
+<img width="3200" height="1800" alt="image" src="https://github.com/user-attachments/assets/866276bf-8158-47b8-bf56-04e812b3d661" />
 
 ### 공연 리스트 화면
 <img width="1649" height="927" alt="image" src="https://github.com/user-attachments/assets/88d88c9c-80ab-4322-ba9f-b16063284a83" />
@@ -28,7 +31,12 @@
 <img width="1649" height="927" alt="image" src="https://github.com/user-attachments/assets/498b994d-0653-4ae6-a78c-6be808d37be0" />
 
 ### 회원가입 화면
-<img width="1649" height="927" alt="image" src="https://github.com/user-attachments/assets/54c71707-3ff0-49cd-a870-6d81e204866f" />
+<img width="3200" height="1800" alt="image" src="https://github.com/user-attachments/assets/be98dc6b-1cae-4438-bd11-9cd9b6e2a3fa" />
+
+### 개인정보 수정 화면
+<img width="3200" height="1800" alt="image" src="https://github.com/user-attachments/assets/6ac0147f-7f01-44f9-917d-fc8626b466fc" />
+
+
 
 ### 커뮤니티 화면
 <img width="1650" height="927" alt="image" src="https://github.com/user-attachments/assets/1e31c1f2-2ab3-4420-8c14-8f26046d4afc" />
@@ -37,14 +45,16 @@
 <img width="1650" height="927" alt="image" src="https://github.com/user-attachments/assets/9f60d5aa-d812-441c-bbc7-aee5f853fa2a" />
 
 ### 게시글 작성 화면
-<img width="1655" height="935" alt="image" src="https://github.com/user-attachments/assets/bb098468-1e61-4670-a2c7-723f7ef8c671" />
+<img width="3200" height="1800" alt="image" src="https://github.com/user-attachments/assets/f02a191a-ade0-4c15-a23a-f7cb0c1a4937" />
+
 
 
 
 ----------------------------
 
 ### 관리자 페이지
-<img width="1650" height="928" alt="image" src="https://github.com/user-attachments/assets/85d6873d-3cbb-43e1-95b1-bd0a67428db7" />
+<img width="3200" height="1800" alt="image" src="https://github.com/user-attachments/assets/cd8d7dcf-7b9f-47bf-b82e-3460978416b7" />
+
 
 ### 공연 상세 정보 수정 (관리자 페이지)
 <img width="1650" height="927" alt="image" src="https://github.com/user-attachments/assets/72feea26-6394-4335-8c1f-38e321e40b41" />
